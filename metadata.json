@@ -1,0 +1,5 @@
+{
+  "name": "Wellknown - Auto Bank",
+  "description": "A centralized dashboard to manage automated bank statement downloads, schedule syncs to Google Drive, and handle real-time OTP challenges.",
+  "requestFramePermissions": []
+}
