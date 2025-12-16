@@ -22,10 +22,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, setPage, pendingO
   return (
     <div className="w-64 bg-slate-900 border-r border-slate-800 flex flex-col h-screen fixed left-0 top-0">
       <div className="p-6">
-        <h1 className="text-2xl font-bold text-blue-500 tracking-tight flex items-center gap-2">
-           <Building2 className="w-8 h-8" /> AutoBank
-        </h1>
-        <p className="text-slate-500 text-xs mt-1 font-medium">SYNC & AUTOMATE</p>
+        <img 
+            src="/wpl-logo.jpg" 
+            alt="Wellknown Polyesters Limited" 
+            className="w-full h-auto object-contain mb-2 rounded-lg"
+        />
+        <p className="text-slate-500 text-xs mt-1 font-medium text-center">SYNC & AUTOMATE</p>
       </div>
 
       <nav className="flex-1 px-4 space-y-2 mt-4">
