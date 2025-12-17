@@ -6,8 +6,8 @@ interface SchedulerProps {
     schedules: SyncSchedule[];
     accounts: BankAccount[];
     toggleSchedule: (id: string) => void;
-    addSchedule: (schedule: SyncSchedule) => void;
-    updateSchedule: (schedule: SyncSchedule) => void;
+    addSchedule: (schedule: SyncSchedule) => Promise<void>;
+    updateSchedule: (schedule: SyncSchedule) => Promise<void>;
     removeSchedule: (id: string) => void;
 }
 
@@ -38,6 +38,7 @@ export const Scheduler: React.FC<SchedulerProps> = ({
     const [targetFolder, setTargetFolder] = useState('');
     const [storageType, setStorageType] = useState<'GoogleDrive' | 'Local'>('GoogleDrive');
     const [isActive, setIsActive] = useState(true);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     // Folder Picker State
     const [currentPath, setCurrentPath] = useState<string[]>(['My Drive']);
@@ -67,8 +68,9 @@ export const Scheduler: React.FC<SchedulerProps> = ({
         setIsModalOpen(true);
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setIsSubmitting(true);
 
         const newScheduleData: SyncSchedule = {
             id: editingId || Date.now().toString(),
@@ -81,12 +83,19 @@ export const Scheduler: React.FC<SchedulerProps> = ({
             isActive
         };
 
-        if (editingId) {
-            updateSchedule(newScheduleData);
-        } else {
-            addSchedule(newScheduleData);
+        try {
+            if (editingId) {
+                await updateSchedule(newScheduleData);
+            } else {
+                await addSchedule(newScheduleData);
+            }
+            setIsModalOpen(false);
+        } catch (error) {
+            console.error(error);
+            alert("Failed to save schedule. Please try again.");
+        } finally {
+            setIsSubmitting(false);
         }
-        setIsModalOpen(false);
     };
 
     // --- Folder Picker Handlers ---
@@ -370,11 +379,27 @@ export const Scheduler: React.FC<SchedulerProps> = ({
                             </div>
 
                             <div className="flex gap-3 pt-2">
-                                <button type="button" onClick={() => setIsModalOpen(false)} className="flex-1 py-2.5 text-slate-300 hover:bg-slate-700 rounded-lg transition-colors font-medium">
+                                <button
+                                    type="button"
+                                    disabled={isSubmitting}
+                                    onClick={() => setIsModalOpen(false)}
+                                    className="flex-1 py-2.5 text-slate-300 hover:bg-slate-700 rounded-lg transition-colors font-medium disabled:opacity-50"
+                                >
                                     Cancel
                                 </button>
-                                <button type="submit" className="flex-1 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-bold shadow-lg shadow-blue-900/20 transition-all hover:scale-[1.02]">
-                                    {editingId ? 'Update Schedule' : 'Create Schedule'}
+                                <button
+                                    type="submit"
+                                    disabled={isSubmitting}
+                                    className="flex-1 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-bold shadow-lg shadow-blue-900/20 transition-all hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                >
+                                    {isSubmitting ? (
+                                        <>
+                                            <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                                            Saving...
+                                        </>
+                                    ) : (
+                                        editingId ? 'Update Schedule' : 'Create Schedule'
+                                    )}
                                 </button>
                             </div>
                         </form>

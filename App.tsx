@@ -157,8 +157,10 @@ const App: React.FC = () => {
         status: 'Success',
         triggeredBy: currentUser?.name || 'Unknown'
       });
+      // Return or indicate success? The await above is enough for the caller in Scheduler.tsx
     } catch (error) {
       console.error("Error adding schedule:", error);
+      throw error; // Propagate so UI knows it failed
     }
   };
 
@@ -176,6 +178,7 @@ const App: React.FC = () => {
       });
     } catch (error) {
       console.error("Error updating schedule:", error);
+      throw error;
     }
   };
 
@@ -220,7 +223,7 @@ const App: React.FC = () => {
   const handleManualDownload = (bankIds: string[]) => {
     const bankNames = accounts.filter(a => bankIds.includes(a.id)).map(a => a.bankName);
 
-    // Update logs
+    // 1. Update Logs (Pending)
     const newLogs: ActivityLog[] = bankNames.map((name, idx) => ({
       id: "pending-" + Date.now() + idx,
       bankName: name,
@@ -231,9 +234,9 @@ const App: React.FC = () => {
     }));
     setLogs(prev => [...newLogs, ...prev]);
 
-    // Simulate success after delay
+    // 2. Simulate Delay & "Download" Realistic CSV
     setTimeout(() => {
-      // Update Logs in DB
+      // A. Update Logs to Success
       newLogs.forEach(async (log) => {
         await dbService.addLog({
           bankName: log.bankName,
@@ -243,7 +246,7 @@ const App: React.FC = () => {
         });
       });
 
-      // Update Accounts Last Sync
+      // B. Update Last Sync Time
       bankIds.forEach(async (id) => {
         await dbService.updateAccount(id, { lastSync: new Date().toISOString() });
       });
@@ -255,6 +258,42 @@ const App: React.FC = () => {
       setAccounts(prev => prev.map(a =>
         bankIds.includes(a.id) ? { ...a, lastSync: 'Just now' } : a
       ));
+
+      // C. Generate Realistic CSV
+      const generateCSV = (bankName: string) => {
+        const headers = "Date,Description,Reference,Debit,Credit,Balance\n";
+        let balance = Math.floor(Math.random() * 500000) + 100000;
+        const rows = Array.from({ length: 15 }).map((_, i) => {
+          const date = new Date();
+          date.setDate(date.getDate() - i);
+          const dateStr = date.toISOString().split('T')[0];
+          const isDebit = Math.random() > 0.3;
+          const amount = Math.floor(Math.random() * 50000) + 100;
+
+          if (isDebit) {
+            balance -= amount;
+            return `${dateStr},UPI-PAYMENT-${Math.floor(Math.random() * 999999)},REF${Math.floor(Math.random() * 1000)},${amount},0,${balance}`;
+          } else {
+            balance += amount;
+            return `${dateStr},NEFT-RECEIPT-${Math.floor(Math.random() * 999999)},REF${Math.floor(Math.random() * 1000)},0,${amount},${balance}`;
+          }
+        }).join("\n");
+        return headers + rows;
+      };
+
+      // Trigger Download for each bank
+      bankNames.forEach(name => {
+        const csvContent = generateCSV(name);
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement("a");
+        const url = URL.createObjectURL(blob);
+        link.setAttribute("href", url);
+        link.setAttribute("download", `Statement_${name.replace(/\s/g, '_')}_${new Date().toISOString().split('T')[0]}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      });
+
     }, 3000);
   };
 
