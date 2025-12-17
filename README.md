@@ -1,20 +1,29 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# WPL Auto Bank
 
-# Run and deploy your AI Studio app
+Automated Bank Statement Downloader & Analyzer for Wellknown Polyesters Limited.
 
-This contains everything you need to run your app locally.
+## Documentation
+- **[Process Document](docs/process_document.md)**: Overview of how the application works, workflows, and architecture.
+- **[Manual Setup Guide](docs/manual_setup.md)**: Instructions for setting up the Firebase backend.
+- **[Testing Guide](docs/testing_guide.md)**: How to verify the application locally and in production.
+- **[Firewall Whitelist](docs/firewall_whitelist.md)**: Network requirements for corporate IT.
 
-View your app in AI Studio: https://ai.studio/apps/drive/19QcR-j3wd4B4wr33jjwLYlZJur-OfWeI
+## Quick Start (Local)
+1.  **Install Dependencies**:
+    ```bash
+    npm install
+    ```
+2.  **Setup Environment**:
+    - Copy `.env.example` to `.env.local`.
+    - Fill in Firebase config values.
+3.  **Run Development Server**:
+    ```bash
+    npm run dev
+    ```
 
-## Run Locally
-
-**Prerequisites:**  Node.js
-
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## Deployment
+This project is configured for **Firebase Hosting**.
+```bash
+npm run build
+firebase deploy
+```
