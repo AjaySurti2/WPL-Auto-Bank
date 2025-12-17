@@ -1,25 +1,30 @@
 import React, { useState } from 'react';
 import { Building2, Lock, Mail, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { User } from '../types';
-import { MOCK_USERS } from '../constants';
+import { login } from '../services/authService';
 
 interface LoginProps {
     onLogin: (user: User) => void;
 }
 
 export const Login: React.FC<LoginProps> = ({ onLogin }) => {
-    const [email, setEmail] = useState('admin@autobank.com');
+    const [email, setEmail] = useState('admin@wellknown.com');
     const [password, setPassword] = useState('password123');
     const [view, setView] = useState<'login' | 'forgot' | 'reset-sent'>('login');
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
-    const handleLogin = (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        const user = MOCK_USERS.find(u => u.email === email && u.password === password);
-        if (user) {
-            onLogin(user);
-        } else {
-            setError('Invalid credentials. Try admin@autobank.com / password123');
+        setLoading(true);
+        setError('');
+        try {
+            await login(email, password);
+            // onLogin will be handled by App.tsx subscription
+        } catch (err: any) {
+            console.error("Login Error:", err);
+            setError('Login failed: ' + (err.message || 'Unknown error'));
+            setLoading(false);
         }
     };
 
@@ -83,8 +88,12 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
                         <div className="flex justify-end">
                             <button type="button" onClick={() => setView('forgot')} className="text-xs text-blue-400 hover:text-blue-300">Forgot Password?</button>
                         </div>
-                        <button type="submit" className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-lg transition-colors flex items-center justify-center gap-2">
-                            Sign In <ArrowRight className="w-4 h-4" />
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className={`w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-lg transition-colors flex items-center justify-center gap-2 ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
+                        >
+                            {loading ? 'Signing In...' : <>Sign In <ArrowRight className="w-4 h-4" /></>}
                         </button>
                     </form>
                 )}
