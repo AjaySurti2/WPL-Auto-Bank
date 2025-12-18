@@ -1,0 +1,50 @@
+type User @table {
+  displayName: String!
+  createdAt: Timestamp!
+  email: String
+  photoUrl: String
+}
+
+type BankAccount @table {
+  user: User!
+  bankName: String!
+  accountNumberMasked: String!
+  connectionStatus: String!
+  createdAt: Timestamp!
+  accountType: String
+  lastSyncedAt: Timestamp
+}
+
+type DownloadSchedule @table {
+  user: User!
+  bankAccount: BankAccount!
+  frequency: String!
+  nextDownloadAt: Timestamp!
+  isActive: Boolean!
+  createdAt: Timestamp!
+  lastDownloadAt: Timestamp
+  statementFormat: String
+  startDateOffset: String
+}
+
+type Statement @table {
+  user: User!
+  bankAccount: BankAccount!
+  downloadSchedule: DownloadSchedule
+  fileName: String!
+  downloadDate: Timestamp!
+  statementPeriodStart: Date!
+  statementPeriodEnd: Date!
+  fileRef: String!
+  status: String
+  errorMessage: String
+}
+
+type Notification @table {
+  user: User!
+  message: String!
+  type: String!
+  createdAt: Timestamp!
+  isRead: Boolean!
+  relatedStatementId: UUID
+}

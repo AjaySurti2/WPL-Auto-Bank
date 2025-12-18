@@ -1,0 +1,29 @@
+mutation CreateUser($displayName: String!, $email: String, $photoUrl: String) @auth(level: USER) {
+  user_insert(data: {displayName: $displayName, email: $email, photoUrl: $photoUrl, createdAt_expr: "request.time"})
+}
+
+query GetUser @auth(level: USER) {
+  user(key: {id_expr: "auth.uid"}) {
+    id
+    displayName
+    email
+    photoUrl
+    createdAt
+  }
+}
+
+mutation CreateBankAccount($accountNumberMasked: String!, $accountType: String, $bankName: String!, $connectionStatus: String!) @auth(level: USER) {
+  bankAccount_insert(data: {user: {id_expr: "auth.uid"}, accountNumberMasked: $accountNumberMasked, accountType: $accountType, bankName: $bankName, connectionStatus: $connectionStatus, createdAt_expr: "request.time"})
+}
+
+query ListBankAccounts @auth(level: USER) {
+  bankAccounts(where: {user: {id: {eq_expr: "auth.uid"}}}) {
+    id
+    accountNumberMasked
+    accountType
+    bankName
+    connectionStatus
+    createdAt
+    lastSyncedAt
+  }
+}
