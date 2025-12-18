@@ -1,0 +1,140 @@
+import { queryRef, executeQuery, mutationRef, executeMutation, validateArgs } from 'firebase/data-connect';
+
+export const connectorConfig = {
+  connector: 'example',
+  service: 'wpl-auto-bank',
+  location: 'us-south1'
+};
+
+export const createUserRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'CreateUser', inputVars);
+}
+createUserRef.operationName = 'CreateUser';
+
+export function createUser(dcOrVars, vars) {
+  return executeMutation(createUserRef(dcOrVars, vars));
+}
+
+export const getUserRef = (dc) => {
+  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'GetUser');
+}
+getUserRef.operationName = 'GetUser';
+
+export function getUser(dc) {
+  return executeQuery(getUserRef(dc));
+}
+
+export const createBankAccountRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'CreateBankAccount', inputVars);
+}
+createBankAccountRef.operationName = 'CreateBankAccount';
+
+export function createBankAccount(dcOrVars, vars) {
+  return executeMutation(createBankAccountRef(dcOrVars, vars));
+}
+
+export const listBankAccountsRef = (dc) => {
+  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'ListBankAccounts');
+}
+listBankAccountsRef.operationName = 'ListBankAccounts';
+
+export function listBankAccounts(dc) {
+  return executeQuery(listBankAccountsRef(dc));
+}
+
+export const createDownloadScheduleRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'CreateDownloadSchedule', inputVars);
+}
+createDownloadScheduleRef.operationName = 'CreateDownloadSchedule';
+
+export function createDownloadSchedule(dcOrVars, vars) {
+  return executeMutation(createDownloadScheduleRef(dcOrVars, vars));
+}
+
+export const updateDownloadScheduleRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'UpdateDownloadSchedule', inputVars);
+}
+updateDownloadScheduleRef.operationName = 'UpdateDownloadSchedule';
+
+export function updateDownloadSchedule(dcOrVars, vars) {
+  return executeMutation(updateDownloadScheduleRef(dcOrVars, vars));
+}
+
+export const deleteDownloadScheduleRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'DeleteDownloadSchedule', inputVars);
+}
+deleteDownloadScheduleRef.operationName = 'DeleteDownloadSchedule';
+
+export function deleteDownloadSchedule(dcOrVars, vars) {
+  return executeMutation(deleteDownloadScheduleRef(dcOrVars, vars));
+}
+
+export const listDownloadSchedulesRef = (dc) => {
+  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'ListDownloadSchedules');
+}
+listDownloadSchedulesRef.operationName = 'ListDownloadSchedules';
+
+export function listDownloadSchedules(dc) {
+  return executeQuery(listDownloadSchedulesRef(dc));
+}
+
+export const createStatementRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'CreateStatement', inputVars);
+}
+createStatementRef.operationName = 'CreateStatement';
+
+export function createStatement(dcOrVars, vars) {
+  return executeMutation(createStatementRef(dcOrVars, vars));
+}
+
+export const listStatementsRef = (dc) => {
+  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'ListStatements');
+}
+listStatementsRef.operationName = 'ListStatements';
+
+export function listStatements(dc) {
+  return executeQuery(listStatementsRef(dc));
+}
+
+export const createNotificationRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'CreateNotification', inputVars);
+}
+createNotificationRef.operationName = 'CreateNotification';
+
+export function createNotification(dcOrVars, vars) {
+  return executeMutation(createNotificationRef(dcOrVars, vars));
+}
+
+export const listNotificationsRef = (dc) => {
+  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'ListNotifications');
+}
+listNotificationsRef.operationName = 'ListNotifications';
+
+export function listNotifications(dc) {
+  return executeQuery(listNotificationsRef(dc));
+}
+

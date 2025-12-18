@@ -1,21 +1,16 @@
-import { db } from './firebase';
 import {
-    collection,
-    getDocs,
-    addDoc,
-    updateDoc,
-    deleteDoc,
-    doc,
-    query,
-    orderBy,
-    where
-} from 'firebase/firestore';
-import { BankAccount, SyncSchedule, ActivityLog, User } from '../types';
-
-// Collection References
-const accountsCollection = collection(db, 'accounts');
-const schedulesCollection = collection(db, 'schedules');
-const logsCollection = collection(db, 'logs');
+    listBankAccounts,
+    createBankAccount,
+    listDownloadSchedules,
+    createDownloadSchedule,
+    updateDownloadSchedule,
+    deleteDownloadSchedule,
+    listStatements,
+    createStatement,
+    listNotifications,
+    createNotification
+} from '@dataconnect/generated';
+import { BankAccount, SyncSchedule, ActivityLog, BankStatus } from '../types';
 
 // Helper to prevent infinite hangs and provide offline fallback
 const withTimeout = <T>(promise: Promise<T>, ms: number = 5000, opName: string): Promise<T> => {
@@ -39,9 +34,22 @@ const saveLocal = <T>(key: string, data: T[]) => localStorage.setItem(key, JSON.
 // Accounts
 export const getAccounts = async (): Promise<BankAccount[]> => {
     try {
-        console.log("Fetching accounts (Cloud)...");
-        const snapshot = await withTimeout(getDocs(accountsCollection), 30000, "getAccounts");
-        const cloudData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as BankAccount));
+        console.log("Fetching accounts (Data Connect)...");
+        const { data } = await withTimeout(listBankAccounts(), 30000, "getAccounts");
+        const cloudData: BankAccount[] = data.bankAccounts.map(acc => ({
+            id: acc.id,
+            bankName: acc.bankName,
+            bankUrl: acc.bankUrl || '',
+            accountNumber: acc.accountNumber || '',
+            accountNumberMasked: acc.accountNumberMasked,
+            userId: '', // Data Connect doesn't expose User ID directly in this query yet
+            lastSync: acc.lastSyncedAt || '',
+            status: acc.connectionStatus as BankStatus,
+            requiresOtp: !!acc.requiresOtp,
+            logo: acc.logo || '',
+            lastSyncedAt: acc.lastSyncedAt || undefined,
+            accountType: acc.accountType || undefined
+        }));
         saveLocal('accounts_cache', cloudData); // Update cache
         return cloudData;
     } catch (e: any) {
@@ -52,64 +60,89 @@ export const getAccounts = async (): Promise<BankAccount[]> => {
 
 export const addAccount = async (account: Omit<BankAccount, 'id'>) => {
     try {
-        const docRef = await withTimeout(addDoc(accountsCollection, account), 30000, "addAccount");
-        return { id: docRef.id, ...account };
+        const { data } = await withTimeout(createBankAccount({
+            bankName: account.bankName,
+            bankUrl: account.bankUrl,
+            logo: account.logo,
+            accountNumber: account.accountNumber,
+            accountNumberMasked: account.accountNumberMasked,
+            connectionStatus: account.status,
+            requiresOtp: account.requiresOtp,
+            accountType: account.accountType
+        }), 30000, "addAccount");
+        return { id: data.bankAccount_insert.id, ...account };
     } catch (e: any) {
         console.warn("Cloud unreachable. Saving Locally. Error:", e.message || e);
         const localData = loadLocal<BankAccount>('accounts_cache');
         const newAcc = { id: `local_${Date.now()}`, ...account };
         saveLocal('accounts_cache', [...localData, newAcc]);
-        return newAcc;
+        return newAcc as any; // Cast needed due to Omit
     }
 };
 
 export const updateAccount = async (id: string, updates: Partial<BankAccount>) => {
-    try {
-        const docRef = doc(db, 'accounts', id);
-        await withTimeout(updateDoc(docRef, updates), 30000, "updateAccount");
-    } catch (e: any) {
-        console.warn("Cloud unreachable. Updating Locally. Error:", e.message || e);
-        const localData = loadLocal<BankAccount>('accounts_cache');
-        const updated = localData.map(a => a.id === id ? { ...a, ...updates } : a);
-        saveLocal('accounts_cache', updated);
-    }
+    // Note: Data Connect update for BankAccount not yet implemented in queries.gql
+    console.warn("Update account for Data Connect not implemented yet.");
 };
 
 export const deleteAccount = async (id: string) => {
-    try {
-        const docRef = doc(db, 'accounts', id);
-        await withTimeout(deleteDoc(docRef), 30000, "deleteAccount");
-    } catch (e: any) {
-        console.warn("Deleting Locally. Error:", e.message || e);
-        const localData = loadLocal<BankAccount>('accounts_cache');
-        saveLocal('accounts_cache', localData.filter(a => a.id !== id));
-    }
+    // Note: Data Connect delete for BankAccount not yet implemented in queries.gql
+    console.warn("Delete account for Data Connect not implemented yet.");
 };
 
 // Schedules
 export const getSchedules = async (): Promise<SyncSchedule[]> => {
     try {
-        const snapshot = await withTimeout(getDocs(schedulesCollection), 30000, "getSchedules");
-        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as SyncSchedule));
+        const { data } = await withTimeout(listDownloadSchedules(), 30000, "getSchedules");
+        const cloudData: SyncSchedule[] = data.downloadSchedules.map(s => ({
+            id: s.id,
+            bankId: s.bankAccount.id,
+            frequency: s.frequency as any,
+            scheduledTime: s.scheduledTime || '',
+            targetFolder: s.targetFolder || '',
+            storageType: (s.storageType as any) || 'Local',
+            nextRun: s.nextDownloadAt,
+            isActive: s.isActive,
+            nextDownloadAt: s.nextDownloadAt, // internal mapping support
+            lastDownloadAt: s.lastDownloadAt || undefined
+        }));
+        saveLocal('schedules_cache', cloudData);
+        return cloudData;
     } catch { return loadLocal('schedules_cache'); }
 };
 
 export const addSchedule = async (schedule: Omit<SyncSchedule, 'id'>) => {
     try {
-        const docRef = await withTimeout(addDoc(schedulesCollection, schedule), 30000, "addSchedule");
-        return { id: docRef.id, ...schedule };
+        const { data } = await withTimeout(createDownloadSchedule({
+            bankAccountId: schedule.bankId,
+            frequency: schedule.frequency,
+            scheduledTime: schedule.scheduledTime,
+            targetFolder: schedule.targetFolder,
+            storageType: schedule.storageType,
+            nextDownloadAt: schedule.nextRun,
+            isActive: schedule.isActive
+        }), 30000, "addSchedule");
+        return { id: data.downloadSchedule_insert.id, ...schedule };
     } catch {
         const localData = loadLocal<SyncSchedule>('schedules_cache');
         const newSched = { id: `local_${Date.now()}`, ...schedule };
         saveLocal('schedules_cache', [...localData, newSched]);
-        return newSched;
+        return newSched as any;
     }
 };
 
 export const updateSchedule = async (id: string, updates: Partial<SyncSchedule>) => {
     try {
-        const docRef = doc(db, 'schedules', id);
-        await withTimeout(updateDoc(docRef, updates), 30000, "updateSchedule");
+        await withTimeout(updateDownloadSchedule({
+            id,
+            frequency: updates.frequency,
+            scheduledTime: updates.scheduledTime,
+            targetFolder: updates.targetFolder,
+            storageType: updates.storageType,
+            nextDownloadAt: updates.nextRun,
+            isActive: updates.isActive,
+            lastDownloadAt: (updates as any).lastDownloadAt
+        }), 30000, "updateSchedule");
     } catch {
         const localData = loadLocal<SyncSchedule>('schedules_cache');
         saveLocal('schedules_cache', localData.map(s => s.id === id ? { ...s, ...updates } : s));
@@ -118,51 +151,51 @@ export const updateSchedule = async (id: string, updates: Partial<SyncSchedule>)
 
 export const deleteSchedule = async (id: string) => {
     try {
-        const docRef = doc(db, 'schedules', id);
-        await withTimeout(deleteDoc(docRef), 30000, "deleteSchedule");
+        await withTimeout(deleteDownloadSchedule({ id }), 30000, "deleteSchedule");
     } catch {
         const localData = loadLocal<SyncSchedule>('schedules_cache');
         saveLocal('schedules_cache', localData.filter(s => s.id !== id));
     }
 };
 
-// Logs
+// Logs / Statements (Mapping Statements to ActivityLog for now)
 export const getLogs = async (): Promise<ActivityLog[]> => {
     try {
-        const q = query(logsCollection, orderBy('timestamp', 'desc'));
-        const snapshot = await withTimeout(getDocs(q), 30000, "getLogs");
-        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as ActivityLog));
+        const { data } = await withTimeout(listStatements(), 30000, "getLogs");
+        const cloudData: ActivityLog[] = data.statements.map(s => ({
+            id: s.id,
+            bankName: s.bankAccount.bankName,
+            action: 'Statement Download',
+            timestamp: s.downloadDate,
+            status: (s.status === 'SUCCESS' ? 'Success' : 'Failed') as any,
+            details: `Downloaded ${s.fileName}`
+        }));
+        return cloudData;
     } catch { return loadLocal('logs_cache'); }
 };
 
 export const addLog = async (log: Omit<ActivityLog, 'id' | 'timestamp'>) => {
-    const newLog = { ...log, timestamp: new Date().toISOString() };
     try {
-        // Logs can be faster, but let's give them 5s just in case
-        await withTimeout(addDoc(logsCollection, newLog), 5000, "addLog");
+        await withTimeout(createNotification({
+            message: log.details || `${log.action} for ${log.bankName}`,
+            type: log.status === 'Success' ? 'INFO' : 'ERROR'
+        }), 5000, "addLog");
     } catch {
         const localData = loadLocal<ActivityLog>('logs_cache');
+        const newLog = { ...log, timestamp: new Date().toISOString() };
         saveLocal('logs_cache', [{ id: `local_${Date.now()}`, ...newLog } as ActivityLog, ...localData].slice(0, 50));
     }
 };
 
-// Users (Managed List)
-const usersCollection = collection(db, 'users');
-
-export const getUsers = async (): Promise<User[]> => {
+// Notifications
+export const getNotifications = async () => {
     try {
-        const snapshot = await withTimeout(getDocs(usersCollection), 5000, "getUsers");
-        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as User));
+        const { data } = await withTimeout(listNotifications(), 30000, "getNotifications");
+        return data.notifications;
     } catch { return []; }
 };
 
-export const addUser = async (user: Omit<User, 'id'>) => {
-    // Only cloud users supported for now
-    const docRef = await addDoc(usersCollection, user);
-    return { id: docRef.id, ...user };
-};
-
-export const deleteUser = async (id: string) => {
-    const docRef = doc(db, 'users', id);
-    await deleteDoc(docRef);
+export const markNotificationRead = async (id: string) => {
+    // Not implemented in GQL yet
+    console.warn("Mark notification read not implemented yet.");
 };

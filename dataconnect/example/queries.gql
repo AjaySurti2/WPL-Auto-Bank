@@ -1,5 +1,5 @@
-mutation CreateUser($displayName: String!, $email: String, $photoUrl: String) @auth(level: USER) {
-  user_insert(data: {displayName: $displayName, email: $email, photoUrl: $photoUrl, createdAt_expr: "request.time"})
+mutation CreateUser($id: String!, $displayName: String!, $email: String!, $photoUrl: String, $role: String!, $avatar: String) @auth(level: USER) {
+  user_insert(data: {id: $id, displayName: $displayName, email: $email, photoUrl: $photoUrl, role: $role, avatar: $avatar, createdAt_expr: "request.time"})
 }
 
 query GetUser @auth(level: USER) {
@@ -8,22 +8,142 @@ query GetUser @auth(level: USER) {
     displayName
     email
     photoUrl
+    role
+    avatar
     createdAt
   }
 }
 
-mutation CreateBankAccount($accountNumberMasked: String!, $accountType: String, $bankName: String!, $connectionStatus: String!) @auth(level: USER) {
-  bankAccount_insert(data: {user: {id_expr: "auth.uid"}, accountNumberMasked: $accountNumberMasked, accountType: $accountType, bankName: $bankName, connectionStatus: $connectionStatus, createdAt_expr: "request.time"})
+mutation CreateBankAccount($bankName: String!, $bankUrl: String, $logo: String, $accountNumber: String, $accountNumberMasked: String!, $connectionStatus: String!, $requiresOtp: Boolean, $accountType: String) @auth(level: USER) {
+  bankAccount_insert(data: {
+    user: {id_expr: "auth.uid"},
+    bankName: $bankName,
+    bankUrl: $bankUrl,
+    logo: $logo,
+    accountNumber: $accountNumber,
+    accountNumberMasked: $accountNumberMasked,
+    connectionStatus: $connectionStatus,
+    requiresOtp: $requiresOtp,
+    accountType: $accountType,
+    createdAt_expr: "request.time"
+  })
 }
 
 query ListBankAccounts @auth(level: USER) {
   bankAccounts(where: {user: {id: {eq_expr: "auth.uid"}}}) {
     id
-    accountNumberMasked
-    accountType
     bankName
+    bankUrl
+    logo
+    accountNumber
+    accountNumberMasked
     connectionStatus
+    requiresOtp
+    accountType
     createdAt
     lastSyncedAt
+  }
+}
+
+mutation CreateDownloadSchedule($bankAccountId: UUID!, $frequency: String!, $scheduledTime: String, $targetFolder: String, $storageType: String, $nextDownloadAt: Timestamp!, $isActive: Boolean!, $statementFormat: String, $startDateOffset: String) @auth(level: USER) {
+  downloadSchedule_insert(data: {
+    user: {id_expr: "auth.uid"},
+    bankAccount: {id: $bankAccountId},
+    frequency: $frequency,
+    scheduledTime: $scheduledTime,
+    targetFolder: $targetFolder,
+    storageType: $storageType,
+    nextDownloadAt: $nextDownloadAt,
+    isActive: $isActive,
+    statementFormat: $statementFormat,
+    startDateOffset: $startDateOffset,
+    createdAt_expr: "request.time"
+  })
+}
+
+mutation UpdateDownloadSchedule($id: UUID!, $frequency: String, $scheduledTime: String, $targetFolder: String, $storageType: String, $nextDownloadAt: Timestamp, $isActive: Boolean, $lastDownloadAt: Timestamp) @auth(level: USER) {
+  downloadSchedule_update(key: {id: $id}, data: {
+    frequency: $frequency,
+    scheduledTime: $scheduledTime,
+    targetFolder: $targetFolder,
+    storageType: $storageType,
+    nextDownloadAt: $nextDownloadAt,
+    isActive: $isActive,
+    lastDownloadAt: $lastDownloadAt
+  })
+}
+
+mutation DeleteDownloadSchedule($id: UUID!) @auth(level: USER) {
+  downloadSchedule_delete(key: {id: $id})
+}
+
+query ListDownloadSchedules @auth(level: USER) {
+  downloadSchedules(where: {user: {id: {eq_expr: "auth.uid"}}}) {
+    id
+    bankAccount {
+      id
+      bankName
+      accountNumberMasked
+    }
+    frequency
+    scheduledTime
+    targetFolder
+    storageType
+    nextDownloadAt
+    isActive
+    createdAt
+    lastDownloadAt
+    statementFormat
+    startDateOffset
+  }
+}
+
+mutation CreateStatement($bankAccountId: UUID!, $downloadScheduleId: UUID, $fileName: String!, $downloadDate: Timestamp!, $statementPeriodStart: Date!, $statementPeriodEnd: Date!, $fileRef: String!, $status: String, $errorMessage: String) @auth(level: USER) {
+  statement_insert(data: {
+    user: {id_expr: "auth.uid"},
+    bankAccount: {id: $bankAccountId},
+    downloadSchedule: {id: $downloadScheduleId},
+    fileName: $fileName,
+    downloadDate: $downloadDate,
+    statementPeriodStart: $statementPeriodStart,
+    statementPeriodEnd: $statementPeriodEnd,
+    fileRef: $fileRef,
+    status: $status,
+    errorMessage: $errorMessage
+  })
+}
+
+query ListStatements @auth(level: USER) {
+  statements(where: {user: {id: {eq_expr: "auth.uid"}}}, orderBy: [{downloadDate: DESC}]) {
+    id
+    bankAccount {
+      bankName
+    }
+    fileName
+    downloadDate
+    status
+    fileRef
+  }
+}
+
+mutation CreateNotification($message: String!, $type: String!, $relatedStatementId: UUID) @auth(level: USER) {
+  notification_insert(data: {
+    user: {id_expr: "auth.uid"},
+    message: $message,
+    type: $type,
+    isRead: false,
+    relatedStatementId: $relatedStatementId,
+    createdAt_expr: "request.time"
+  })
+}
+
+query ListNotifications @auth(level: USER) {
+  notifications(where: {user: {id: {eq_expr: "auth.uid"}}}, orderBy: [{createdAt: DESC}]) {
+    id
+    message
+    type
+    isRead
+    createdAt
+    relatedStatementId
   }
 }

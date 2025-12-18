@@ -16,6 +16,7 @@ export interface BankAccount {
   status: BankStatus;
   requiresOtp: boolean;
   logo: string; // Placeholder URL
+  accountType?: string; // New field from Data Connect schema
 }
 
 export interface SyncSchedule {
