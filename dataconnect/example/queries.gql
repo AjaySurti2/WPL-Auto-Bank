@@ -1,5 +1,5 @@
-mutation CreateUser($id: String!, $displayName: String!, $email: String!, $photoUrl: String, $role: String!, $avatar: String) @auth(level: USER) {
-  user_insert(data: {id: $id, displayName: $displayName, email: $email, photoUrl: $photoUrl, role: $role, avatar: $avatar, createdAt_expr: "request.time"})
+mutation CreateUser($displayName: String!, $email: String!, $photoUrl: String, $role: String!, $avatar: String) @auth(level: USER) {
+  user_insert(data: {id_expr: "auth.uid", displayName: $displayName, email: $email, photoUrl: $photoUrl, role: $role, avatar: $avatar, createdAt_expr: "request.time"})
 }
 
 query GetUser @auth(level: USER) {
@@ -27,6 +27,23 @@ mutation CreateBankAccount($bankName: String!, $bankUrl: String, $logo: String, 
     accountType: $accountType,
     createdAt_expr: "request.time"
   })
+}
+
+mutation UpdateBankAccount($id: UUID!, $bankName: String, $bankUrl: String, $logo: String, $accountNumber: String, $accountNumberMasked: String, $connectionStatus: String, $requiresOtp: Boolean, $accountType: String) @auth(level: USER) {
+  bankAccount_update(key: {id: $id}, data: {
+    bankName: $bankName,
+    bankUrl: $bankUrl,
+    logo: $logo,
+    accountNumber: $accountNumber,
+    accountNumberMasked: $accountNumberMasked,
+    connectionStatus: $connectionStatus,
+    requiresOtp: $requiresOtp,
+    accountType: $accountType
+  })
+}
+
+mutation DeleteBankAccount($id: UUID!) @auth(level: USER) {
+  bankAccount_delete(key: {id: $id})
 }
 
 query ListBankAccounts @auth(level: USER) {
@@ -146,4 +163,8 @@ query ListNotifications @auth(level: USER) {
     createdAt
     relatedStatementId
   }
+}
+
+mutation MarkNotificationRead($id: UUID!) @auth(level: USER) {
+  notification_update(key: {id: $id}, data: {isRead: true})
 }

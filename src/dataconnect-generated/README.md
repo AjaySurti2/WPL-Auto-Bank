@@ -18,11 +18,14 @@ This README will guide you through the process of using the generated JavaScript
 - [**Mutations**](#mutations)
   - [*CreateUser*](#createuser)
   - [*CreateBankAccount*](#createbankaccount)
+  - [*UpdateBankAccount*](#updatebankaccount)
+  - [*DeleteBankAccount*](#deletebankaccount)
   - [*CreateDownloadSchedule*](#createdownloadschedule)
   - [*UpdateDownloadSchedule*](#updatedownloadschedule)
   - [*DeleteDownloadSchedule*](#deletedownloadschedule)
   - [*CreateStatement*](#createstatement)
   - [*CreateNotification*](#createnotification)
+  - [*MarkNotificationRead*](#marknotificationread)
 
 # Accessing the connector
 A connector is a collection of Queries and Mutations. One SDK is generated for each connector - this SDK is generated for the connector `example`. You can find more information about connectors in the [Data Connect documentation](https://firebase.google.com/docs/data-connect#how-does).
@@ -626,7 +629,6 @@ The `CreateUser` mutation requires an argument of type `CreateUserVariables`, wh
 
 ```typescript
 export interface CreateUserVariables {
-  id: string;
   displayName: string;
   email: string;
   photoUrl?: string | null;
@@ -651,7 +653,6 @@ import { connectorConfig, createUser, CreateUserVariables } from '@dataconnect/g
 
 // The `CreateUser` mutation requires an argument of type `CreateUserVariables`:
 const createUserVars: CreateUserVariables = {
-  id: ..., 
   displayName: ..., 
   email: ..., 
   photoUrl: ..., // optional
@@ -663,7 +664,7 @@ const createUserVars: CreateUserVariables = {
 // You can use the `await` keyword to wait for the promise to resolve.
 const { data } = await createUser(createUserVars);
 // Variables can be defined inline as well.
-const { data } = await createUser({ id: ..., displayName: ..., email: ..., photoUrl: ..., role: ..., avatar: ..., });
+const { data } = await createUser({ displayName: ..., email: ..., photoUrl: ..., role: ..., avatar: ..., });
 
 // You can also pass in a `DataConnect` instance to the action shortcut function.
 const dataConnect = getDataConnect(connectorConfig);
@@ -686,7 +687,6 @@ import { connectorConfig, createUserRef, CreateUserVariables } from '@dataconnec
 
 // The `CreateUser` mutation requires an argument of type `CreateUserVariables`:
 const createUserVars: CreateUserVariables = {
-  id: ..., 
   displayName: ..., 
   email: ..., 
   photoUrl: ..., // optional
@@ -697,7 +697,7 @@ const createUserVars: CreateUserVariables = {
 // Call the `createUserRef()` function to get a reference to the mutation.
 const ref = createUserRef(createUserVars);
 // Variables can be defined inline as well.
-const ref = createUserRef({ id: ..., displayName: ..., email: ..., photoUrl: ..., role: ..., avatar: ..., });
+const ref = createUserRef({ displayName: ..., email: ..., photoUrl: ..., role: ..., avatar: ..., });
 
 // You can also pass in a `DataConnect` instance to the `MutationRef` function.
 const dataConnect = getDataConnect(connectorConfig);
@@ -843,6 +843,248 @@ console.log(data.bankAccount_insert);
 executeMutation(ref).then((response) => {
   const data = response.data;
   console.log(data.bankAccount_insert);
+});
+```
+
+## UpdateBankAccount
+You can execute the `UpdateBankAccount` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+updateBankAccount(vars: UpdateBankAccountVariables): MutationPromise<UpdateBankAccountData, UpdateBankAccountVariables>;
+
+interface UpdateBankAccountRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: UpdateBankAccountVariables): MutationRef<UpdateBankAccountData, UpdateBankAccountVariables>;
+}
+export const updateBankAccountRef: UpdateBankAccountRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
+```typescript
+updateBankAccount(dc: DataConnect, vars: UpdateBankAccountVariables): MutationPromise<UpdateBankAccountData, UpdateBankAccountVariables>;
+
+interface UpdateBankAccountRef {
+  ...
+  (dc: DataConnect, vars: UpdateBankAccountVariables): MutationRef<UpdateBankAccountData, UpdateBankAccountVariables>;
+}
+export const updateBankAccountRef: UpdateBankAccountRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the updateBankAccountRef:
+```typescript
+const name = updateBankAccountRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `UpdateBankAccount` mutation requires an argument of type `UpdateBankAccountVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface UpdateBankAccountVariables {
+  id: UUIDString;
+  bankName?: string | null;
+  bankUrl?: string | null;
+  logo?: string | null;
+  accountNumber?: string | null;
+  accountNumberMasked?: string | null;
+  connectionStatus?: string | null;
+  requiresOtp?: boolean | null;
+  accountType?: string | null;
+}
+```
+### Return Type
+Recall that executing the `UpdateBankAccount` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `UpdateBankAccountData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface UpdateBankAccountData {
+  bankAccount_update?: BankAccount_Key | null;
+}
+```
+### Using `UpdateBankAccount`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, updateBankAccount, UpdateBankAccountVariables } from '@dataconnect/generated';
+
+// The `UpdateBankAccount` mutation requires an argument of type `UpdateBankAccountVariables`:
+const updateBankAccountVars: UpdateBankAccountVariables = {
+  id: ..., 
+  bankName: ..., // optional
+  bankUrl: ..., // optional
+  logo: ..., // optional
+  accountNumber: ..., // optional
+  accountNumberMasked: ..., // optional
+  connectionStatus: ..., // optional
+  requiresOtp: ..., // optional
+  accountType: ..., // optional
+};
+
+// Call the `updateBankAccount()` function to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await updateBankAccount(updateBankAccountVars);
+// Variables can be defined inline as well.
+const { data } = await updateBankAccount({ id: ..., bankName: ..., bankUrl: ..., logo: ..., accountNumber: ..., accountNumberMasked: ..., connectionStatus: ..., requiresOtp: ..., accountType: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await updateBankAccount(dataConnect, updateBankAccountVars);
+
+console.log(data.bankAccount_update);
+
+// Or, you can use the `Promise` API.
+updateBankAccount(updateBankAccountVars).then((response) => {
+  const data = response.data;
+  console.log(data.bankAccount_update);
+});
+```
+
+### Using `UpdateBankAccount`'s `MutationRef` function
+
+```typescript
+import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { connectorConfig, updateBankAccountRef, UpdateBankAccountVariables } from '@dataconnect/generated';
+
+// The `UpdateBankAccount` mutation requires an argument of type `UpdateBankAccountVariables`:
+const updateBankAccountVars: UpdateBankAccountVariables = {
+  id: ..., 
+  bankName: ..., // optional
+  bankUrl: ..., // optional
+  logo: ..., // optional
+  accountNumber: ..., // optional
+  accountNumberMasked: ..., // optional
+  connectionStatus: ..., // optional
+  requiresOtp: ..., // optional
+  accountType: ..., // optional
+};
+
+// Call the `updateBankAccountRef()` function to get a reference to the mutation.
+const ref = updateBankAccountRef(updateBankAccountVars);
+// Variables can be defined inline as well.
+const ref = updateBankAccountRef({ id: ..., bankName: ..., bankUrl: ..., logo: ..., accountNumber: ..., accountNumberMasked: ..., connectionStatus: ..., requiresOtp: ..., accountType: ..., });
+
+// You can also pass in a `DataConnect` instance to the `MutationRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = updateBankAccountRef(dataConnect, updateBankAccountVars);
+
+// Call `executeMutation()` on the reference to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeMutation(ref);
+
+console.log(data.bankAccount_update);
+
+// Or, you can use the `Promise` API.
+executeMutation(ref).then((response) => {
+  const data = response.data;
+  console.log(data.bankAccount_update);
+});
+```
+
+## DeleteBankAccount
+You can execute the `DeleteBankAccount` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+deleteBankAccount(vars: DeleteBankAccountVariables): MutationPromise<DeleteBankAccountData, DeleteBankAccountVariables>;
+
+interface DeleteBankAccountRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: DeleteBankAccountVariables): MutationRef<DeleteBankAccountData, DeleteBankAccountVariables>;
+}
+export const deleteBankAccountRef: DeleteBankAccountRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
+```typescript
+deleteBankAccount(dc: DataConnect, vars: DeleteBankAccountVariables): MutationPromise<DeleteBankAccountData, DeleteBankAccountVariables>;
+
+interface DeleteBankAccountRef {
+  ...
+  (dc: DataConnect, vars: DeleteBankAccountVariables): MutationRef<DeleteBankAccountData, DeleteBankAccountVariables>;
+}
+export const deleteBankAccountRef: DeleteBankAccountRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the deleteBankAccountRef:
+```typescript
+const name = deleteBankAccountRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `DeleteBankAccount` mutation requires an argument of type `DeleteBankAccountVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface DeleteBankAccountVariables {
+  id: UUIDString;
+}
+```
+### Return Type
+Recall that executing the `DeleteBankAccount` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `DeleteBankAccountData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface DeleteBankAccountData {
+  bankAccount_delete?: BankAccount_Key | null;
+}
+```
+### Using `DeleteBankAccount`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, deleteBankAccount, DeleteBankAccountVariables } from '@dataconnect/generated';
+
+// The `DeleteBankAccount` mutation requires an argument of type `DeleteBankAccountVariables`:
+const deleteBankAccountVars: DeleteBankAccountVariables = {
+  id: ..., 
+};
+
+// Call the `deleteBankAccount()` function to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await deleteBankAccount(deleteBankAccountVars);
+// Variables can be defined inline as well.
+const { data } = await deleteBankAccount({ id: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await deleteBankAccount(dataConnect, deleteBankAccountVars);
+
+console.log(data.bankAccount_delete);
+
+// Or, you can use the `Promise` API.
+deleteBankAccount(deleteBankAccountVars).then((response) => {
+  const data = response.data;
+  console.log(data.bankAccount_delete);
+});
+```
+
+### Using `DeleteBankAccount`'s `MutationRef` function
+
+```typescript
+import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { connectorConfig, deleteBankAccountRef, DeleteBankAccountVariables } from '@dataconnect/generated';
+
+// The `DeleteBankAccount` mutation requires an argument of type `DeleteBankAccountVariables`:
+const deleteBankAccountVars: DeleteBankAccountVariables = {
+  id: ..., 
+};
+
+// Call the `deleteBankAccountRef()` function to get a reference to the mutation.
+const ref = deleteBankAccountRef(deleteBankAccountVars);
+// Variables can be defined inline as well.
+const ref = deleteBankAccountRef({ id: ..., });
+
+// You can also pass in a `DataConnect` instance to the `MutationRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = deleteBankAccountRef(dataConnect, deleteBankAccountVars);
+
+// Call `executeMutation()` on the reference to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeMutation(ref);
+
+console.log(data.bankAccount_delete);
+
+// Or, you can use the `Promise` API.
+executeMutation(ref).then((response) => {
+  const data = response.data;
+  console.log(data.bankAccount_delete);
 });
 ```
 
@@ -1463,6 +1705,115 @@ console.log(data.notification_insert);
 executeMutation(ref).then((response) => {
   const data = response.data;
   console.log(data.notification_insert);
+});
+```
+
+## MarkNotificationRead
+You can execute the `MarkNotificationRead` mutation using the following action shortcut function, or by calling `executeMutation()` after calling the following `MutationRef` function, both of which are defined in [dataconnect-generated/index.d.ts](./index.d.ts):
+```typescript
+markNotificationRead(vars: MarkNotificationReadVariables): MutationPromise<MarkNotificationReadData, MarkNotificationReadVariables>;
+
+interface MarkNotificationReadRef {
+  ...
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: MarkNotificationReadVariables): MutationRef<MarkNotificationReadData, MarkNotificationReadVariables>;
+}
+export const markNotificationReadRef: MarkNotificationReadRef;
+```
+You can also pass in a `DataConnect` instance to the action shortcut function or `MutationRef` function.
+```typescript
+markNotificationRead(dc: DataConnect, vars: MarkNotificationReadVariables): MutationPromise<MarkNotificationReadData, MarkNotificationReadVariables>;
+
+interface MarkNotificationReadRef {
+  ...
+  (dc: DataConnect, vars: MarkNotificationReadVariables): MutationRef<MarkNotificationReadData, MarkNotificationReadVariables>;
+}
+export const markNotificationReadRef: MarkNotificationReadRef;
+```
+
+If you need the name of the operation without creating a ref, you can retrieve the operation name by calling the `operationName` property on the markNotificationReadRef:
+```typescript
+const name = markNotificationReadRef.operationName;
+console.log(name);
+```
+
+### Variables
+The `MarkNotificationRead` mutation requires an argument of type `MarkNotificationReadVariables`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+
+```typescript
+export interface MarkNotificationReadVariables {
+  id: UUIDString;
+}
+```
+### Return Type
+Recall that executing the `MarkNotificationRead` mutation returns a `MutationPromise` that resolves to an object with a `data` property.
+
+The `data` property is an object of type `MarkNotificationReadData`, which is defined in [dataconnect-generated/index.d.ts](./index.d.ts). It has the following fields:
+```typescript
+export interface MarkNotificationReadData {
+  notification_update?: Notification_Key | null;
+}
+```
+### Using `MarkNotificationRead`'s action shortcut function
+
+```typescript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, markNotificationRead, MarkNotificationReadVariables } from '@dataconnect/generated';
+
+// The `MarkNotificationRead` mutation requires an argument of type `MarkNotificationReadVariables`:
+const markNotificationReadVars: MarkNotificationReadVariables = {
+  id: ..., 
+};
+
+// Call the `markNotificationRead()` function to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await markNotificationRead(markNotificationReadVars);
+// Variables can be defined inline as well.
+const { data } = await markNotificationRead({ id: ..., });
+
+// You can also pass in a `DataConnect` instance to the action shortcut function.
+const dataConnect = getDataConnect(connectorConfig);
+const { data } = await markNotificationRead(dataConnect, markNotificationReadVars);
+
+console.log(data.notification_update);
+
+// Or, you can use the `Promise` API.
+markNotificationRead(markNotificationReadVars).then((response) => {
+  const data = response.data;
+  console.log(data.notification_update);
+});
+```
+
+### Using `MarkNotificationRead`'s `MutationRef` function
+
+```typescript
+import { getDataConnect, executeMutation } from 'firebase/data-connect';
+import { connectorConfig, markNotificationReadRef, MarkNotificationReadVariables } from '@dataconnect/generated';
+
+// The `MarkNotificationRead` mutation requires an argument of type `MarkNotificationReadVariables`:
+const markNotificationReadVars: MarkNotificationReadVariables = {
+  id: ..., 
+};
+
+// Call the `markNotificationReadRef()` function to get a reference to the mutation.
+const ref = markNotificationReadRef(markNotificationReadVars);
+// Variables can be defined inline as well.
+const ref = markNotificationReadRef({ id: ..., });
+
+// You can also pass in a `DataConnect` instance to the `MutationRef` function.
+const dataConnect = getDataConnect(connectorConfig);
+const ref = markNotificationReadRef(dataConnect, markNotificationReadVars);
+
+// Call `executeMutation()` on the reference to execute the mutation.
+// You can use the `await` keyword to wait for the promise to resolve.
+const { data } = await executeMutation(ref);
+
+console.log(data.notification_update);
+
+// Or, you can use the `Promise` API.
+executeMutation(ref).then((response) => {
+  const data = response.data;
+  console.log(data.notification_update);
 });
 ```
 

@@ -39,6 +39,28 @@ export function createBankAccount(dcOrVars, vars) {
   return executeMutation(createBankAccountRef(dcOrVars, vars));
 }
 
+export const updateBankAccountRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'UpdateBankAccount', inputVars);
+}
+updateBankAccountRef.operationName = 'UpdateBankAccount';
+
+export function updateBankAccount(dcOrVars, vars) {
+  return executeMutation(updateBankAccountRef(dcOrVars, vars));
+}
+
+export const deleteBankAccountRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'DeleteBankAccount', inputVars);
+}
+deleteBankAccountRef.operationName = 'DeleteBankAccount';
+
+export function deleteBankAccount(dcOrVars, vars) {
+  return executeMutation(deleteBankAccountRef(dcOrVars, vars));
+}
+
 export const listBankAccountsRef = (dc) => {
   const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
   dcInstance._useGeneratedSdk();
@@ -136,5 +158,16 @@ listNotificationsRef.operationName = 'ListNotifications';
 
 export function listNotifications(dc) {
   return executeQuery(listNotificationsRef(dc));
+}
+
+export const markNotificationReadRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'MarkNotificationRead', inputVars);
+}
+markNotificationReadRef.operationName = 'MarkNotificationRead';
+
+export function markNotificationRead(dcOrVars, vars) {
+  return executeMutation(markNotificationReadRef(dcOrVars, vars));
 }
 

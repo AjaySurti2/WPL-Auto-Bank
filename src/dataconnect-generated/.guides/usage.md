@@ -12,7 +12,7 @@ For each operation, there is a wrapper hook that can be used to call the operati
 
 Here are all of the hooks that get generated:
 ```ts
-import { useCreateUser, useGetUser, useCreateBankAccount, useListBankAccounts, useCreateDownloadSchedule, useUpdateDownloadSchedule, useDeleteDownloadSchedule, useListDownloadSchedules, useCreateStatement, useListStatements } from '@dataconnect/generated/react';
+import { useCreateUser, useGetUser, useCreateBankAccount, useUpdateBankAccount, useDeleteBankAccount, useListBankAccounts, useCreateDownloadSchedule, useUpdateDownloadSchedule, useDeleteDownloadSchedule, useListDownloadSchedules } from '@dataconnect/generated/react';
 // The types of these hooks are available in react/index.d.ts
 
 const { data, isPending, isSuccess, isError, error } = useCreateUser(createUserVars);
@@ -20,6 +20,10 @@ const { data, isPending, isSuccess, isError, error } = useCreateUser(createUserV
 const { data, isPending, isSuccess, isError, error } = useGetUser();
 
 const { data, isPending, isSuccess, isError, error } = useCreateBankAccount(createBankAccountVars);
+
+const { data, isPending, isSuccess, isError, error } = useUpdateBankAccount(updateBankAccountVars);
+
+const { data, isPending, isSuccess, isError, error } = useDeleteBankAccount(deleteBankAccountVars);
 
 const { data, isPending, isSuccess, isError, error } = useListBankAccounts();
 
@@ -30,10 +34,6 @@ const { data, isPending, isSuccess, isError, error } = useUpdateDownloadSchedule
 const { data, isPending, isSuccess, isError, error } = useDeleteDownloadSchedule(deleteDownloadScheduleVars);
 
 const { data, isPending, isSuccess, isError, error } = useListDownloadSchedules();
-
-const { data, isPending, isSuccess, isError, error } = useCreateStatement(createStatementVars);
-
-const { data, isPending, isSuccess, isError, error } = useListStatements();
 
 ```
 
@@ -72,7 +72,7 @@ If a user is not using a supported framework, they can use the generated SDK dir
 Here's an example of how to use it with the first 5 operations:
 
 ```js
-import { createUser, getUser, createBankAccount, listBankAccounts, createDownloadSchedule, updateDownloadSchedule, deleteDownloadSchedule, listDownloadSchedules, createStatement, listStatements } from '@dataconnect/generated';
+import { createUser, getUser, createBankAccount, updateBankAccount, deleteBankAccount, listBankAccounts, createDownloadSchedule, updateDownloadSchedule, deleteDownloadSchedule, listDownloadSchedules } from '@dataconnect/generated';
 
 
 // Operation CreateUser:  For variables, look at type CreateUserVars in ../index.d.ts
@@ -83,6 +83,12 @@ const { data } = await GetUser(dataConnect);
 
 // Operation CreateBankAccount:  For variables, look at type CreateBankAccountVars in ../index.d.ts
 const { data } = await CreateBankAccount(dataConnect, createBankAccountVars);
+
+// Operation UpdateBankAccount:  For variables, look at type UpdateBankAccountVars in ../index.d.ts
+const { data } = await UpdateBankAccount(dataConnect, updateBankAccountVars);
+
+// Operation DeleteBankAccount:  For variables, look at type DeleteBankAccountVars in ../index.d.ts
+const { data } = await DeleteBankAccount(dataConnect, deleteBankAccountVars);
 
 // Operation ListBankAccounts: 
 const { data } = await ListBankAccounts(dataConnect);
@@ -98,12 +104,6 @@ const { data } = await DeleteDownloadSchedule(dataConnect, deleteDownloadSchedul
 
 // Operation ListDownloadSchedules: 
 const { data } = await ListDownloadSchedules(dataConnect);
-
-// Operation CreateStatement:  For variables, look at type CreateStatementVars in ../index.d.ts
-const { data } = await CreateStatement(dataConnect, createStatementVars);
-
-// Operation ListStatements: 
-const { data } = await ListStatements(dataConnect);
 
 
 ```

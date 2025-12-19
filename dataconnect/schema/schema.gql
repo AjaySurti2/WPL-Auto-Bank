@@ -1,4 +1,4 @@
-type User @table {
+type User @table(key: ["id"]) {
   id: String!
   displayName: String!
   email: String!

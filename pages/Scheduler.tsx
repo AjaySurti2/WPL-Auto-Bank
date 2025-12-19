@@ -72,6 +72,16 @@ export const Scheduler: React.FC<SchedulerProps> = ({
         e.preventDefault();
         setIsSubmitting(true);
 
+        // Calculate actual next run timestamp for Data Connect
+        let nextDate = new Date();
+        const [hours, minutes] = scheduledTime.split(':').map(Number);
+        nextDate.setHours(hours, minutes, 0, 0);
+
+        // If time has already passed today, set for tomorrow
+        if (nextDate.getTime() < Date.now()) {
+            nextDate.setDate(nextDate.getDate() + 1);
+        }
+
         const newScheduleData: SyncSchedule = {
             id: editingId || Date.now().toString(),
             bankId: selectedBankId,
@@ -79,7 +89,7 @@ export const Scheduler: React.FC<SchedulerProps> = ({
             scheduledTime,
             targetFolder: storageType === 'Local' && !targetFolder ? 'Downloads Folder (Default)' : targetFolder,
             storageType,
-            nextRun: `Scheduled for ${scheduledTime}`,
+            nextRun: nextDate.toISOString(),
             isActive
         };
 

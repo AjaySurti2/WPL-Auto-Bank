@@ -25,11 +25,14 @@ You can also follow the instructions from the [Data Connect documentation](https
 - [**Mutations**](#mutations)
   - [*CreateUser*](#createuser)
   - [*CreateBankAccount*](#createbankaccount)
+  - [*UpdateBankAccount*](#updatebankaccount)
+  - [*DeleteBankAccount*](#deletebankaccount)
   - [*CreateDownloadSchedule*](#createdownloadschedule)
   - [*UpdateDownloadSchedule*](#updatedownloadschedule)
   - [*DeleteDownloadSchedule*](#deletedownloadschedule)
   - [*CreateStatement*](#createstatement)
   - [*CreateNotification*](#createnotification)
+  - [*MarkNotificationRead*](#marknotificationread)
 
 # TanStack Query Firebase & TanStack React Query
 This SDK provides [React](https://react.dev/) hooks generated specific to your application, for the operations found in the connector `example`. These hooks are generated using [TanStack Query Firebase](https://react-query-firebase.invertase.dev/) by our partners at Invertase, a library built on top of [TanStack React Query v5](https://tanstack.com/query/v5/docs/framework/react/overview).
@@ -559,7 +562,6 @@ The `CreateUser` Mutation requires an argument of type `CreateUserVariables`, wh
 
 ```javascript
 export interface CreateUserVariables {
-  id: string;
   displayName: string;
   email: string;
   photoUrl?: string | null;
@@ -614,7 +616,6 @@ export default function CreateUserComponent() {
   // After calling the Mutation hook function, you must call `UseMutationResult.mutate()` to execute the Mutation.
   // The `useCreateUser` Mutation requires an argument of type `CreateUserVariables`:
   const createUserVars: CreateUserVariables = {
-    id: ..., 
     displayName: ..., 
     email: ..., 
     photoUrl: ..., // optional
@@ -623,7 +624,7 @@ export default function CreateUserComponent() {
   };
   mutation.mutate(createUserVars);
   // Variables can be defined inline as well.
-  mutation.mutate({ id: ..., displayName: ..., email: ..., photoUrl: ..., role: ..., avatar: ..., });
+  mutation.mutate({ displayName: ..., email: ..., photoUrl: ..., role: ..., avatar: ..., });
 
   // You can also pass in a `useDataConnectMutationOptions` object to `UseMutationResult.mutate()`.
   const options = {
@@ -751,6 +752,210 @@ export default function CreateBankAccountComponent() {
   // If the Mutation is successful, you can access the data returned using the `UseMutationResult.data` field.
   if (mutation.isSuccess) {
     console.log(mutation.data.bankAccount_insert);
+  }
+  return <div>Mutation execution {mutation.isSuccess ? 'successful' : 'failed'}!</div>;
+}
+```
+
+## UpdateBankAccount
+You can execute the `UpdateBankAccount` Mutation using the `UseMutationResult` object returned by the following Mutation hook function (which is defined in [dataconnect-generated/react/index.d.ts](./index.d.ts)):
+```javascript
+useUpdateBankAccount(options?: useDataConnectMutationOptions<UpdateBankAccountData, FirebaseError, UpdateBankAccountVariables>): UseDataConnectMutationResult<UpdateBankAccountData, UpdateBankAccountVariables>;
+```
+You can also pass in a `DataConnect` instance to the Mutation hook function.
+```javascript
+useUpdateBankAccount(dc: DataConnect, options?: useDataConnectMutationOptions<UpdateBankAccountData, FirebaseError, UpdateBankAccountVariables>): UseDataConnectMutationResult<UpdateBankAccountData, UpdateBankAccountVariables>;
+```
+
+### Variables
+The `UpdateBankAccount` Mutation requires an argument of type `UpdateBankAccountVariables`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+
+```javascript
+export interface UpdateBankAccountVariables {
+  id: UUIDString;
+  bankName?: string | null;
+  bankUrl?: string | null;
+  logo?: string | null;
+  accountNumber?: string | null;
+  accountNumberMasked?: string | null;
+  connectionStatus?: string | null;
+  requiresOtp?: boolean | null;
+  accountType?: string | null;
+}
+```
+### Return Type
+Recall that calling the `UpdateBankAccount` Mutation hook function returns a `UseMutationResult` object. This object holds the state of your Mutation, including whether the Mutation is loading, has completed, or has succeeded/failed, among other things.
+
+To check the status of a Mutation, use the `UseMutationResult.status` field. You can also check for pending / success / error status using the `UseMutationResult.isPending`, `UseMutationResult.isSuccess`, and `UseMutationResult.isError` fields.
+
+To execute the Mutation, call `UseMutationResult.mutate()`. This function executes the Mutation, but does not return the data from the Mutation.
+
+To access the data returned by a Mutation, use the `UseMutationResult.data` field. The data for the `UpdateBankAccount` Mutation is of type `UpdateBankAccountData`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+```javascript
+export interface UpdateBankAccountData {
+  bankAccount_update?: BankAccount_Key | null;
+}
+```
+
+To learn more about the `UseMutationResult` object, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/reference/useMutation).
+
+### Using `UpdateBankAccount`'s Mutation hook function
+
+```javascript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, UpdateBankAccountVariables } from '@dataconnect/generated';
+import { useUpdateBankAccount } from '@dataconnect/generated/react'
+
+export default function UpdateBankAccountComponent() {
+  // Call the Mutation hook function to get a `UseMutationResult` object which holds the state of your Mutation.
+  const mutation = useUpdateBankAccount();
+
+  // You can also pass in a `DataConnect` instance to the Mutation hook function.
+  const dataConnect = getDataConnect(connectorConfig);
+  const mutation = useUpdateBankAccount(dataConnect);
+
+  // You can also pass in a `useDataConnectMutationOptions` object to the Mutation hook function.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useUpdateBankAccount(options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectMutationOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useUpdateBankAccount(dataConnect, options);
+
+  // After calling the Mutation hook function, you must call `UseMutationResult.mutate()` to execute the Mutation.
+  // The `useUpdateBankAccount` Mutation requires an argument of type `UpdateBankAccountVariables`:
+  const updateBankAccountVars: UpdateBankAccountVariables = {
+    id: ..., 
+    bankName: ..., // optional
+    bankUrl: ..., // optional
+    logo: ..., // optional
+    accountNumber: ..., // optional
+    accountNumberMasked: ..., // optional
+    connectionStatus: ..., // optional
+    requiresOtp: ..., // optional
+    accountType: ..., // optional
+  };
+  mutation.mutate(updateBankAccountVars);
+  // Variables can be defined inline as well.
+  mutation.mutate({ id: ..., bankName: ..., bankUrl: ..., logo: ..., accountNumber: ..., accountNumberMasked: ..., connectionStatus: ..., requiresOtp: ..., accountType: ..., });
+
+  // You can also pass in a `useDataConnectMutationOptions` object to `UseMutationResult.mutate()`.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  mutation.mutate(updateBankAccountVars, options);
+
+  // Then, you can render your component dynamically based on the status of the Mutation.
+  if (mutation.isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (mutation.isError) {
+    return <div>Error: {mutation.error.message}</div>;
+  }
+
+  // If the Mutation is successful, you can access the data returned using the `UseMutationResult.data` field.
+  if (mutation.isSuccess) {
+    console.log(mutation.data.bankAccount_update);
+  }
+  return <div>Mutation execution {mutation.isSuccess ? 'successful' : 'failed'}!</div>;
+}
+```
+
+## DeleteBankAccount
+You can execute the `DeleteBankAccount` Mutation using the `UseMutationResult` object returned by the following Mutation hook function (which is defined in [dataconnect-generated/react/index.d.ts](./index.d.ts)):
+```javascript
+useDeleteBankAccount(options?: useDataConnectMutationOptions<DeleteBankAccountData, FirebaseError, DeleteBankAccountVariables>): UseDataConnectMutationResult<DeleteBankAccountData, DeleteBankAccountVariables>;
+```
+You can also pass in a `DataConnect` instance to the Mutation hook function.
+```javascript
+useDeleteBankAccount(dc: DataConnect, options?: useDataConnectMutationOptions<DeleteBankAccountData, FirebaseError, DeleteBankAccountVariables>): UseDataConnectMutationResult<DeleteBankAccountData, DeleteBankAccountVariables>;
+```
+
+### Variables
+The `DeleteBankAccount` Mutation requires an argument of type `DeleteBankAccountVariables`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+
+```javascript
+export interface DeleteBankAccountVariables {
+  id: UUIDString;
+}
+```
+### Return Type
+Recall that calling the `DeleteBankAccount` Mutation hook function returns a `UseMutationResult` object. This object holds the state of your Mutation, including whether the Mutation is loading, has completed, or has succeeded/failed, among other things.
+
+To check the status of a Mutation, use the `UseMutationResult.status` field. You can also check for pending / success / error status using the `UseMutationResult.isPending`, `UseMutationResult.isSuccess`, and `UseMutationResult.isError` fields.
+
+To execute the Mutation, call `UseMutationResult.mutate()`. This function executes the Mutation, but does not return the data from the Mutation.
+
+To access the data returned by a Mutation, use the `UseMutationResult.data` field. The data for the `DeleteBankAccount` Mutation is of type `DeleteBankAccountData`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+```javascript
+export interface DeleteBankAccountData {
+  bankAccount_delete?: BankAccount_Key | null;
+}
+```
+
+To learn more about the `UseMutationResult` object, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/reference/useMutation).
+
+### Using `DeleteBankAccount`'s Mutation hook function
+
+```javascript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, DeleteBankAccountVariables } from '@dataconnect/generated';
+import { useDeleteBankAccount } from '@dataconnect/generated/react'
+
+export default function DeleteBankAccountComponent() {
+  // Call the Mutation hook function to get a `UseMutationResult` object which holds the state of your Mutation.
+  const mutation = useDeleteBankAccount();
+
+  // You can also pass in a `DataConnect` instance to the Mutation hook function.
+  const dataConnect = getDataConnect(connectorConfig);
+  const mutation = useDeleteBankAccount(dataConnect);
+
+  // You can also pass in a `useDataConnectMutationOptions` object to the Mutation hook function.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useDeleteBankAccount(options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectMutationOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useDeleteBankAccount(dataConnect, options);
+
+  // After calling the Mutation hook function, you must call `UseMutationResult.mutate()` to execute the Mutation.
+  // The `useDeleteBankAccount` Mutation requires an argument of type `DeleteBankAccountVariables`:
+  const deleteBankAccountVars: DeleteBankAccountVariables = {
+    id: ..., 
+  };
+  mutation.mutate(deleteBankAccountVars);
+  // Variables can be defined inline as well.
+  mutation.mutate({ id: ..., });
+
+  // You can also pass in a `useDataConnectMutationOptions` object to `UseMutationResult.mutate()`.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  mutation.mutate(deleteBankAccountVars, options);
+
+  // Then, you can render your component dynamically based on the status of the Mutation.
+  if (mutation.isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (mutation.isError) {
+    return <div>Error: {mutation.error.message}</div>;
+  }
+
+  // If the Mutation is successful, you can access the data returned using the `UseMutationResult.data` field.
+  if (mutation.isSuccess) {
+    console.log(mutation.data.bankAccount_delete);
   }
   return <div>Mutation execution {mutation.isSuccess ? 'successful' : 'failed'}!</div>;
 }
@@ -1271,6 +1476,100 @@ export default function CreateNotificationComponent() {
   // If the Mutation is successful, you can access the data returned using the `UseMutationResult.data` field.
   if (mutation.isSuccess) {
     console.log(mutation.data.notification_insert);
+  }
+  return <div>Mutation execution {mutation.isSuccess ? 'successful' : 'failed'}!</div>;
+}
+```
+
+## MarkNotificationRead
+You can execute the `MarkNotificationRead` Mutation using the `UseMutationResult` object returned by the following Mutation hook function (which is defined in [dataconnect-generated/react/index.d.ts](./index.d.ts)):
+```javascript
+useMarkNotificationRead(options?: useDataConnectMutationOptions<MarkNotificationReadData, FirebaseError, MarkNotificationReadVariables>): UseDataConnectMutationResult<MarkNotificationReadData, MarkNotificationReadVariables>;
+```
+You can also pass in a `DataConnect` instance to the Mutation hook function.
+```javascript
+useMarkNotificationRead(dc: DataConnect, options?: useDataConnectMutationOptions<MarkNotificationReadData, FirebaseError, MarkNotificationReadVariables>): UseDataConnectMutationResult<MarkNotificationReadData, MarkNotificationReadVariables>;
+```
+
+### Variables
+The `MarkNotificationRead` Mutation requires an argument of type `MarkNotificationReadVariables`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+
+```javascript
+export interface MarkNotificationReadVariables {
+  id: UUIDString;
+}
+```
+### Return Type
+Recall that calling the `MarkNotificationRead` Mutation hook function returns a `UseMutationResult` object. This object holds the state of your Mutation, including whether the Mutation is loading, has completed, or has succeeded/failed, among other things.
+
+To check the status of a Mutation, use the `UseMutationResult.status` field. You can also check for pending / success / error status using the `UseMutationResult.isPending`, `UseMutationResult.isSuccess`, and `UseMutationResult.isError` fields.
+
+To execute the Mutation, call `UseMutationResult.mutate()`. This function executes the Mutation, but does not return the data from the Mutation.
+
+To access the data returned by a Mutation, use the `UseMutationResult.data` field. The data for the `MarkNotificationRead` Mutation is of type `MarkNotificationReadData`, which is defined in [dataconnect-generated/index.d.ts](../index.d.ts). It has the following fields:
+```javascript
+export interface MarkNotificationReadData {
+  notification_update?: Notification_Key | null;
+}
+```
+
+To learn more about the `UseMutationResult` object, see the [TanStack React Query documentation](https://tanstack.com/query/v5/docs/framework/react/reference/useMutation).
+
+### Using `MarkNotificationRead`'s Mutation hook function
+
+```javascript
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig, MarkNotificationReadVariables } from '@dataconnect/generated';
+import { useMarkNotificationRead } from '@dataconnect/generated/react'
+
+export default function MarkNotificationReadComponent() {
+  // Call the Mutation hook function to get a `UseMutationResult` object which holds the state of your Mutation.
+  const mutation = useMarkNotificationRead();
+
+  // You can also pass in a `DataConnect` instance to the Mutation hook function.
+  const dataConnect = getDataConnect(connectorConfig);
+  const mutation = useMarkNotificationRead(dataConnect);
+
+  // You can also pass in a `useDataConnectMutationOptions` object to the Mutation hook function.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useMarkNotificationRead(options);
+
+  // You can also pass both a `DataConnect` instance and a `useDataConnectMutationOptions` object.
+  const dataConnect = getDataConnect(connectorConfig);
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  const mutation = useMarkNotificationRead(dataConnect, options);
+
+  // After calling the Mutation hook function, you must call `UseMutationResult.mutate()` to execute the Mutation.
+  // The `useMarkNotificationRead` Mutation requires an argument of type `MarkNotificationReadVariables`:
+  const markNotificationReadVars: MarkNotificationReadVariables = {
+    id: ..., 
+  };
+  mutation.mutate(markNotificationReadVars);
+  // Variables can be defined inline as well.
+  mutation.mutate({ id: ..., });
+
+  // You can also pass in a `useDataConnectMutationOptions` object to `UseMutationResult.mutate()`.
+  const options = {
+    onSuccess: () => { console.log('Mutation succeeded!'); }
+  };
+  mutation.mutate(markNotificationReadVars, options);
+
+  // Then, you can render your component dynamically based on the status of the Mutation.
+  if (mutation.isPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (mutation.isError) {
+    return <div>Error: {mutation.error.message}</div>;
+  }
+
+  // If the Mutation is successful, you can access the data returned using the `UseMutationResult.data` field.
+  if (mutation.isSuccess) {
+    console.log(mutation.data.notification_update);
   }
   return <div>Mutation execution {mutation.isSuccess ? 'successful' : 'failed'}!</div>;
 }

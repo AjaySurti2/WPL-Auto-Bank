@@ -1,4 +1,4 @@
-import { CreateUserData, CreateUserVariables, GetUserData, CreateBankAccountData, CreateBankAccountVariables, ListBankAccountsData, CreateDownloadScheduleData, CreateDownloadScheduleVariables, UpdateDownloadScheduleData, UpdateDownloadScheduleVariables, DeleteDownloadScheduleData, DeleteDownloadScheduleVariables, ListDownloadSchedulesData, CreateStatementData, CreateStatementVariables, ListStatementsData, CreateNotificationData, CreateNotificationVariables, ListNotificationsData } from '../';
+import { CreateUserData, CreateUserVariables, GetUserData, CreateBankAccountData, CreateBankAccountVariables, UpdateBankAccountData, UpdateBankAccountVariables, DeleteBankAccountData, DeleteBankAccountVariables, ListBankAccountsData, CreateDownloadScheduleData, CreateDownloadScheduleVariables, UpdateDownloadScheduleData, UpdateDownloadScheduleVariables, DeleteDownloadScheduleData, DeleteDownloadScheduleVariables, ListDownloadSchedulesData, CreateStatementData, CreateStatementVariables, ListStatementsData, CreateNotificationData, CreateNotificationVariables, ListNotificationsData, MarkNotificationReadData, MarkNotificationReadVariables } from '../';
 import { UseDataConnectQueryResult, useDataConnectQueryOptions, UseDataConnectMutationResult, useDataConnectMutationOptions} from '@tanstack-query-firebase/react/data-connect';
 import { UseQueryResult, UseMutationResult} from '@tanstack/react-query';
 import { DataConnect } from 'firebase/data-connect';
@@ -13,6 +13,12 @@ export function useGetUser(dc: DataConnect, options?: useDataConnectQueryOptions
 
 export function useCreateBankAccount(options?: useDataConnectMutationOptions<CreateBankAccountData, FirebaseError, CreateBankAccountVariables>): UseDataConnectMutationResult<CreateBankAccountData, CreateBankAccountVariables>;
 export function useCreateBankAccount(dc: DataConnect, options?: useDataConnectMutationOptions<CreateBankAccountData, FirebaseError, CreateBankAccountVariables>): UseDataConnectMutationResult<CreateBankAccountData, CreateBankAccountVariables>;
+
+export function useUpdateBankAccount(options?: useDataConnectMutationOptions<UpdateBankAccountData, FirebaseError, UpdateBankAccountVariables>): UseDataConnectMutationResult<UpdateBankAccountData, UpdateBankAccountVariables>;
+export function useUpdateBankAccount(dc: DataConnect, options?: useDataConnectMutationOptions<UpdateBankAccountData, FirebaseError, UpdateBankAccountVariables>): UseDataConnectMutationResult<UpdateBankAccountData, UpdateBankAccountVariables>;
+
+export function useDeleteBankAccount(options?: useDataConnectMutationOptions<DeleteBankAccountData, FirebaseError, DeleteBankAccountVariables>): UseDataConnectMutationResult<DeleteBankAccountData, DeleteBankAccountVariables>;
+export function useDeleteBankAccount(dc: DataConnect, options?: useDataConnectMutationOptions<DeleteBankAccountData, FirebaseError, DeleteBankAccountVariables>): UseDataConnectMutationResult<DeleteBankAccountData, DeleteBankAccountVariables>;
 
 export function useListBankAccounts(options?: useDataConnectQueryOptions<ListBankAccountsData>): UseDataConnectQueryResult<ListBankAccountsData, undefined>;
 export function useListBankAccounts(dc: DataConnect, options?: useDataConnectQueryOptions<ListBankAccountsData>): UseDataConnectQueryResult<ListBankAccountsData, undefined>;
@@ -40,3 +46,6 @@ export function useCreateNotification(dc: DataConnect, options?: useDataConnectM
 
 export function useListNotifications(options?: useDataConnectQueryOptions<ListNotificationsData>): UseDataConnectQueryResult<ListNotificationsData, undefined>;
 export function useListNotifications(dc: DataConnect, options?: useDataConnectQueryOptions<ListNotificationsData>): UseDataConnectQueryResult<ListNotificationsData, undefined>;
+
+export function useMarkNotificationRead(options?: useDataConnectMutationOptions<MarkNotificationReadData, FirebaseError, MarkNotificationReadVariables>): UseDataConnectMutationResult<MarkNotificationReadData, MarkNotificationReadVariables>;
+export function useMarkNotificationRead(dc: DataConnect, options?: useDataConnectMutationOptions<MarkNotificationReadData, FirebaseError, MarkNotificationReadVariables>): UseDataConnectMutationResult<MarkNotificationReadData, MarkNotificationReadVariables>;

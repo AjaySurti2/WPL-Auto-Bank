@@ -29,6 +29,9 @@ const App: React.FC = () => {
     const unsubscribe = subscribeToAuthChanges((user) => {
       setCurrentUser(user);
       setLoading(false);
+      if (user) {
+        dbService.syncUser(user);
+      }
     });
     return () => unsubscribe();
   }, []);

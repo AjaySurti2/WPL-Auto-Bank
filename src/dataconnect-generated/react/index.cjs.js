@@ -1,4 +1,4 @@
-const { createUserRef, getUserRef, createBankAccountRef, listBankAccountsRef, createDownloadScheduleRef, updateDownloadScheduleRef, deleteDownloadScheduleRef, listDownloadSchedulesRef, createStatementRef, listStatementsRef, createNotificationRef, listNotificationsRef, connectorConfig } = require('../index.cjs.js');
+const { createUserRef, getUserRef, createBankAccountRef, updateBankAccountRef, deleteBankAccountRef, listBankAccountsRef, createDownloadScheduleRef, updateDownloadScheduleRef, deleteDownloadScheduleRef, listDownloadSchedulesRef, createStatementRef, listStatementsRef, createNotificationRef, listNotificationsRef, markNotificationReadRef, connectorConfig } = require('../index.cjs.js');
 const { validateArgs, CallerSdkTypeEnum } = require('firebase/data-connect');
 const { useDataConnectQuery, useDataConnectMutation, validateReactArgs } = require('@tanstack-query-firebase/react/data-connect');
 
@@ -20,6 +20,22 @@ exports.useCreateBankAccount = function useCreateBankAccount(dcOrOptions, option
   const { dc: dcInstance, vars: inputOpts } = validateArgs(connectorConfig, dcOrOptions, options);
   function refFactory(vars) {
     return createBankAccountRef(dcInstance, vars);
+  }
+  return useDataConnectMutation(refFactory, inputOpts, CallerSdkTypeEnum.GeneratedReact);
+}
+
+exports.useUpdateBankAccount = function useUpdateBankAccount(dcOrOptions, options) {
+  const { dc: dcInstance, vars: inputOpts } = validateArgs(connectorConfig, dcOrOptions, options);
+  function refFactory(vars) {
+    return updateBankAccountRef(dcInstance, vars);
+  }
+  return useDataConnectMutation(refFactory, inputOpts, CallerSdkTypeEnum.GeneratedReact);
+}
+
+exports.useDeleteBankAccount = function useDeleteBankAccount(dcOrOptions, options) {
+  const { dc: dcInstance, vars: inputOpts } = validateArgs(connectorConfig, dcOrOptions, options);
+  function refFactory(vars) {
+    return deleteBankAccountRef(dcInstance, vars);
   }
   return useDataConnectMutation(refFactory, inputOpts, CallerSdkTypeEnum.GeneratedReact);
 }
@@ -87,4 +103,11 @@ exports.useListNotifications = function useListNotifications(dcOrOptions, option
   const { dc: dcInstance, options: inputOpts } = validateReactArgs(connectorConfig, dcOrOptions, options);
   const ref = listNotificationsRef(dcInstance);
   return useDataConnectQuery(ref, inputOpts, CallerSdkTypeEnum.GeneratedReact);
+}
+exports.useMarkNotificationRead = function useMarkNotificationRead(dcOrOptions, options) {
+  const { dc: dcInstance, vars: inputOpts } = validateArgs(connectorConfig, dcOrOptions, options);
+  function refFactory(vars) {
+    return markNotificationReadRef(dcInstance, vars);
+  }
+  return useDataConnectMutation(refFactory, inputOpts, CallerSdkTypeEnum.GeneratedReact);
 }

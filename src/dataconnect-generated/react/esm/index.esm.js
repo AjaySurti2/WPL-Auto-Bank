@@ -1,4 +1,4 @@
-import { createUserRef, getUserRef, createBankAccountRef, listBankAccountsRef, createDownloadScheduleRef, updateDownloadScheduleRef, deleteDownloadScheduleRef, listDownloadSchedulesRef, createStatementRef, listStatementsRef, createNotificationRef, listNotificationsRef, connectorConfig } from '../../esm/index.esm.js';
+import { createUserRef, getUserRef, createBankAccountRef, updateBankAccountRef, deleteBankAccountRef, listBankAccountsRef, createDownloadScheduleRef, updateDownloadScheduleRef, deleteDownloadScheduleRef, listDownloadSchedulesRef, createStatementRef, listStatementsRef, createNotificationRef, listNotificationsRef, markNotificationReadRef, connectorConfig } from '../../esm/index.esm.js';
 import { validateArgs, CallerSdkTypeEnum } from 'firebase/data-connect';
 import { useDataConnectQuery, useDataConnectMutation, validateReactArgs } from '@tanstack-query-firebase/react/data-connect';
 
@@ -20,6 +20,22 @@ export function useCreateBankAccount(dcOrOptions, options) {
   const { dc: dcInstance, vars: inputOpts } = validateArgs(connectorConfig, dcOrOptions, options);
   function refFactory(vars) {
     return createBankAccountRef(dcInstance, vars);
+  }
+  return useDataConnectMutation(refFactory, inputOpts, CallerSdkTypeEnum.GeneratedReact);
+}
+
+export function useUpdateBankAccount(dcOrOptions, options) {
+  const { dc: dcInstance, vars: inputOpts } = validateArgs(connectorConfig, dcOrOptions, options);
+  function refFactory(vars) {
+    return updateBankAccountRef(dcInstance, vars);
+  }
+  return useDataConnectMutation(refFactory, inputOpts, CallerSdkTypeEnum.GeneratedReact);
+}
+
+export function useDeleteBankAccount(dcOrOptions, options) {
+  const { dc: dcInstance, vars: inputOpts } = validateArgs(connectorConfig, dcOrOptions, options);
+  function refFactory(vars) {
+    return deleteBankAccountRef(dcInstance, vars);
   }
   return useDataConnectMutation(refFactory, inputOpts, CallerSdkTypeEnum.GeneratedReact);
 }
@@ -87,4 +103,11 @@ export function useListNotifications(dcOrOptions, options) {
   const { dc: dcInstance, options: inputOpts } = validateReactArgs(connectorConfig, dcOrOptions, options);
   const ref = listNotificationsRef(dcInstance);
   return useDataConnectQuery(ref, inputOpts, CallerSdkTypeEnum.GeneratedReact);
+}
+export function useMarkNotificationRead(dcOrOptions, options) {
+  const { dc: dcInstance, vars: inputOpts } = validateArgs(connectorConfig, dcOrOptions, options);
+  function refFactory(vars) {
+    return markNotificationReadRef(dcInstance, vars);
+  }
+  return useDataConnectMutation(refFactory, inputOpts, CallerSdkTypeEnum.GeneratedReact);
 }

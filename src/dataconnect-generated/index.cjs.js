@@ -43,6 +43,30 @@ exports.createBankAccount = function createBankAccount(dcOrVars, vars) {
   return executeMutation(createBankAccountRef(dcOrVars, vars));
 };
 
+const updateBankAccountRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'UpdateBankAccount', inputVars);
+}
+updateBankAccountRef.operationName = 'UpdateBankAccount';
+exports.updateBankAccountRef = updateBankAccountRef;
+
+exports.updateBankAccount = function updateBankAccount(dcOrVars, vars) {
+  return executeMutation(updateBankAccountRef(dcOrVars, vars));
+};
+
+const deleteBankAccountRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'DeleteBankAccount', inputVars);
+}
+deleteBankAccountRef.operationName = 'DeleteBankAccount';
+exports.deleteBankAccountRef = deleteBankAccountRef;
+
+exports.deleteBankAccount = function deleteBankAccount(dcOrVars, vars) {
+  return executeMutation(deleteBankAccountRef(dcOrVars, vars));
+};
+
 const listBankAccountsRef = (dc) => {
   const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
   dcInstance._useGeneratedSdk();
@@ -149,4 +173,16 @@ exports.listNotificationsRef = listNotificationsRef;
 
 exports.listNotifications = function listNotifications(dc) {
   return executeQuery(listNotificationsRef(dc));
+};
+
+const markNotificationReadRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'MarkNotificationRead', inputVars);
+}
+markNotificationReadRef.operationName = 'MarkNotificationRead';
+exports.markNotificationReadRef = markNotificationReadRef;
+
+exports.markNotificationRead = function markNotificationRead(dcOrVars, vars) {
+  return executeMutation(markNotificationReadRef(dcOrVars, vars));
 };

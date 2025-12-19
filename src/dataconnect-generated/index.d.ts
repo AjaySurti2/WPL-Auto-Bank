@@ -77,12 +77,19 @@ export interface CreateUserData {
 }
 
 export interface CreateUserVariables {
-  id: string;
   displayName: string;
   email: string;
   photoUrl?: string | null;
   role: string;
   avatar?: string | null;
+}
+
+export interface DeleteBankAccountData {
+  bankAccount_delete?: BankAccount_Key | null;
+}
+
+export interface DeleteBankAccountVariables {
+  id: UUIDString;
 }
 
 export interface DeleteDownloadScheduleData {
@@ -171,6 +178,14 @@ export interface ListStatementsData {
   } & Statement_Key)[];
 }
 
+export interface MarkNotificationReadData {
+  notification_update?: Notification_Key | null;
+}
+
+export interface MarkNotificationReadVariables {
+  id: UUIDString;
+}
+
 export interface Notification_Key {
   id: UUIDString;
   __typename?: 'Notification_Key';
@@ -179,6 +194,22 @@ export interface Notification_Key {
 export interface Statement_Key {
   id: UUIDString;
   __typename?: 'Statement_Key';
+}
+
+export interface UpdateBankAccountData {
+  bankAccount_update?: BankAccount_Key | null;
+}
+
+export interface UpdateBankAccountVariables {
+  id: UUIDString;
+  bankName?: string | null;
+  bankUrl?: string | null;
+  logo?: string | null;
+  accountNumber?: string | null;
+  accountNumberMasked?: string | null;
+  connectionStatus?: string | null;
+  requiresOtp?: boolean | null;
+  accountType?: string | null;
 }
 
 export interface UpdateDownloadScheduleData {
@@ -236,6 +267,30 @@ export const createBankAccountRef: CreateBankAccountRef;
 
 export function createBankAccount(vars: CreateBankAccountVariables): MutationPromise<CreateBankAccountData, CreateBankAccountVariables>;
 export function createBankAccount(dc: DataConnect, vars: CreateBankAccountVariables): MutationPromise<CreateBankAccountData, CreateBankAccountVariables>;
+
+interface UpdateBankAccountRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: UpdateBankAccountVariables): MutationRef<UpdateBankAccountData, UpdateBankAccountVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: UpdateBankAccountVariables): MutationRef<UpdateBankAccountData, UpdateBankAccountVariables>;
+  operationName: string;
+}
+export const updateBankAccountRef: UpdateBankAccountRef;
+
+export function updateBankAccount(vars: UpdateBankAccountVariables): MutationPromise<UpdateBankAccountData, UpdateBankAccountVariables>;
+export function updateBankAccount(dc: DataConnect, vars: UpdateBankAccountVariables): MutationPromise<UpdateBankAccountData, UpdateBankAccountVariables>;
+
+interface DeleteBankAccountRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: DeleteBankAccountVariables): MutationRef<DeleteBankAccountData, DeleteBankAccountVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: DeleteBankAccountVariables): MutationRef<DeleteBankAccountData, DeleteBankAccountVariables>;
+  operationName: string;
+}
+export const deleteBankAccountRef: DeleteBankAccountRef;
+
+export function deleteBankAccount(vars: DeleteBankAccountVariables): MutationPromise<DeleteBankAccountData, DeleteBankAccountVariables>;
+export function deleteBankAccount(dc: DataConnect, vars: DeleteBankAccountVariables): MutationPromise<DeleteBankAccountData, DeleteBankAccountVariables>;
 
 interface ListBankAccountsRef {
   /* Allow users to create refs without passing in DataConnect */
@@ -344,4 +399,16 @@ export const listNotificationsRef: ListNotificationsRef;
 
 export function listNotifications(): QueryPromise<ListNotificationsData, undefined>;
 export function listNotifications(dc: DataConnect): QueryPromise<ListNotificationsData, undefined>;
+
+interface MarkNotificationReadRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: MarkNotificationReadVariables): MutationRef<MarkNotificationReadData, MarkNotificationReadVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: MarkNotificationReadVariables): MutationRef<MarkNotificationReadData, MarkNotificationReadVariables>;
+  operationName: string;
+}
+export const markNotificationReadRef: MarkNotificationReadRef;
+
+export function markNotificationRead(vars: MarkNotificationReadVariables): MutationPromise<MarkNotificationReadData, MarkNotificationReadVariables>;
+export function markNotificationRead(dc: DataConnect, vars: MarkNotificationReadVariables): MutationPromise<MarkNotificationReadData, MarkNotificationReadVariables>;
 
