@@ -13,7 +13,11 @@ import {
     createNotification,
     markNotificationRead as markNotificationReadDC,
     createUser,
-    getUser
+    getUser,
+    listUsers,
+    adminUpsertUser,
+    updateUserProfile,
+    deleteUser as deleteUserDC
 } from '@dataconnect/generated';
 import { dataconnect } from './firebase';
 import { BankAccount, SyncSchedule, ActivityLog, BankStatus, User } from '../types';
@@ -40,9 +44,10 @@ export const syncUser = async (user: User) => {
                 email: user.email,
                 role: user.role,
                 avatar: user.avatar,
-                photoUrl: user.avatar
+                photoUrl: user.avatar,
+                password: user.password
             }), 10000, "createUser");
-            console.log("User created in Data Connect.");
+            console.log("User synced with Data Connect.");
         }
     } catch (e: any) {
         console.warn("Failed to sync user with Data Connect:", e.message || e);
@@ -296,50 +301,97 @@ export const markNotificationRead = async (id: string) => {
 
 export const getUsers = async (): Promise<User[]> => {
     try {
-        const { data } = await withTimeout(getUser(dataconnect), 10000, "getUsers");
-        if (data.user) {
-            return [{
-                id: data.user.id,
-                name: data.user.displayName,
-                email: data.user.email,
-                role: data.user.role as any,
-                avatar: data.user.avatar || '👤'
-            }];
-        }
-        return [];
-    } catch {
+        console.log("Fetching all users (Data Connect)...");
+        const { data } = await withTimeout(listUsers(dataconnect), 30000, "getUsers");
+        const cloudData: User[] = data.users.map(u => ({
+            id: u.id,
+            name: u.displayName,
+            email: u.email,
+            role: u.role as any,
+            avatar: u.avatar || '👤',
+            password: u.password || undefined
+        }));
+        console.log(`[Cloud] Success: Fetched ${cloudData.length} users.`);
+        saveLocal('users_cache', cloudData);
+        return cloudData;
+    } catch (e: any) {
+        console.warn(`[Cloud] Sync Failed (getUsers): ${e.message || e}. Using LOCAL fallback.`);
         return loadLocal<User>('users_cache');
     }
 };
 
-export const addUser = async (user: Omit<User, 'id'>) => {
+export const addUser = async (user: User) => {
     try {
-        const { data } = await withTimeout(createUser(dataconnect, {
+        console.log(`[Cloud] Attempting to create user: ${user.name}`);
+        const { data } = await withTimeout(adminUpsertUser(dataconnect, {
+            id: user.id,
             displayName: user.name,
             email: user.email,
             role: user.role,
             avatar: user.avatar,
+            password: user.password,
             photoUrl: user.avatar
         }), 10000, "addUser");
 
-        const newId = (data.user_insert as any)?.id || data.user_insert;
-        const newUser = { id: typeof newId === 'string' ? newId : `local_user_${Date.now()}`, ...user };
-
+        console.log(`[Cloud] Success: User created/updated.`);
         const localData = loadLocal<User>('users_cache');
-        saveLocal('users_cache', [...localData, newUser as User]);
-        return newUser;
+        saveLocal('users_cache', [...localData.filter(u => u.id !== user.id), user]);
+        return user;
     } catch (e: any) {
+        if (e.message?.includes('404') || e.message?.includes('not found')) {
+            console.warn(`[Cloud] AdminUpsertUser not found, falling back to basic createUser.`);
+            try {
+                await withTimeout(createUser(dataconnect, {
+                    displayName: user.name,
+                    email: user.email,
+                    role: user.role,
+                    avatar: user.avatar,
+                    photoUrl: user.avatar,
+                    password: user.password
+                }), 10000, "addUserFallback");
+                console.log(`[Cloud] Success: User created (fallback).`);
+                const localData = loadLocal<User>('users_cache');
+                saveLocal('users_cache', [...localData.filter(u => u.id !== user.id), user]);
+                return user;
+            } catch (innerError: any) {
+                console.error(`[Cloud] Fallback also failed:`, innerError);
+            }
+        }
         console.error(`[Cloud] Sync Failed (addUser):`, e);
-        const newUser = { id: `local_${Date.now()}`, ...user } as User;
         const localData = loadLocal<User>('users_cache');
-        saveLocal('users_cache', [...localData, newUser]);
-        return newUser;
+        saveLocal('users_cache', [...localData.filter(u => u.id !== user.id), user]);
+        return user;
     }
 };
 
+export const updateUser = async (id: string, updates: Partial<User>) => {
+    try {
+        console.log(`[Cloud] Updating user: ${id}`);
+        await withTimeout(updateUserProfile(dataconnect, {
+            id,
+            displayName: updates.name,
+            avatar: updates.avatar,
+            role: updates.role,
+            password: updates.password
+        }), 10000, "updateUser");
+
+        const localData = loadLocal<User>('users_cache');
+        saveLocal('users_cache', localData.map(u => u.id === id ? { ...u, ...updates } : u));
+    } catch (e: any) {
+        console.error(`[Cloud] Sync Failed (updateUser):`, e);
+        const localData = loadLocal<User>('users_cache');
+        saveLocal('users_cache', localData.map(u => u.id === id ? { ...u, ...updates } : u));
+    }
+}
+
 export const deleteUser = async (id: string) => {
-    // Note: deleteUser mutation would need to be added to queries.gql
-    // For now we just clean local cache
-    const localData = loadLocal<User>('users_cache');
-    saveLocal('users_cache', localData.filter(u => u.id !== id));
+    try {
+        await withTimeout(deleteUserDC(dataconnect, { id }), 10000, "deleteUser");
+        const localData = loadLocal<User>('users_cache');
+        saveLocal('users_cache', localData.filter(u => u.id !== id));
+    } catch (e: any) {
+        console.error(`[Cloud] Sync Failed (deleteUser):`, e);
+        const localData = loadLocal<User>('users_cache');
+        saveLocal('users_cache', localData.filter(u => u.id !== id));
+    }
 };

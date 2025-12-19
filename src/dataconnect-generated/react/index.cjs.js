@@ -1,4 +1,4 @@
-const { createUserRef, getUserRef, createBankAccountRef, updateBankAccountRef, deleteBankAccountRef, listBankAccountsRef, createDownloadScheduleRef, updateDownloadScheduleRef, deleteDownloadScheduleRef, listDownloadSchedulesRef, createStatementRef, listStatementsRef, createNotificationRef, listNotificationsRef, markNotificationReadRef, connectorConfig } = require('../index.cjs.js');
+const { createUserRef, adminUpsertUserRef, getUserRef, listUsersRef, updateUserProfileRef, deleteUserRef, createBankAccountRef, updateBankAccountRef, deleteBankAccountRef, listBankAccountsRef, createDownloadScheduleRef, updateDownloadScheduleRef, deleteDownloadScheduleRef, listDownloadSchedulesRef, createStatementRef, listStatementsRef, createNotificationRef, listNotificationsRef, markNotificationReadRef, connectorConfig } = require('../index.cjs.js');
 const { validateArgs, CallerSdkTypeEnum } = require('firebase/data-connect');
 const { useDataConnectQuery, useDataConnectMutation, validateReactArgs } = require('@tanstack-query-firebase/react/data-connect');
 
@@ -10,12 +10,42 @@ exports.useCreateUser = function useCreateUser(dcOrOptions, options) {
   return useDataConnectMutation(refFactory, inputOpts, CallerSdkTypeEnum.GeneratedReact);
 }
 
+exports.useAdminUpsertUser = function useAdminUpsertUser(dcOrOptions, options) {
+  const { dc: dcInstance, vars: inputOpts } = validateArgs(connectorConfig, dcOrOptions, options);
+  function refFactory(vars) {
+    return adminUpsertUserRef(dcInstance, vars);
+  }
+  return useDataConnectMutation(refFactory, inputOpts, CallerSdkTypeEnum.GeneratedReact);
+}
+
 
 exports.useGetUser = function useGetUser(dcOrOptions, options) {
   const { dc: dcInstance, options: inputOpts } = validateReactArgs(connectorConfig, dcOrOptions, options);
   const ref = getUserRef(dcInstance);
   return useDataConnectQuery(ref, inputOpts, CallerSdkTypeEnum.GeneratedReact);
 }
+
+exports.useListUsers = function useListUsers(dcOrOptions, options) {
+  const { dc: dcInstance, options: inputOpts } = validateReactArgs(connectorConfig, dcOrOptions, options);
+  const ref = listUsersRef(dcInstance);
+  return useDataConnectQuery(ref, inputOpts, CallerSdkTypeEnum.GeneratedReact);
+}
+exports.useUpdateUserProfile = function useUpdateUserProfile(dcOrOptions, options) {
+  const { dc: dcInstance, vars: inputOpts } = validateArgs(connectorConfig, dcOrOptions, options);
+  function refFactory(vars) {
+    return updateUserProfileRef(dcInstance, vars);
+  }
+  return useDataConnectMutation(refFactory, inputOpts, CallerSdkTypeEnum.GeneratedReact);
+}
+
+exports.useDeleteUser = function useDeleteUser(dcOrOptions, options) {
+  const { dc: dcInstance, vars: inputOpts } = validateArgs(connectorConfig, dcOrOptions, options);
+  function refFactory(vars) {
+    return deleteUserRef(dcInstance, vars);
+  }
+  return useDataConnectMutation(refFactory, inputOpts, CallerSdkTypeEnum.GeneratedReact);
+}
+
 exports.useCreateBankAccount = function useCreateBankAccount(dcOrOptions, options) {
   const { dc: dcInstance, vars: inputOpts } = validateArgs(connectorConfig, dcOrOptions, options);
   function refFactory(vars) {

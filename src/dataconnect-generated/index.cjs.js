@@ -19,6 +19,18 @@ exports.createUser = function createUser(dcOrVars, vars) {
   return executeMutation(createUserRef(dcOrVars, vars));
 };
 
+const adminUpsertUserRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'AdminUpsertUser', inputVars);
+}
+adminUpsertUserRef.operationName = 'AdminUpsertUser';
+exports.adminUpsertUserRef = adminUpsertUserRef;
+
+exports.adminUpsertUser = function adminUpsertUser(dcOrVars, vars) {
+  return executeMutation(adminUpsertUserRef(dcOrVars, vars));
+};
+
 const getUserRef = (dc) => {
   const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
   dcInstance._useGeneratedSdk();
@@ -29,6 +41,42 @@ exports.getUserRef = getUserRef;
 
 exports.getUser = function getUser(dc) {
   return executeQuery(getUserRef(dc));
+};
+
+const listUsersRef = (dc) => {
+  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'ListUsers');
+}
+listUsersRef.operationName = 'ListUsers';
+exports.listUsersRef = listUsersRef;
+
+exports.listUsers = function listUsers(dc) {
+  return executeQuery(listUsersRef(dc));
+};
+
+const updateUserProfileRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'UpdateUserProfile', inputVars);
+}
+updateUserProfileRef.operationName = 'UpdateUserProfile';
+exports.updateUserProfileRef = updateUserProfileRef;
+
+exports.updateUserProfile = function updateUserProfile(dcOrVars, vars) {
+  return executeMutation(updateUserProfileRef(dcOrVars, vars));
+};
+
+const deleteUserRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'DeleteUser', inputVars);
+}
+deleteUserRef.operationName = 'DeleteUser';
+exports.deleteUserRef = deleteUserRef;
+
+exports.deleteUser = function deleteUser(dcOrVars, vars) {
+  return executeMutation(deleteUserRef(dcOrVars, vars));
 };
 
 const createBankAccountRef = (dcOrVars, vars) => {

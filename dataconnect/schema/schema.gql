@@ -5,6 +5,7 @@ type User @table(key: ["id"]) {
   photoUrl: String
   role: String!
   avatar: String
+  password: String
   createdAt: Timestamp!
 }
 

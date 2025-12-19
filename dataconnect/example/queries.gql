@@ -1,5 +1,9 @@
-mutation CreateUser($displayName: String!, $email: String!, $photoUrl: String, $role: String!, $avatar: String) @auth(level: USER) {
-  user_insert(data: {id_expr: "auth.uid", displayName: $displayName, email: $email, photoUrl: $photoUrl, role: $role, avatar: $avatar, createdAt_expr: "request.time"})
+mutation CreateUser($displayName: String!, $email: String!, $photoUrl: String, $role: String!, $avatar: String, $password: String) @auth(level: USER) {
+  user_upsert(data: {id_expr: "auth.uid", displayName: $displayName, email: $email, photoUrl: $photoUrl, role: $role, avatar: $avatar, password: $password, createdAt_expr: "request.time"})
+}
+
+mutation AdminUpsertUser($id: String!, $displayName: String!, $email: String!, $photoUrl: String, $role: String!, $avatar: String, $password: String) @auth(level: USER) {
+  user_upsert(data: {id: $id, displayName: $displayName, email: $email, photoUrl: $photoUrl, role: $role, avatar: $avatar, password: $password, createdAt_expr: "request.time"})
 }
 
 query GetUser @auth(level: USER) {
@@ -10,8 +14,28 @@ query GetUser @auth(level: USER) {
     photoUrl
     role
     avatar
+    password
     createdAt
   }
+}
+
+query ListUsers @auth(level: USER) {
+  users {
+    id
+    displayName
+    email
+    role
+    avatar
+    password
+  }
+}
+
+mutation UpdateUserProfile($id: String!, $displayName: String, $avatar: String, $role: String, $password: String) @auth(level: USER) {
+  user_update(key: {id: $id}, data: {displayName: $displayName, avatar: $avatar, role: $role, password: $password})
+}
+
+mutation DeleteUser($id: String!) @auth(level: USER) {
+  user_delete(key: {id: $id})
 }
 
 mutation CreateBankAccount($bankName: String!, $bankUrl: String, $logo: String, $accountNumber: String, $accountNumberMasked: String!, $connectionStatus: String!, $requiresOtp: Boolean, $accountType: String) @auth(level: USER) {

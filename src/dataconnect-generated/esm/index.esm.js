@@ -17,6 +17,17 @@ export function createUser(dcOrVars, vars) {
   return executeMutation(createUserRef(dcOrVars, vars));
 }
 
+export const adminUpsertUserRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'AdminUpsertUser', inputVars);
+}
+adminUpsertUserRef.operationName = 'AdminUpsertUser';
+
+export function adminUpsertUser(dcOrVars, vars) {
+  return executeMutation(adminUpsertUserRef(dcOrVars, vars));
+}
+
 export const getUserRef = (dc) => {
   const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
   dcInstance._useGeneratedSdk();
@@ -26,6 +37,39 @@ getUserRef.operationName = 'GetUser';
 
 export function getUser(dc) {
   return executeQuery(getUserRef(dc));
+}
+
+export const listUsersRef = (dc) => {
+  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'ListUsers');
+}
+listUsersRef.operationName = 'ListUsers';
+
+export function listUsers(dc) {
+  return executeQuery(listUsersRef(dc));
+}
+
+export const updateUserProfileRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'UpdateUserProfile', inputVars);
+}
+updateUserProfileRef.operationName = 'UpdateUserProfile';
+
+export function updateUserProfile(dcOrVars, vars) {
+  return executeMutation(updateUserProfileRef(dcOrVars, vars));
+}
+
+export const deleteUserRef = (dcOrVars, vars) => {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  dcInstance._useGeneratedSdk();
+  return mutationRef(dcInstance, 'DeleteUser', inputVars);
+}
+deleteUserRef.operationName = 'DeleteUser';
+
+export function deleteUser(dcOrVars, vars) {
+  return executeMutation(deleteUserRef(dcOrVars, vars));
 }
 
 export const createBankAccountRef = (dcOrVars, vars) => {

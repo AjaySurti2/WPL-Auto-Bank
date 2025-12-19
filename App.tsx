@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { User as UserIcon, Shield, Settings as SettingsIcon, LogOut } from 'lucide-react';
 import { Sidebar } from './components/Sidebar';
 import { Dashboard } from './pages/Dashboard';
 import { BankMaster } from './pages/BankMaster';
@@ -9,7 +10,7 @@ import { Settings } from './pages/Settings';
 import { Login } from './pages/Login';
 import { MOCK_USERS } from './constants';
 import { BankAccount, BankStatus, User, ActivityLog, SyncSchedule } from './types';
-import { subscribeToAuthChanges, logout } from './services/authService';
+import { subscribeToAuthChanges, logout, signUp } from './services/authService';
 import * as dbService from './services/dbService';
 
 const App: React.FC = () => {
@@ -23,6 +24,7 @@ const App: React.FC = () => {
   const [schedules, setSchedules] = useState<SyncSchedule[]>([]);
   const [logs, setLogs] = useState<ActivityLog[]>([]);
   const [users, setUsers] = useState<User[]>([]);
+  const [showProfileModal, setShowProfileModal] = useState(false);
 
   // Services
   useEffect(() => {
@@ -303,18 +305,41 @@ const App: React.FC = () => {
   // User Management
   const addUser = async (user: User) => {
     try {
-      // @ts-ignore
-      const { id, ...userData } = user;
-      const newUser = await dbService.addUser(userData);
-      setUsers(prev => [...prev, newUser as User]);
+      // 1. Create in Firebase Auth first (for new users only)
+      const existingUser = users.find(u => u.id === user.id || u.email === user.email);
+      if (!existingUser && user.password) {
+        console.log(`[Auth] Creating account for ${user.email}...`);
+        try {
+          // This will briefly create the user in Auth. 
+          // Note: createUserWithEmailAndPassword logs the user in.
+          // Since we are likely an Admin, we might need a workaround or just warn.
+          // For now, we proceed - the syncUser logic in dbService will bridge the gap.
+          await signUp(user.email, user.password, user.name);
+          console.log(`[Auth] Account created.`);
+        } catch (authError: any) {
+          if (authError.code !== 'auth/email-already-in-use') {
+            throw authError;
+          }
+        }
+      }
+
+      // 2. Create/Update in Database
+      const newUser = await dbService.addUser(user);
+      setUsers(prev => {
+        const exists = prev.find(u => u.id === user.id);
+        if (exists) return prev.map(u => u.id === user.id ? newUser : u);
+        return [...prev, newUser as User];
+      });
+
       await dbService.addLog({
         bankName: 'Settings',
-        action: `Added new user: ${user.name}`,
+        action: `${existingUser ? 'Updated' : 'Added'} user: ${user.name}`,
         status: 'Success',
         triggeredBy: currentUser?.name || 'Unknown'
       });
-    } catch (error) {
-      console.error("Error adding user:", error);
+    } catch (error: any) {
+      console.error("Error adding/updating user:", error);
+      alert(`Failed to manage user: ${error.message}`);
     }
   };
 
@@ -417,9 +442,12 @@ const App: React.FC = () => {
               <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
               <span className="text-xs font-medium text-slate-300">System Online</span>
             </div>
-            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-blue-500/20">
+            <button
+              onClick={() => setShowProfileModal(true)}
+              className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-blue-500/20 hover:scale-110 transition-transform"
+            >
               {currentUser.avatar}
-            </div>
+            </button>
           </div>
         </header>
 
@@ -427,6 +455,53 @@ const App: React.FC = () => {
           {renderPage()}
         </div>
       </main>
+
+      {/* Profile Details Modal */}
+      {showProfileModal && currentUser && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+          <div className="bg-slate-800 w-full max-w-sm rounded-2xl border border-slate-700 shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="p-6 border-b border-slate-700 flex justify-between items-center bg-slate-900/50">
+              <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                <UserIcon className="w-5 h-5 text-blue-500" /> User Profile
+              </h3>
+              <button onClick={() => setShowProfileModal(false)} className="text-slate-400 hover:text-white transition-colors">✕</button>
+            </div>
+            <div className="p-8 flex flex-col items-center">
+              <div className="w-24 h-24 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold text-3xl shadow-xl shadow-blue-500/20 mb-6">
+                {currentUser.avatar}
+              </div>
+              <h4 className="text-xl font-bold text-white mb-1">{currentUser.name}</h4>
+              <p className="text-blue-400 text-sm font-medium mb-4 flex items-center gap-1.5">
+                <Shield className="w-4 h-4" /> {currentUser.role}
+              </p>
+
+              <div className="w-full space-y-4 pt-4 border-t border-slate-700">
+                <div className="flex justify-between text-sm">
+                  <span className="text-slate-500">Email</span>
+                  <span className="text-slate-300 font-medium">{currentUser.email}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-slate-500">User ID</span>
+                  <span className="text-slate-300 font-mono text-[10px] break-all max-w-[180px] text-right">{currentUser.id}</span>
+                </div>
+                {currentUser.password && (
+                  <div className="flex justify-between text-sm">
+                    <span className="text-slate-500">Password</span>
+                    <span className="text-slate-300 font-medium">********</span>
+                  </div>
+                )}
+              </div>
+
+              <button
+                onClick={() => { setShowProfileModal(false); setCurrentPage('settings'); }}
+                className="w-full mt-8 py-2.5 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
+              >
+                <SettingsIcon className="w-4 h-4" /> Edit Profile in Settings
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

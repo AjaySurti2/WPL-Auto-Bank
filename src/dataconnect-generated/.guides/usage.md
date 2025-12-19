@@ -12,12 +12,20 @@ For each operation, there is a wrapper hook that can be used to call the operati
 
 Here are all of the hooks that get generated:
 ```ts
-import { useCreateUser, useGetUser, useCreateBankAccount, useUpdateBankAccount, useDeleteBankAccount, useListBankAccounts, useCreateDownloadSchedule, useUpdateDownloadSchedule, useDeleteDownloadSchedule, useListDownloadSchedules } from '@dataconnect/generated/react';
+import { useCreateUser, useAdminUpsertUser, useGetUser, useListUsers, useUpdateUserProfile, useDeleteUser, useCreateBankAccount, useUpdateBankAccount, useDeleteBankAccount, useListBankAccounts } from '@dataconnect/generated/react';
 // The types of these hooks are available in react/index.d.ts
 
 const { data, isPending, isSuccess, isError, error } = useCreateUser(createUserVars);
 
+const { data, isPending, isSuccess, isError, error } = useAdminUpsertUser(adminUpsertUserVars);
+
 const { data, isPending, isSuccess, isError, error } = useGetUser();
+
+const { data, isPending, isSuccess, isError, error } = useListUsers();
+
+const { data, isPending, isSuccess, isError, error } = useUpdateUserProfile(updateUserProfileVars);
+
+const { data, isPending, isSuccess, isError, error } = useDeleteUser(deleteUserVars);
 
 const { data, isPending, isSuccess, isError, error } = useCreateBankAccount(createBankAccountVars);
 
@@ -26,14 +34,6 @@ const { data, isPending, isSuccess, isError, error } = useUpdateBankAccount(upda
 const { data, isPending, isSuccess, isError, error } = useDeleteBankAccount(deleteBankAccountVars);
 
 const { data, isPending, isSuccess, isError, error } = useListBankAccounts();
-
-const { data, isPending, isSuccess, isError, error } = useCreateDownloadSchedule(createDownloadScheduleVars);
-
-const { data, isPending, isSuccess, isError, error } = useUpdateDownloadSchedule(updateDownloadScheduleVars);
-
-const { data, isPending, isSuccess, isError, error } = useDeleteDownloadSchedule(deleteDownloadScheduleVars);
-
-const { data, isPending, isSuccess, isError, error } = useListDownloadSchedules();
 
 ```
 
@@ -72,14 +72,26 @@ If a user is not using a supported framework, they can use the generated SDK dir
 Here's an example of how to use it with the first 5 operations:
 
 ```js
-import { createUser, getUser, createBankAccount, updateBankAccount, deleteBankAccount, listBankAccounts, createDownloadSchedule, updateDownloadSchedule, deleteDownloadSchedule, listDownloadSchedules } from '@dataconnect/generated';
+import { createUser, adminUpsertUser, getUser, listUsers, updateUserProfile, deleteUser, createBankAccount, updateBankAccount, deleteBankAccount, listBankAccounts } from '@dataconnect/generated';
 
 
 // Operation CreateUser:  For variables, look at type CreateUserVars in ../index.d.ts
 const { data } = await CreateUser(dataConnect, createUserVars);
 
+// Operation AdminUpsertUser:  For variables, look at type AdminUpsertUserVars in ../index.d.ts
+const { data } = await AdminUpsertUser(dataConnect, adminUpsertUserVars);
+
 // Operation GetUser: 
 const { data } = await GetUser(dataConnect);
+
+// Operation ListUsers: 
+const { data } = await ListUsers(dataConnect);
+
+// Operation UpdateUserProfile:  For variables, look at type UpdateUserProfileVars in ../index.d.ts
+const { data } = await UpdateUserProfile(dataConnect, updateUserProfileVars);
+
+// Operation DeleteUser:  For variables, look at type DeleteUserVars in ../index.d.ts
+const { data } = await DeleteUser(dataConnect, deleteUserVars);
 
 // Operation CreateBankAccount:  For variables, look at type CreateBankAccountVars in ../index.d.ts
 const { data } = await CreateBankAccount(dataConnect, createBankAccountVars);
@@ -92,18 +104,6 @@ const { data } = await DeleteBankAccount(dataConnect, deleteBankAccountVars);
 
 // Operation ListBankAccounts: 
 const { data } = await ListBankAccounts(dataConnect);
-
-// Operation CreateDownloadSchedule:  For variables, look at type CreateDownloadScheduleVars in ../index.d.ts
-const { data } = await CreateDownloadSchedule(dataConnect, createDownloadScheduleVars);
-
-// Operation UpdateDownloadSchedule:  For variables, look at type UpdateDownloadScheduleVars in ../index.d.ts
-const { data } = await UpdateDownloadSchedule(dataConnect, updateDownloadScheduleVars);
-
-// Operation DeleteDownloadSchedule:  For variables, look at type DeleteDownloadScheduleVars in ../index.d.ts
-const { data } = await DeleteDownloadSchedule(dataConnect, deleteDownloadScheduleVars);
-
-// Operation ListDownloadSchedules: 
-const { data } = await ListDownloadSchedules(dataConnect);
 
 
 ```

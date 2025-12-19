@@ -1,8 +1,10 @@
 import { auth } from './firebase';
 import {
     signInWithEmailAndPassword,
+    createUserWithEmailAndPassword,
     signOut as firebaseSignOut,
     onAuthStateChanged,
+    updateProfile,
     User as FirebaseUser
 } from 'firebase/auth';
 import { User } from '../types';
@@ -20,6 +22,26 @@ export const login = async (email: string, password: string): Promise<User> => {
             role: 'Admin', // Default role for now, ideally fetched from DB
             password: '', // Don't keep password
             avatar: (fbUser.displayName || email || 'U')[0].toUpperCase()
+        };
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const signUp = async (email: string, password: string, name: string): Promise<User> => {
+    try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const fbUser = userCredential.user;
+
+        await updateProfile(fbUser, { displayName: name });
+
+        return {
+            id: fbUser.uid,
+            name: name,
+            email: fbUser.email || '',
+            role: 'Downloader',
+            password: '',
+            avatar: name[0].toUpperCase()
         };
     } catch (error) {
         throw error;

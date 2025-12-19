@@ -10,6 +10,20 @@ export type DateString = string;
 
 
 
+export interface AdminUpsertUserData {
+  user_upsert: User_Key;
+}
+
+export interface AdminUpsertUserVariables {
+  id: string;
+  displayName: string;
+  email: string;
+  photoUrl?: string | null;
+  role: string;
+  avatar?: string | null;
+  password?: string | null;
+}
+
 export interface BankAccount_Key {
   id: UUIDString;
   __typename?: 'BankAccount_Key';
@@ -73,7 +87,7 @@ export interface CreateStatementVariables {
 }
 
 export interface CreateUserData {
-  user_insert: User_Key;
+  user_upsert: User_Key;
 }
 
 export interface CreateUserVariables {
@@ -82,6 +96,7 @@ export interface CreateUserVariables {
   photoUrl?: string | null;
   role: string;
   avatar?: string | null;
+  password?: string | null;
 }
 
 export interface DeleteBankAccountData {
@@ -100,6 +115,14 @@ export interface DeleteDownloadScheduleVariables {
   id: UUIDString;
 }
 
+export interface DeleteUserData {
+  user_delete?: User_Key | null;
+}
+
+export interface DeleteUserVariables {
+  id: string;
+}
+
 export interface DownloadSchedule_Key {
   id: UUIDString;
   __typename?: 'DownloadSchedule_Key';
@@ -113,6 +136,7 @@ export interface GetUserData {
     photoUrl?: string | null;
     role: string;
     avatar?: string | null;
+    password?: string | null;
     createdAt: TimestampString;
   } & User_Key;
 }
@@ -178,6 +202,17 @@ export interface ListStatementsData {
   } & Statement_Key)[];
 }
 
+export interface ListUsersData {
+  users: ({
+    id: string;
+    displayName: string;
+    email: string;
+    role: string;
+    avatar?: string | null;
+    password?: string | null;
+  } & User_Key)[];
+}
+
 export interface MarkNotificationReadData {
   notification_update?: Notification_Key | null;
 }
@@ -227,6 +262,18 @@ export interface UpdateDownloadScheduleVariables {
   lastDownloadAt?: TimestampString | null;
 }
 
+export interface UpdateUserProfileData {
+  user_update?: User_Key | null;
+}
+
+export interface UpdateUserProfileVariables {
+  id: string;
+  displayName?: string | null;
+  avatar?: string | null;
+  role?: string | null;
+  password?: string | null;
+}
+
 export interface User_Key {
   id: string;
   __typename?: 'User_Key';
@@ -244,6 +291,18 @@ export const createUserRef: CreateUserRef;
 export function createUser(vars: CreateUserVariables): MutationPromise<CreateUserData, CreateUserVariables>;
 export function createUser(dc: DataConnect, vars: CreateUserVariables): MutationPromise<CreateUserData, CreateUserVariables>;
 
+interface AdminUpsertUserRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: AdminUpsertUserVariables): MutationRef<AdminUpsertUserData, AdminUpsertUserVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: AdminUpsertUserVariables): MutationRef<AdminUpsertUserData, AdminUpsertUserVariables>;
+  operationName: string;
+}
+export const adminUpsertUserRef: AdminUpsertUserRef;
+
+export function adminUpsertUser(vars: AdminUpsertUserVariables): MutationPromise<AdminUpsertUserData, AdminUpsertUserVariables>;
+export function adminUpsertUser(dc: DataConnect, vars: AdminUpsertUserVariables): MutationPromise<AdminUpsertUserData, AdminUpsertUserVariables>;
+
 interface GetUserRef {
   /* Allow users to create refs without passing in DataConnect */
   (): QueryRef<GetUserData, undefined>;
@@ -255,6 +314,42 @@ export const getUserRef: GetUserRef;
 
 export function getUser(): QueryPromise<GetUserData, undefined>;
 export function getUser(dc: DataConnect): QueryPromise<GetUserData, undefined>;
+
+interface ListUsersRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (): QueryRef<ListUsersData, undefined>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect): QueryRef<ListUsersData, undefined>;
+  operationName: string;
+}
+export const listUsersRef: ListUsersRef;
+
+export function listUsers(): QueryPromise<ListUsersData, undefined>;
+export function listUsers(dc: DataConnect): QueryPromise<ListUsersData, undefined>;
+
+interface UpdateUserProfileRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: UpdateUserProfileVariables): MutationRef<UpdateUserProfileData, UpdateUserProfileVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: UpdateUserProfileVariables): MutationRef<UpdateUserProfileData, UpdateUserProfileVariables>;
+  operationName: string;
+}
+export const updateUserProfileRef: UpdateUserProfileRef;
+
+export function updateUserProfile(vars: UpdateUserProfileVariables): MutationPromise<UpdateUserProfileData, UpdateUserProfileVariables>;
+export function updateUserProfile(dc: DataConnect, vars: UpdateUserProfileVariables): MutationPromise<UpdateUserProfileData, UpdateUserProfileVariables>;
+
+interface DeleteUserRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: DeleteUserVariables): MutationRef<DeleteUserData, DeleteUserVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: DeleteUserVariables): MutationRef<DeleteUserData, DeleteUserVariables>;
+  operationName: string;
+}
+export const deleteUserRef: DeleteUserRef;
+
+export function deleteUser(vars: DeleteUserVariables): MutationPromise<DeleteUserData, DeleteUserVariables>;
+export function deleteUser(dc: DataConnect, vars: DeleteUserVariables): MutationPromise<DeleteUserData, DeleteUserVariables>;
 
 interface CreateBankAccountRef {
   /* Allow users to create refs without passing in DataConnect */
