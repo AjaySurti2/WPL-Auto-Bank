@@ -10,8 +10,8 @@ interface DashboardProps {
 }
 
 export const Dashboard: React.FC<DashboardProps> = ({ accounts, logs, setPage, onManualDownload }) => {
-    const connectedCount = accounts.filter(a => a.status === BankStatus.CONNECTED).length;
-    const attentionCount = accounts.filter(a => a.status === BankStatus.OTP_REQUIRED || a.status === BankStatus.NEEDS_ATTENTION).length;
+    const connectedCount = accounts.filter(a => a.connectionStatus === BankStatus.CONNECTED).length;
+    const attentionCount = accounts.filter(a => a.connectionStatus === BankStatus.OTP_REQUIRED || a.connectionStatus === BankStatus.NEEDS_ATTENTION).length;
 
     const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
     const [selectedBanks, setSelectedBanks] = useState<string[]>([]);
@@ -39,7 +39,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ accounts, logs, setPage, o
                 const timestamp = new Date().toISOString().split('T')[0];
                 const content = selectedBanks.map(id => {
                     const bank = accounts.find(a => a.id === id);
-                    return `Bank: ${bank?.bankName || 'Unknown'}\nAccount: ${bank?.accountNumberMasked || 'N/A'}\nStatus: ${bank?.status || 'Unknown'}\nDate: ${new Date().toLocaleString()}\n------------------------\n`;
+                    return `Bank: ${bank?.bankName || 'Unknown'}\nAccount: ${bank?.accountNumberMasked || 'N/A'}\nStatus: ${bank?.connectionStatus || 'Unknown'}\nDate: ${new Date().toLocaleString()}\n------------------------\n`;
                 }).join('\n');
                 const blob = new Blob([content], { type: 'text/plain' });
                 const url = window.URL.createObjectURL(blob);
@@ -215,7 +215,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ accounts, logs, setPage, o
                                             <p className="text-sm font-medium text-white">{acc.bankName}</p>
                                             <p className="text-xs text-slate-500">{acc.accountNumberMasked}</p>
                                         </div>
-                                        <div className={`w-2 h-2 rounded-full ${acc.status === 'Connected' ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
+                                        <div className={`w-2 h-2 rounded-full ${acc.connectionStatus === 'Connected' ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
                                     </div>
                                 ))}
                             </div>

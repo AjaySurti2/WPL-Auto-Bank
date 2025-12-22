@@ -1,9 +1,9 @@
-import { BankAccount, BankStatus, SyncSchedule, ActivityLog, User } from './types';
+import { BankAccount, BankStatus, DownloadSchedule, ActivityLog, User } from './types';
 
 export const MOCK_USERS: User[] = [
   {
     id: 'u1',
-    name: 'Administrator',
+    displayName: 'Administrator',
     email: 'admin@autobank.com',
     role: 'Admin',
     password: 'password123',
@@ -11,7 +11,7 @@ export const MOCK_USERS: User[] = [
   },
   {
     id: 'u2',
-    name: 'Ops Manager',
+    displayName: 'Ops Manager',
     email: 'ops@autobank.com',
     role: 'Scheduler',
     password: 'password123',
@@ -19,7 +19,7 @@ export const MOCK_USERS: User[] = [
   },
   {
     id: 'u3',
-    name: 'Audit Team',
+    displayName: 'Audit Team',
     email: 'audit@autobank.com',
     role: 'Downloader',
     password: 'password123',
@@ -35,8 +35,8 @@ export const MOCK_ACCOUNTS: BankAccount[] = [
     accountNumber: '9876544432',
     accountNumberMasked: '**** 4432',
     userId: 'jdoe_business',
-    lastSync: '2023-10-26 14:30',
-    status: BankStatus.CONNECTED,
+    lastSyncedAt: '2023-10-26 14:30',
+    connectionStatus: BankStatus.CONNECTED,
     requiresOtp: false,
     logo: 'https://picsum.photos/40/40?random=1'
   },
@@ -47,8 +47,8 @@ export const MOCK_ACCOUNTS: BankAccount[] = [
     accountNumber: '1234568891',
     accountNumberMasked: '**** 8891',
     userId: 'jdoe_personal',
-    lastSync: '2023-10-25 09:00',
-    status: BankStatus.OTP_REQUIRED,
+    lastSyncedAt: '2023-10-25 09:00',
+    connectionStatus: BankStatus.OTP_REQUIRED,
     requiresOtp: true,
     logo: 'https://picsum.photos/40/40?random=2'
   },
@@ -59,14 +59,14 @@ export const MOCK_ACCOUNTS: BankAccount[] = [
     accountNumber: '5555551120',
     accountNumberMasked: '**** 1120',
     userId: 'jdoe_savings',
-    lastSync: '2023-10-20 18:45',
-    status: BankStatus.NEEDS_ATTENTION,
+    lastSyncedAt: '2023-10-20 18:45',
+    connectionStatus: BankStatus.NEEDS_ATTENTION,
     requiresOtp: true,
     logo: 'https://picsum.photos/40/40?random=3'
   }
 ];
 
-export const MOCK_SCHEDULES: SyncSchedule[] = [
+export const MOCK_SCHEDULES: DownloadSchedule[] = [
   {
     id: 's1',
     bankId: '1',
@@ -74,7 +74,7 @@ export const MOCK_SCHEDULES: SyncSchedule[] = [
     scheduledTime: '02:00',
     targetFolder: '/Finance/Chase/2023',
     storageType: 'GoogleDrive',
-    nextRun: '2023-10-27 02:00',
+    nextDownloadAt: '2023-10-27 02:00',
     isActive: true
   },
   {
@@ -84,7 +84,7 @@ export const MOCK_SCHEDULES: SyncSchedule[] = [
     scheduledTime: '00:00',
     targetFolder: 'C:\\Users\\Admin\\Downloads\\Statements',
     storageType: 'Local',
-    nextRun: '2023-11-01 00:00',
+    nextDownloadAt: '2023-11-01 00:00',
     isActive: true
   }
 ];

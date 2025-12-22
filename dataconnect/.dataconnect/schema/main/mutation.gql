@@ -1,0 +1,572 @@
+extend type Mutation {
+  """
+  ✨ Insert a single `BankAccount` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  bankAccount_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: BankAccount_Data!
+  ): BankAccount_KeyOutput! @fdc_generated(from: "BankAccount", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `DownloadSchedule` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  downloadSchedule_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: DownloadSchedule_Data!
+  ): DownloadSchedule_KeyOutput! @fdc_generated(from: "DownloadSchedule", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `Notification` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  notification_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: Notification_Data!
+  ): Notification_KeyOutput! @fdc_generated(from: "Notification", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `Statement` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  statement_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: Statement_Data!
+  ): Statement_KeyOutput! @fdc_generated(from: "Statement", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `User` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  user_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: User_Data!
+  ): User_KeyOutput! @fdc_generated(from: "User", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert `BankAccount` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  bankAccount_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [BankAccount_Data!]!
+  ): [BankAccount_KeyOutput!]! @fdc_generated(from: "BankAccount", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `DownloadSchedule` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  downloadSchedule_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [DownloadSchedule_Data!]!
+  ): [DownloadSchedule_KeyOutput!]! @fdc_generated(from: "DownloadSchedule", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `Notification` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  notification_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [Notification_Data!]!
+  ): [Notification_KeyOutput!]! @fdc_generated(from: "Notification", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `Statement` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  statement_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [Statement_Data!]!
+  ): [Statement_KeyOutput!]! @fdc_generated(from: "Statement", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `User` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  user_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [User_Data!]!
+  ): [User_KeyOutput!]! @fdc_generated(from: "User", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert or update a single `BankAccount` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `BankAccount`.
+  """
+  bankAccount_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: BankAccount_Data!
+  ): BankAccount_KeyOutput! @fdc_generated(from: "BankAccount", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `DownloadSchedule` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `DownloadSchedule`.
+  """
+  downloadSchedule_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: DownloadSchedule_Data!
+  ): DownloadSchedule_KeyOutput! @fdc_generated(from: "DownloadSchedule", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `Notification` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Notification`.
+  """
+  notification_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: Notification_Data!
+  ): Notification_KeyOutput! @fdc_generated(from: "Notification", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `Statement` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Statement`.
+  """
+  statement_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: Statement_Data!
+  ): Statement_KeyOutput! @fdc_generated(from: "Statement", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `User` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `User`.
+  """
+  user_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: User_Data!
+  ): User_KeyOutput! @fdc_generated(from: "User", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update `BankAccount` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `BankAccount`.
+  """
+  bankAccount_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [BankAccount_Data!]!
+  ): [BankAccount_KeyOutput!]! @fdc_generated(from: "BankAccount", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `DownloadSchedule` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `DownloadSchedule`.
+  """
+  downloadSchedule_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [DownloadSchedule_Data!]!
+  ): [DownloadSchedule_KeyOutput!]! @fdc_generated(from: "DownloadSchedule", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `Notification` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Notification`.
+  """
+  notification_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [Notification_Data!]!
+  ): [Notification_KeyOutput!]! @fdc_generated(from: "Notification", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `Statement` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Statement`.
+  """
+  statement_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [Statement_Data!]!
+  ): [Statement_KeyOutput!]! @fdc_generated(from: "Statement", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `User` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `User`.
+  """
+  user_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [User_Data!]!
+  ): [User_KeyOutput!]! @fdc_generated(from: "User", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Update a single `BankAccount` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `BankAccount` or `null` if not found.
+  """
+  bankAccount_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: BankAccount_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: BankAccount_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: BankAccount_Data!
+  ): BankAccount_KeyOutput @fdc_generated(from: "BankAccount", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `DownloadSchedule` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `DownloadSchedule` or `null` if not found.
+  """
+  downloadSchedule_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: DownloadSchedule_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: DownloadSchedule_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: DownloadSchedule_Data!
+  ): DownloadSchedule_KeyOutput @fdc_generated(from: "DownloadSchedule", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `Notification` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `Notification` or `null` if not found.
+  """
+  notification_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Notification_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Notification_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: Notification_Data!
+  ): Notification_KeyOutput @fdc_generated(from: "Notification", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `Statement` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `Statement` or `null` if not found.
+  """
+  statement_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Statement_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Statement_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: Statement_Data!
+  ): Statement_KeyOutput @fdc_generated(from: "Statement", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `User` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `User` or `null` if not found.
+  """
+  user_update(
+    """
+    The unique ID of the object.
+    """
+    id: String
+
+    """
+    ✨ `_expr` server value variant of `id` (The unique ID of the object.)
+    """
+    id_expr: String_Expr
+
+    """
+    The key used to identify the object.
+    """
+    key: User_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: User_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: User_Data!
+  ): User_KeyOutput @fdc_generated(from: "User", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update `BankAccount` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  bankAccount_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: BankAccount_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: BankAccount_Data!
+  ): Int! @fdc_generated(from: "BankAccount", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `DownloadSchedule` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  downloadSchedule_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: DownloadSchedule_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: DownloadSchedule_Data!
+  ): Int! @fdc_generated(from: "DownloadSchedule", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `Notification` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  notification_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: Notification_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: Notification_Data!
+  ): Int! @fdc_generated(from: "Notification", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `Statement` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  statement_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: Statement_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: Statement_Data!
+  ): Int! @fdc_generated(from: "Statement", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `User` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  user_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: User_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: User_Data!
+  ): Int! @fdc_generated(from: "User", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Delete a single `BankAccount` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  bankAccount_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: BankAccount_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: BankAccount_FirstRow
+  ): BankAccount_KeyOutput @fdc_generated(from: "BankAccount", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `DownloadSchedule` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  downloadSchedule_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: DownloadSchedule_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: DownloadSchedule_FirstRow
+  ): DownloadSchedule_KeyOutput @fdc_generated(from: "DownloadSchedule", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `Notification` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  notification_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Notification_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Notification_FirstRow
+  ): Notification_KeyOutput @fdc_generated(from: "Notification", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `Statement` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  statement_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Statement_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Statement_FirstRow
+  ): Statement_KeyOutput @fdc_generated(from: "Statement", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `User` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  user_delete(
+    """
+    The unique ID of the object.
+    """
+    id: String
+
+    """
+    ✨ `_expr` server value variant of `id` (The unique ID of the object.)
+    """
+    id_expr: String_Expr
+
+    """
+    The key used to identify the object.
+    """
+    key: User_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: User_FirstRow
+  ): User_KeyOutput @fdc_generated(from: "User", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete `BankAccount` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  bankAccount_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: BankAccount_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "BankAccount", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `DownloadSchedule` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  downloadSchedule_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: DownloadSchedule_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "DownloadSchedule", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `Notification` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  notification_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: Notification_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "Notification", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `Statement` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  statement_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: Statement_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "Statement", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `User` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  user_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: User_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "User", purpose: DELETE_MULTIPLE)
+}

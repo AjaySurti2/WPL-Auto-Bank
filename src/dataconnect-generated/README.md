@@ -120,7 +120,6 @@ export interface GetUserData {
     photoUrl?: string | null;
     role: string;
     avatar?: string | null;
-    password?: string | null;
     createdAt: TimestampString;
   } & User_Key;
 }
@@ -219,7 +218,6 @@ export interface ListUsersData {
     email: string;
     role: string;
     avatar?: string | null;
-    password?: string | null;
   } & User_Key)[];
 }
 ```
@@ -313,6 +311,8 @@ The `data` property is an object of type `ListBankAccountsData`, which is define
 export interface ListBankAccountsData {
   bankAccounts: ({
     id: UUIDString;
+    userId: string;
+    creatorName?: string | null;
     bankName: string;
     bankUrl?: string | null;
     logo?: string | null;
@@ -416,6 +416,8 @@ The `data` property is an object of type `ListDownloadSchedulesData`, which is d
 export interface ListDownloadSchedulesData {
   downloadSchedules: ({
     id: UUIDString;
+    userId: string;
+    creatorName?: string | null;
     bankAccount: {
       id: UUIDString;
       bankName: string;
@@ -737,7 +739,6 @@ export interface CreateUserVariables {
   photoUrl?: string | null;
   role: string;
   avatar?: string | null;
-  password?: string | null;
 }
 ```
 ### Return Type
@@ -762,14 +763,13 @@ const createUserVars: CreateUserVariables = {
   photoUrl: ..., // optional
   role: ..., 
   avatar: ..., // optional
-  password: ..., // optional
 };
 
 // Call the `createUser()` function to execute the mutation.
 // You can use the `await` keyword to wait for the promise to resolve.
 const { data } = await createUser(createUserVars);
 // Variables can be defined inline as well.
-const { data } = await createUser({ displayName: ..., email: ..., photoUrl: ..., role: ..., avatar: ..., password: ..., });
+const { data } = await createUser({ displayName: ..., email: ..., photoUrl: ..., role: ..., avatar: ..., });
 
 // You can also pass in a `DataConnect` instance to the action shortcut function.
 const dataConnect = getDataConnect(connectorConfig);
@@ -797,13 +797,12 @@ const createUserVars: CreateUserVariables = {
   photoUrl: ..., // optional
   role: ..., 
   avatar: ..., // optional
-  password: ..., // optional
 };
 
 // Call the `createUserRef()` function to get a reference to the mutation.
 const ref = createUserRef(createUserVars);
 // Variables can be defined inline as well.
-const ref = createUserRef({ displayName: ..., email: ..., photoUrl: ..., role: ..., avatar: ..., password: ..., });
+const ref = createUserRef({ displayName: ..., email: ..., photoUrl: ..., role: ..., avatar: ..., });
 
 // You can also pass in a `DataConnect` instance to the `MutationRef` function.
 const dataConnect = getDataConnect(connectorConfig);
@@ -862,7 +861,6 @@ export interface AdminUpsertUserVariables {
   photoUrl?: string | null;
   role: string;
   avatar?: string | null;
-  password?: string | null;
 }
 ```
 ### Return Type
@@ -888,14 +886,13 @@ const adminUpsertUserVars: AdminUpsertUserVariables = {
   photoUrl: ..., // optional
   role: ..., 
   avatar: ..., // optional
-  password: ..., // optional
 };
 
 // Call the `adminUpsertUser()` function to execute the mutation.
 // You can use the `await` keyword to wait for the promise to resolve.
 const { data } = await adminUpsertUser(adminUpsertUserVars);
 // Variables can be defined inline as well.
-const { data } = await adminUpsertUser({ id: ..., displayName: ..., email: ..., photoUrl: ..., role: ..., avatar: ..., password: ..., });
+const { data } = await adminUpsertUser({ id: ..., displayName: ..., email: ..., photoUrl: ..., role: ..., avatar: ..., });
 
 // You can also pass in a `DataConnect` instance to the action shortcut function.
 const dataConnect = getDataConnect(connectorConfig);
@@ -924,13 +921,12 @@ const adminUpsertUserVars: AdminUpsertUserVariables = {
   photoUrl: ..., // optional
   role: ..., 
   avatar: ..., // optional
-  password: ..., // optional
 };
 
 // Call the `adminUpsertUserRef()` function to get a reference to the mutation.
 const ref = adminUpsertUserRef(adminUpsertUserVars);
 // Variables can be defined inline as well.
-const ref = adminUpsertUserRef({ id: ..., displayName: ..., email: ..., photoUrl: ..., role: ..., avatar: ..., password: ..., });
+const ref = adminUpsertUserRef({ id: ..., displayName: ..., email: ..., photoUrl: ..., role: ..., avatar: ..., });
 
 // You can also pass in a `DataConnect` instance to the `MutationRef` function.
 const dataConnect = getDataConnect(connectorConfig);
@@ -987,7 +983,6 @@ export interface UpdateUserProfileVariables {
   displayName?: string | null;
   avatar?: string | null;
   role?: string | null;
-  password?: string | null;
 }
 ```
 ### Return Type
@@ -1011,14 +1006,13 @@ const updateUserProfileVars: UpdateUserProfileVariables = {
   displayName: ..., // optional
   avatar: ..., // optional
   role: ..., // optional
-  password: ..., // optional
 };
 
 // Call the `updateUserProfile()` function to execute the mutation.
 // You can use the `await` keyword to wait for the promise to resolve.
 const { data } = await updateUserProfile(updateUserProfileVars);
 // Variables can be defined inline as well.
-const { data } = await updateUserProfile({ id: ..., displayName: ..., avatar: ..., role: ..., password: ..., });
+const { data } = await updateUserProfile({ id: ..., displayName: ..., avatar: ..., role: ..., });
 
 // You can also pass in a `DataConnect` instance to the action shortcut function.
 const dataConnect = getDataConnect(connectorConfig);
@@ -1045,13 +1039,12 @@ const updateUserProfileVars: UpdateUserProfileVariables = {
   displayName: ..., // optional
   avatar: ..., // optional
   role: ..., // optional
-  password: ..., // optional
 };
 
 // Call the `updateUserProfileRef()` function to get a reference to the mutation.
 const ref = updateUserProfileRef(updateUserProfileVars);
 // Variables can be defined inline as well.
-const ref = updateUserProfileRef({ id: ..., displayName: ..., avatar: ..., role: ..., password: ..., });
+const ref = updateUserProfileRef({ id: ..., displayName: ..., avatar: ..., role: ..., });
 
 // You can also pass in a `DataConnect` instance to the `MutationRef` function.
 const dataConnect = getDataConnect(connectorConfig);
@@ -1216,11 +1209,11 @@ export interface CreateBankAccountVariables {
   bankName: string;
   bankUrl?: string | null;
   logo?: string | null;
-  accountNumber?: string | null;
   accountNumberMasked: string;
   connectionStatus: string;
   requiresOtp?: boolean | null;
   accountType?: string | null;
+  creatorName?: string | null;
 }
 ```
 ### Return Type
@@ -1243,18 +1236,18 @@ const createBankAccountVars: CreateBankAccountVariables = {
   bankName: ..., 
   bankUrl: ..., // optional
   logo: ..., // optional
-  accountNumber: ..., // optional
   accountNumberMasked: ..., 
   connectionStatus: ..., 
   requiresOtp: ..., // optional
   accountType: ..., // optional
+  creatorName: ..., // optional
 };
 
 // Call the `createBankAccount()` function to execute the mutation.
 // You can use the `await` keyword to wait for the promise to resolve.
 const { data } = await createBankAccount(createBankAccountVars);
 // Variables can be defined inline as well.
-const { data } = await createBankAccount({ bankName: ..., bankUrl: ..., logo: ..., accountNumber: ..., accountNumberMasked: ..., connectionStatus: ..., requiresOtp: ..., accountType: ..., });
+const { data } = await createBankAccount({ bankName: ..., bankUrl: ..., logo: ..., accountNumberMasked: ..., connectionStatus: ..., requiresOtp: ..., accountType: ..., creatorName: ..., });
 
 // You can also pass in a `DataConnect` instance to the action shortcut function.
 const dataConnect = getDataConnect(connectorConfig);
@@ -1280,17 +1273,17 @@ const createBankAccountVars: CreateBankAccountVariables = {
   bankName: ..., 
   bankUrl: ..., // optional
   logo: ..., // optional
-  accountNumber: ..., // optional
   accountNumberMasked: ..., 
   connectionStatus: ..., 
   requiresOtp: ..., // optional
   accountType: ..., // optional
+  creatorName: ..., // optional
 };
 
 // Call the `createBankAccountRef()` function to get a reference to the mutation.
 const ref = createBankAccountRef(createBankAccountVars);
 // Variables can be defined inline as well.
-const ref = createBankAccountRef({ bankName: ..., bankUrl: ..., logo: ..., accountNumber: ..., accountNumberMasked: ..., connectionStatus: ..., requiresOtp: ..., accountType: ..., });
+const ref = createBankAccountRef({ bankName: ..., bankUrl: ..., logo: ..., accountNumberMasked: ..., connectionStatus: ..., requiresOtp: ..., accountType: ..., creatorName: ..., });
 
 // You can also pass in a `DataConnect` instance to the `MutationRef` function.
 const dataConnect = getDataConnect(connectorConfig);
@@ -1347,7 +1340,6 @@ export interface UpdateBankAccountVariables {
   bankName?: string | null;
   bankUrl?: string | null;
   logo?: string | null;
-  accountNumber?: string | null;
   accountNumberMasked?: string | null;
   connectionStatus?: string | null;
   requiresOtp?: boolean | null;
@@ -1375,7 +1367,6 @@ const updateBankAccountVars: UpdateBankAccountVariables = {
   bankName: ..., // optional
   bankUrl: ..., // optional
   logo: ..., // optional
-  accountNumber: ..., // optional
   accountNumberMasked: ..., // optional
   connectionStatus: ..., // optional
   requiresOtp: ..., // optional
@@ -1386,7 +1377,7 @@ const updateBankAccountVars: UpdateBankAccountVariables = {
 // You can use the `await` keyword to wait for the promise to resolve.
 const { data } = await updateBankAccount(updateBankAccountVars);
 // Variables can be defined inline as well.
-const { data } = await updateBankAccount({ id: ..., bankName: ..., bankUrl: ..., logo: ..., accountNumber: ..., accountNumberMasked: ..., connectionStatus: ..., requiresOtp: ..., accountType: ..., });
+const { data } = await updateBankAccount({ id: ..., bankName: ..., bankUrl: ..., logo: ..., accountNumberMasked: ..., connectionStatus: ..., requiresOtp: ..., accountType: ..., });
 
 // You can also pass in a `DataConnect` instance to the action shortcut function.
 const dataConnect = getDataConnect(connectorConfig);
@@ -1413,7 +1404,6 @@ const updateBankAccountVars: UpdateBankAccountVariables = {
   bankName: ..., // optional
   bankUrl: ..., // optional
   logo: ..., // optional
-  accountNumber: ..., // optional
   accountNumberMasked: ..., // optional
   connectionStatus: ..., // optional
   requiresOtp: ..., // optional
@@ -1423,7 +1413,7 @@ const updateBankAccountVars: UpdateBankAccountVariables = {
 // Call the `updateBankAccountRef()` function to get a reference to the mutation.
 const ref = updateBankAccountRef(updateBankAccountVars);
 // Variables can be defined inline as well.
-const ref = updateBankAccountRef({ id: ..., bankName: ..., bankUrl: ..., logo: ..., accountNumber: ..., accountNumberMasked: ..., connectionStatus: ..., requiresOtp: ..., accountType: ..., });
+const ref = updateBankAccountRef({ id: ..., bankName: ..., bankUrl: ..., logo: ..., accountNumberMasked: ..., connectionStatus: ..., requiresOtp: ..., accountType: ..., });
 
 // You can also pass in a `DataConnect` instance to the `MutationRef` function.
 const dataConnect = getDataConnect(connectorConfig);
@@ -1594,6 +1584,7 @@ export interface CreateDownloadScheduleVariables {
   isActive: boolean;
   statementFormat?: string | null;
   startDateOffset?: string | null;
+  creatorName?: string | null;
 }
 ```
 ### Return Type
@@ -1622,13 +1613,14 @@ const createDownloadScheduleVars: CreateDownloadScheduleVariables = {
   isActive: ..., 
   statementFormat: ..., // optional
   startDateOffset: ..., // optional
+  creatorName: ..., // optional
 };
 
 // Call the `createDownloadSchedule()` function to execute the mutation.
 // You can use the `await` keyword to wait for the promise to resolve.
 const { data } = await createDownloadSchedule(createDownloadScheduleVars);
 // Variables can be defined inline as well.
-const { data } = await createDownloadSchedule({ bankAccountId: ..., frequency: ..., scheduledTime: ..., targetFolder: ..., storageType: ..., nextDownloadAt: ..., isActive: ..., statementFormat: ..., startDateOffset: ..., });
+const { data } = await createDownloadSchedule({ bankAccountId: ..., frequency: ..., scheduledTime: ..., targetFolder: ..., storageType: ..., nextDownloadAt: ..., isActive: ..., statementFormat: ..., startDateOffset: ..., creatorName: ..., });
 
 // You can also pass in a `DataConnect` instance to the action shortcut function.
 const dataConnect = getDataConnect(connectorConfig);
@@ -1660,12 +1652,13 @@ const createDownloadScheduleVars: CreateDownloadScheduleVariables = {
   isActive: ..., 
   statementFormat: ..., // optional
   startDateOffset: ..., // optional
+  creatorName: ..., // optional
 };
 
 // Call the `createDownloadScheduleRef()` function to get a reference to the mutation.
 const ref = createDownloadScheduleRef(createDownloadScheduleVars);
 // Variables can be defined inline as well.
-const ref = createDownloadScheduleRef({ bankAccountId: ..., frequency: ..., scheduledTime: ..., targetFolder: ..., storageType: ..., nextDownloadAt: ..., isActive: ..., statementFormat: ..., startDateOffset: ..., });
+const ref = createDownloadScheduleRef({ bankAccountId: ..., frequency: ..., scheduledTime: ..., targetFolder: ..., storageType: ..., nextDownloadAt: ..., isActive: ..., statementFormat: ..., startDateOffset: ..., creatorName: ..., });
 
 // You can also pass in a `DataConnect` instance to the `MutationRef` function.
 const dataConnect = getDataConnect(connectorConfig);

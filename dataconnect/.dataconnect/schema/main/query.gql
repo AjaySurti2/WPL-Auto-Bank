@@ -1,0 +1,272 @@
+extend type Query {
+  """
+  ✨ Look up a single `BankAccount` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  bankAccount(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: BankAccount_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: BankAccount_FirstRow
+  ): BankAccount @fdc_generated(from: "BankAccount", purpose: QUERY_SINGLE)
+  """
+  ✨ Look up a single `DownloadSchedule` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  downloadSchedule(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: DownloadSchedule_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: DownloadSchedule_FirstRow
+  ): DownloadSchedule @fdc_generated(from: "DownloadSchedule", purpose: QUERY_SINGLE)
+  """
+  ✨ Look up a single `Notification` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  notification(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Notification_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Notification_FirstRow
+  ): Notification @fdc_generated(from: "Notification", purpose: QUERY_SINGLE)
+  """
+  ✨ Look up a single `Statement` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  statement(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Statement_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Statement_FirstRow
+  ): Statement @fdc_generated(from: "Statement", purpose: QUERY_SINGLE)
+  """
+  ✨ Look up a single `User` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  user(
+    """
+    The unique ID of the object.
+    """
+    id: String
+
+    """
+    ✨ `_expr` server value variant of `id` (The unique ID of the object.)
+    """
+    id_expr: String_Expr
+
+    """
+    The key used to identify the object.
+    """
+    key: User_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: User_FirstRow
+  ): User @fdc_generated(from: "User", purpose: QUERY_SINGLE)
+  """
+  ✨ List `BankAccount` objects in the table and return selected fields, optionally filtered by `where` conditions
+  """
+  bankAccounts(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: BankAccount_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [BankAccount_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: BankAccount_Having
+  ): [BankAccount!]! @fdc_generated(from: "BankAccount", purpose: QUERY_MULTIPLE)
+  """
+  ✨ List `DownloadSchedule` objects in the table and return selected fields, optionally filtered by `where` conditions
+  """
+  downloadSchedules(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: DownloadSchedule_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [DownloadSchedule_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: DownloadSchedule_Having
+  ): [DownloadSchedule!]! @fdc_generated(from: "DownloadSchedule", purpose: QUERY_MULTIPLE)
+  """
+  ✨ List `Notification` objects in the table and return selected fields, optionally filtered by `where` conditions
+  """
+  notifications(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: Notification_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [Notification_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: Notification_Having
+  ): [Notification!]! @fdc_generated(from: "Notification", purpose: QUERY_MULTIPLE)
+  """
+  ✨ List `Statement` objects in the table and return selected fields, optionally filtered by `where` conditions
+  """
+  statements(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: Statement_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [Statement_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: Statement_Having
+  ): [Statement!]! @fdc_generated(from: "Statement", purpose: QUERY_MULTIPLE)
+  """
+  ✨ List `User` objects in the table and return selected fields, optionally filtered by `where` conditions
+  """
+  users(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: User_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [User_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: User_Having
+  ): [User!]! @fdc_generated(from: "User", purpose: QUERY_MULTIPLE)
+}

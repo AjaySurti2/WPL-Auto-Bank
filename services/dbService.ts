@@ -20,7 +20,7 @@ import {
     deleteUser as deleteUserDC
 } from '@dataconnect/generated';
 import { dataconnect } from './firebase';
-import { BankAccount, SyncSchedule, ActivityLog, BankStatus, User } from '../types';
+import { BankAccount, DownloadSchedule, ActivityLog, BankStatus, User } from '../types';
 
 // Helper to prevent infinite hangs and provide offline fallback
 const withTimeout = <T>(promise: Promise<T>, ms: number = 10000, opName: string): Promise<T> => {
@@ -40,12 +40,11 @@ export const syncUser = async (user: User) => {
         if (!data.user) {
             console.log("User missing in Data Connect. Creating...");
             await withTimeout(createUser(dataconnect, {
-                displayName: user.name,
+                displayName: user.displayName,
                 email: user.email,
                 role: user.role,
                 avatar: user.avatar,
-                photoUrl: user.avatar,
-                password: user.password
+                photoUrl: user.avatar
             }), 10000, "createUser");
             console.log("User synced with Data Connect.");
         }
@@ -66,28 +65,36 @@ const saveLocal = <T>(key: string, data: T[]) => localStorage.setItem(key, JSON.
 // Accounts
 export const getAccounts = async (): Promise<BankAccount[]> => {
     try {
-        console.log("Fetching accounts (Data Connect)...");
-        const { data } = await withTimeout(listBankAccounts(dataconnect), 30000, "getAccounts");
-        const cloudData: BankAccount[] = data.bankAccounts.map(acc => ({
+        console.log("Fetching accounts (Data Connect: Shared Mode)...");
+        const response = await withTimeout(listBankAccounts(dataconnect), 30000, "getAccounts");
+
+        if (!response || !response.data) {
+            throw new Error("Empty response from cloud service");
+        }
+
+        const cloudData: BankAccount[] = response.data.bankAccounts.map(acc => ({
             id: acc.id,
             bankName: acc.bankName,
             bankUrl: acc.bankUrl || '',
             accountNumber: acc.accountNumber || '',
             accountNumberMasked: acc.accountNumberMasked,
-            userId: '',
-            lastSync: acc.lastSyncedAt || '',
-            status: acc.connectionStatus as BankStatus,
+            userId: (acc as any).userId || 'Shared',
+            creatorName: (acc as any).creatorName,
+            lastSyncedAt: acc.lastSyncedAt || '',
+            connectionStatus: acc.connectionStatus as BankStatus,
             requiresOtp: !!acc.requiresOtp,
             logo: acc.logo || '',
-            lastSyncedAt: acc.lastSyncedAt || undefined,
             accountType: acc.accountType || undefined
         }));
-        console.log(`[Cloud] Success: Fetched ${cloudData.length} accounts.`);
+
+        console.log(`[Cloud] ✅ Successfully fetched ${cloudData.length} organization bank accounts.`);
         saveLocal('accounts_cache', cloudData);
         return cloudData;
     } catch (e: any) {
-        console.warn(`[Cloud] Sync Failed (getAccounts): ${e.message || e}. Using LOCAL fallback.`);
-        return loadLocal<BankAccount>('accounts_cache');
+        console.error(`[Cloud] ❌ getAccounts failed:`, e);
+        const cached = loadLocal<BankAccount>('accounts_cache');
+        console.log(`[Cloud] Falling back to local cache (${cached.length} items).`);
+        return cached;
     }
 };
 
@@ -97,12 +104,12 @@ export const addAccount = async (account: Omit<BankAccount, 'id'>) => {
             bankName: account.bankName,
             bankUrl: account.bankUrl,
             logo: account.logo,
-            accountNumber: account.accountNumber,
             accountNumberMasked: account.accountNumberMasked,
-            connectionStatus: account.status,
+            connectionStatus: account.connectionStatus,
             requiresOtp: account.requiresOtp,
-            accountType: account.accountType
-        }), 30000, "addAccount");
+            accountType: account.accountType,
+            creatorName: account.creatorName // Store the human name in creatorName
+        } as any), 30000, "addAccount");
 
         // Robust ID extraction for Data Connect's KeyOutput
         const newId = (data.bankAccount_insert as any)?.id || data.bankAccount_insert;
@@ -133,9 +140,8 @@ export const updateAccount = async (id: string, updates: Partial<BankAccount>) =
             bankName: updates.bankName,
             bankUrl: updates.bankUrl,
             logo: updates.logo,
-            accountNumber: updates.accountNumber,
             accountNumberMasked: updates.accountNumberMasked,
-            connectionStatus: updates.status,
+            connectionStatus: updates.connectionStatus,
             requiresOtp: updates.requiresOtp,
             accountType: updates.accountType
         }), 30000, "updateAccount");
@@ -161,32 +167,34 @@ export const deleteAccount = async (id: string) => {
 };
 
 // Schedules
-export const getSchedules = async (): Promise<SyncSchedule[]> => {
+export const getSchedules = async (): Promise<DownloadSchedule[]> => {
     try {
         const { data } = await withTimeout(listDownloadSchedules(dataconnect), 30000, "getSchedules");
-        const cloudData: SyncSchedule[] = data.downloadSchedules.map(s => ({
+        const cloudData: DownloadSchedule[] = data.downloadSchedules.map(s => ({
             id: s.id,
             bankId: s.bankAccount.id,
             frequency: s.frequency as any,
             scheduledTime: s.scheduledTime || '',
             targetFolder: s.targetFolder || '',
             storageType: (s.storageType as any) || 'Local',
-            nextRun: s.nextDownloadAt,
-            isActive: s.isActive,
             nextDownloadAt: s.nextDownloadAt,
-            lastDownloadAt: s.lastDownloadAt || undefined
+            isActive: s.isActive,
+            bankAccountName: s.bankAccount?.bankName || 'Unknown',
+            userId: (s as any).userId || 'Shared',
+            userName: (s as any).creatorName,
+            lastDownloadAt: s.lastDownloadAt || undefined,
         }));
         saveLocal('schedules_cache', cloudData);
         return cloudData;
     } catch { return loadLocal('schedules_cache'); }
 };
 
-export const addSchedule = async (schedule: Omit<SyncSchedule, 'id'>) => {
+export const addSchedule = async (schedule: Omit<DownloadSchedule, 'id'>) => {
     try {
         console.log(`[Cloud] Attempting to create schedule for bank: ${schedule.bankId}`);
 
         // Final sanity check for timestamp format
-        let timestamp = schedule.nextRun;
+        let timestamp = schedule.nextDownloadAt;
         try {
             new Date(timestamp).toISOString();
         } catch {
@@ -209,25 +217,25 @@ export const addSchedule = async (schedule: Omit<SyncSchedule, 'id'>) => {
         const newSched = {
             id: typeof newId === 'string' ? newId : `local_sched_${Date.now()}`,
             ...schedule,
-            nextRun: timestamp
+            nextDownloadAt: timestamp
         };
 
         console.log(`[Cloud] Success: Schedule created with ID: ${newSched.id}`);
 
-        const localData = loadLocal<SyncSchedule>('schedules_cache');
-        saveLocal('schedules_cache', [...localData, newSched as SyncSchedule]);
+        const localData = loadLocal<DownloadSchedule>('schedules_cache');
+        saveLocal('schedules_cache', [...localData, newSched as DownloadSchedule]);
 
         return newSched;
     } catch (e: any) {
         console.error(`[Cloud] Sync Failed (addSchedule):`, e);
-        const localData = loadLocal<SyncSchedule>('schedules_cache');
+        const localData = loadLocal<DownloadSchedule>('schedules_cache');
         const newSched = { id: `local_${Date.now()}`, ...schedule };
         saveLocal('schedules_cache', [...localData, newSched]);
         return newSched as any;
     }
 };
 
-export const updateSchedule = async (id: string, updates: Partial<SyncSchedule>) => {
+export const updateSchedule = async (id: string, updates: Partial<DownloadSchedule>) => {
     try {
         await withTimeout(updateDownloadSchedule(dataconnect, {
             id,
@@ -235,12 +243,12 @@ export const updateSchedule = async (id: string, updates: Partial<SyncSchedule>)
             scheduledTime: updates.scheduledTime,
             targetFolder: updates.targetFolder,
             storageType: updates.storageType,
-            nextDownloadAt: updates.nextRun,
+            nextDownloadAt: updates.nextDownloadAt,
             isActive: updates.isActive,
             lastDownloadAt: (updates as any).lastDownloadAt
         }), 30000, "updateSchedule");
     } catch {
-        const localData = loadLocal<SyncSchedule>('schedules_cache');
+        const localData = loadLocal<DownloadSchedule>('schedules_cache');
         saveLocal('schedules_cache', localData.map(s => s.id === id ? { ...s, ...updates } : s));
     }
 };
@@ -249,7 +257,7 @@ export const deleteSchedule = async (id: string) => {
     try {
         await withTimeout(deleteDownloadSchedule(dataconnect, { id }), 30000, "deleteSchedule");
     } catch {
-        const localData = loadLocal<SyncSchedule>('schedules_cache');
+        const localData = loadLocal<DownloadSchedule>('schedules_cache');
         saveLocal('schedules_cache', localData.filter(s => s.id !== id));
     }
 };
@@ -305,11 +313,10 @@ export const getUsers = async (): Promise<User[]> => {
         const { data } = await withTimeout(listUsers(dataconnect), 30000, "getUsers");
         const cloudData: User[] = data.users.map(u => ({
             id: u.id,
-            name: u.displayName,
+            displayName: u.displayName,
             email: u.email,
             role: u.role as any,
-            avatar: u.avatar || '👤',
-            password: u.password || undefined
+            avatar: u.avatar || '👤'
         }));
         console.log(`[Cloud] Success: Fetched ${cloudData.length} users.`);
         saveLocal('users_cache', cloudData);
@@ -320,17 +327,36 @@ export const getUsers = async (): Promise<User[]> => {
     }
 };
 
+export const getCurrentUser = async (): Promise<User | null> => {
+    try {
+        console.log("Fetching current user profile (Data Connect)...");
+        const { data } = await withTimeout(getUser(dataconnect), 10000, "getCurrentUser");
+        if (data.user) {
+            return {
+                id: data.user.id,
+                displayName: data.user.displayName,
+                email: data.user.email,
+                role: data.user.role as any,
+                avatar: data.user.avatar || (data.user.displayName ? data.user.displayName[0].toUpperCase() : 'U')
+            };
+        }
+        return null;
+    } catch (e) {
+        console.warn("[Cloud] Failed to fetch current user profile:", e);
+        return null;
+    }
+};
+
 export const addUser = async (user: User) => {
     try {
-        console.log(`[Cloud] Attempting to create user: ${user.name}`);
+        console.log(`[Cloud] Attempting to create user: ${user.displayName}`);
         const { data } = await withTimeout(adminUpsertUser(dataconnect, {
             id: user.id,
-            displayName: user.name,
+            displayName: user.displayName,
             email: user.email,
             role: user.role,
             avatar: user.avatar,
-            password: user.password,
-            photoUrl: user.avatar
+            photoUrl: user.avatar // Removed password field per lint error
         }), 10000, "addUser");
 
         console.log(`[Cloud] Success: User created/updated.`);
@@ -342,12 +368,12 @@ export const addUser = async (user: User) => {
             console.warn(`[Cloud] AdminUpsertUser not found, falling back to basic createUser.`);
             try {
                 await withTimeout(createUser(dataconnect, {
-                    displayName: user.name,
+                    displayName: user.displayName,
                     email: user.email,
                     role: user.role,
                     avatar: user.avatar,
-                    photoUrl: user.avatar,
-                    password: user.password
+                    photoUrl: user.avatar
+                    // Removed password field per lint error
                 }), 10000, "addUserFallback");
                 console.log(`[Cloud] Success: User created (fallback).`);
                 const localData = loadLocal<User>('users_cache');
@@ -367,12 +393,12 @@ export const addUser = async (user: User) => {
 export const updateUser = async (id: string, updates: Partial<User>) => {
     try {
         console.log(`[Cloud] Updating user: ${id}`);
-        await withTimeout(updateUserProfile(dataconnect, {
+        const { data } = await withTimeout(updateUserProfile(dataconnect, {
             id,
-            displayName: updates.name,
+            displayName: updates.displayName,
             avatar: updates.avatar,
-            role: updates.role,
-            password: updates.password
+            role: updates.role
+            // Removed password field per lint error
         }), 10000, "updateUser");
 
         const localData = loadLocal<User>('users_cache');

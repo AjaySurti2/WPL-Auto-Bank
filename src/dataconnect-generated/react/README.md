@@ -156,7 +156,6 @@ export interface GetUserData {
     photoUrl?: string | null;
     role: string;
     avatar?: string | null;
-    password?: string | null;
     createdAt: TimestampString;
   } & User_Key;
 }
@@ -233,7 +232,6 @@ export interface ListUsersData {
     email: string;
     role: string;
     avatar?: string | null;
-    password?: string | null;
   } & User_Key)[];
 }
 ```
@@ -305,6 +303,8 @@ To access the data returned by a Query, use the `UseQueryResult.data` field. The
 export interface ListBankAccountsData {
   bankAccounts: ({
     id: UUIDString;
+    userId: string;
+    creatorName?: string | null;
     bankName: string;
     bankUrl?: string | null;
     logo?: string | null;
@@ -386,6 +386,8 @@ To access the data returned by a Query, use the `UseQueryResult.data` field. The
 export interface ListDownloadSchedulesData {
   downloadSchedules: ({
     id: UUIDString;
+    userId: string;
+    creatorName?: string | null;
     bankAccount: {
       id: UUIDString;
       bankName: string;
@@ -648,7 +650,6 @@ export interface CreateUserVariables {
   photoUrl?: string | null;
   role: string;
   avatar?: string | null;
-  password?: string | null;
 }
 ```
 ### Return Type
@@ -703,11 +704,10 @@ export default function CreateUserComponent() {
     photoUrl: ..., // optional
     role: ..., 
     avatar: ..., // optional
-    password: ..., // optional
   };
   mutation.mutate(createUserVars);
   // Variables can be defined inline as well.
-  mutation.mutate({ displayName: ..., email: ..., photoUrl: ..., role: ..., avatar: ..., password: ..., });
+  mutation.mutate({ displayName: ..., email: ..., photoUrl: ..., role: ..., avatar: ..., });
 
   // You can also pass in a `useDataConnectMutationOptions` object to `UseMutationResult.mutate()`.
   const options = {
@@ -753,7 +753,6 @@ export interface AdminUpsertUserVariables {
   photoUrl?: string | null;
   role: string;
   avatar?: string | null;
-  password?: string | null;
 }
 ```
 ### Return Type
@@ -809,11 +808,10 @@ export default function AdminUpsertUserComponent() {
     photoUrl: ..., // optional
     role: ..., 
     avatar: ..., // optional
-    password: ..., // optional
   };
   mutation.mutate(adminUpsertUserVars);
   // Variables can be defined inline as well.
-  mutation.mutate({ id: ..., displayName: ..., email: ..., photoUrl: ..., role: ..., avatar: ..., password: ..., });
+  mutation.mutate({ id: ..., displayName: ..., email: ..., photoUrl: ..., role: ..., avatar: ..., });
 
   // You can also pass in a `useDataConnectMutationOptions` object to `UseMutationResult.mutate()`.
   const options = {
@@ -857,7 +855,6 @@ export interface UpdateUserProfileVariables {
   displayName?: string | null;
   avatar?: string | null;
   role?: string | null;
-  password?: string | null;
 }
 ```
 ### Return Type
@@ -911,11 +908,10 @@ export default function UpdateUserProfileComponent() {
     displayName: ..., // optional
     avatar: ..., // optional
     role: ..., // optional
-    password: ..., // optional
   };
   mutation.mutate(updateUserProfileVars);
   // Variables can be defined inline as well.
-  mutation.mutate({ id: ..., displayName: ..., avatar: ..., role: ..., password: ..., });
+  mutation.mutate({ id: ..., displayName: ..., avatar: ..., role: ..., });
 
   // You can also pass in a `useDataConnectMutationOptions` object to `UseMutationResult.mutate()`.
   const options = {
@@ -1052,11 +1048,11 @@ export interface CreateBankAccountVariables {
   bankName: string;
   bankUrl?: string | null;
   logo?: string | null;
-  accountNumber?: string | null;
   accountNumberMasked: string;
   connectionStatus: string;
   requiresOtp?: boolean | null;
   accountType?: string | null;
+  creatorName?: string | null;
 }
 ```
 ### Return Type
@@ -1109,15 +1105,15 @@ export default function CreateBankAccountComponent() {
     bankName: ..., 
     bankUrl: ..., // optional
     logo: ..., // optional
-    accountNumber: ..., // optional
     accountNumberMasked: ..., 
     connectionStatus: ..., 
     requiresOtp: ..., // optional
     accountType: ..., // optional
+    creatorName: ..., // optional
   };
   mutation.mutate(createBankAccountVars);
   // Variables can be defined inline as well.
-  mutation.mutate({ bankName: ..., bankUrl: ..., logo: ..., accountNumber: ..., accountNumberMasked: ..., connectionStatus: ..., requiresOtp: ..., accountType: ..., });
+  mutation.mutate({ bankName: ..., bankUrl: ..., logo: ..., accountNumberMasked: ..., connectionStatus: ..., requiresOtp: ..., accountType: ..., creatorName: ..., });
 
   // You can also pass in a `useDataConnectMutationOptions` object to `UseMutationResult.mutate()`.
   const options = {
@@ -1161,7 +1157,6 @@ export interface UpdateBankAccountVariables {
   bankName?: string | null;
   bankUrl?: string | null;
   logo?: string | null;
-  accountNumber?: string | null;
   accountNumberMasked?: string | null;
   connectionStatus?: string | null;
   requiresOtp?: boolean | null;
@@ -1219,7 +1214,6 @@ export default function UpdateBankAccountComponent() {
     bankName: ..., // optional
     bankUrl: ..., // optional
     logo: ..., // optional
-    accountNumber: ..., // optional
     accountNumberMasked: ..., // optional
     connectionStatus: ..., // optional
     requiresOtp: ..., // optional
@@ -1227,7 +1221,7 @@ export default function UpdateBankAccountComponent() {
   };
   mutation.mutate(updateBankAccountVars);
   // Variables can be defined inline as well.
-  mutation.mutate({ id: ..., bankName: ..., bankUrl: ..., logo: ..., accountNumber: ..., accountNumberMasked: ..., connectionStatus: ..., requiresOtp: ..., accountType: ..., });
+  mutation.mutate({ id: ..., bankName: ..., bankUrl: ..., logo: ..., accountNumberMasked: ..., connectionStatus: ..., requiresOtp: ..., accountType: ..., });
 
   // You can also pass in a `useDataConnectMutationOptions` object to `UseMutationResult.mutate()`.
   const options = {
@@ -1370,6 +1364,7 @@ export interface CreateDownloadScheduleVariables {
   isActive: boolean;
   statementFormat?: string | null;
   startDateOffset?: string | null;
+  creatorName?: string | null;
 }
 ```
 ### Return Type
@@ -1428,10 +1423,11 @@ export default function CreateDownloadScheduleComponent() {
     isActive: ..., 
     statementFormat: ..., // optional
     startDateOffset: ..., // optional
+    creatorName: ..., // optional
   };
   mutation.mutate(createDownloadScheduleVars);
   // Variables can be defined inline as well.
-  mutation.mutate({ bankAccountId: ..., frequency: ..., scheduledTime: ..., targetFolder: ..., storageType: ..., nextDownloadAt: ..., isActive: ..., statementFormat: ..., startDateOffset: ..., });
+  mutation.mutate({ bankAccountId: ..., frequency: ..., scheduledTime: ..., targetFolder: ..., storageType: ..., nextDownloadAt: ..., isActive: ..., statementFormat: ..., startDateOffset: ..., creatorName: ..., });
 
   // You can also pass in a `useDataConnectMutationOptions` object to `UseMutationResult.mutate()`.
   const options = {

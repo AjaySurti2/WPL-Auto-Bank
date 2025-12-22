@@ -21,7 +21,6 @@ export interface AdminUpsertUserVariables {
   photoUrl?: string | null;
   role: string;
   avatar?: string | null;
-  password?: string | null;
 }
 
 export interface BankAccount_Key {
@@ -37,11 +36,11 @@ export interface CreateBankAccountVariables {
   bankName: string;
   bankUrl?: string | null;
   logo?: string | null;
-  accountNumber?: string | null;
   accountNumberMasked: string;
   connectionStatus: string;
   requiresOtp?: boolean | null;
   accountType?: string | null;
+  creatorName?: string | null;
 }
 
 export interface CreateDownloadScheduleData {
@@ -58,6 +57,7 @@ export interface CreateDownloadScheduleVariables {
   isActive: boolean;
   statementFormat?: string | null;
   startDateOffset?: string | null;
+  creatorName?: string | null;
 }
 
 export interface CreateNotificationData {
@@ -96,7 +96,6 @@ export interface CreateUserVariables {
   photoUrl?: string | null;
   role: string;
   avatar?: string | null;
-  password?: string | null;
 }
 
 export interface DeleteBankAccountData {
@@ -136,7 +135,6 @@ export interface GetUserData {
     photoUrl?: string | null;
     role: string;
     avatar?: string | null;
-    password?: string | null;
     createdAt: TimestampString;
   } & User_Key;
 }
@@ -144,6 +142,8 @@ export interface GetUserData {
 export interface ListBankAccountsData {
   bankAccounts: ({
     id: UUIDString;
+    userId: string;
+    creatorName?: string | null;
     bankName: string;
     bankUrl?: string | null;
     logo?: string | null;
@@ -160,6 +160,8 @@ export interface ListBankAccountsData {
 export interface ListDownloadSchedulesData {
   downloadSchedules: ({
     id: UUIDString;
+    userId: string;
+    creatorName?: string | null;
     bankAccount: {
       id: UUIDString;
       bankName: string;
@@ -209,7 +211,6 @@ export interface ListUsersData {
     email: string;
     role: string;
     avatar?: string | null;
-    password?: string | null;
   } & User_Key)[];
 }
 
@@ -240,7 +241,6 @@ export interface UpdateBankAccountVariables {
   bankName?: string | null;
   bankUrl?: string | null;
   logo?: string | null;
-  accountNumber?: string | null;
   accountNumberMasked?: string | null;
   connectionStatus?: string | null;
   requiresOtp?: boolean | null;
@@ -271,7 +271,6 @@ export interface UpdateUserProfileVariables {
   displayName?: string | null;
   avatar?: string | null;
   role?: string | null;
-  password?: string | null;
 }
 
 export interface User_Key {

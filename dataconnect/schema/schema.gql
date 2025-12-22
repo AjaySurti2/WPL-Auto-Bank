@@ -5,12 +5,12 @@ type User @table(key: ["id"]) {
   photoUrl: String
   role: String!
   avatar: String
-  password: String
   createdAt: Timestamp!
 }
 
 type BankAccount @table {
-  user: User!
+  userId: String!
+  creatorName: String
   bankName: String!
   bankUrl: String
   logo: String
@@ -24,7 +24,8 @@ type BankAccount @table {
 }
 
 type DownloadSchedule @table {
-  user: User!
+  userId: String!
+  creatorName: String
   bankAccount: BankAccount!
   frequency: String!
   scheduledTime: String
@@ -39,7 +40,7 @@ type DownloadSchedule @table {
 }
 
 type Statement @table {
-  user: User!
+  userId: String!
   bankAccount: BankAccount!
   downloadSchedule: DownloadSchedule
   fileName: String!
@@ -52,7 +53,7 @@ type Statement @table {
 }
 
 type Notification @table {
-  user: User!
+  userId: String!
   message: String!
   type: String!
   createdAt: Timestamp!

@@ -12,22 +12,26 @@ export interface BankAccount {
   accountNumber: string;
   accountNumberMasked: string;
   userId: string;
-  lastSync: string;
-  status: BankStatus;
+  creatorName?: string; // Human readable name of creator
+  lastSyncedAt: string; // Renamed from lastSync
+  connectionStatus: BankStatus; // Renamed from status
   requiresOtp: boolean;
-  logo: string; // Placeholder URL
-  accountType?: string; // New field from Data Connect schema
+  logo: string;
+  accountType?: string;
 }
 
-export interface SyncSchedule {
+export interface DownloadSchedule { // Renamed from SyncSchedule
   id: string;
   bankId: string;
   frequency: 'Daily' | 'Weekly' | 'Monthly';
   scheduledTime: string; // HH:mm format
-  targetFolder: string; // Google Drive folder name or Local path
-  storageType: 'GoogleDrive' | 'Local'; // New field for storage preference
-  nextRun: string;
+  targetFolder: string;
+  storageType: 'GoogleDrive' | 'Local';
+  nextDownloadAt: string; // Renamed from nextRun
   isActive: boolean;
+  userName?: string;
+  bankAccountName?: string; // Helper for UI
+  lastDownloadAt?: string;
 }
 
 export interface ActivityLog {
@@ -50,9 +54,10 @@ export type UserRole = 'Admin' | 'Scheduler' | 'Downloader';
 
 export interface User {
   id: string;
-  name: string;
+  displayName: string; // Renamed from name
   email: string;
   role: UserRole;
-  password?: string; // In reality, this would be hashed
+  password?: string;
   avatar?: string;
+  photoUrl?: string;
 }

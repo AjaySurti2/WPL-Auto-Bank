@@ -1,9 +1,9 @@
-mutation CreateUser($displayName: String!, $email: String!, $photoUrl: String, $role: String!, $avatar: String, $password: String) @auth(level: USER) {
-  user_upsert(data: {id_expr: "auth.uid", displayName: $displayName, email: $email, photoUrl: $photoUrl, role: $role, avatar: $avatar, password: $password, createdAt_expr: "request.time"})
+mutation CreateUser($displayName: String!, $email: String!, $photoUrl: String, $role: String!, $avatar: String) @auth(level: USER) {
+  user_upsert(data: {id_expr: "auth.uid", displayName: $displayName, email: $email, photoUrl: $photoUrl, role: $role, avatar: $avatar, createdAt_expr: "request.time"})
 }
 
-mutation AdminUpsertUser($id: String!, $displayName: String!, $email: String!, $photoUrl: String, $role: String!, $avatar: String, $password: String) @auth(level: USER) {
-  user_upsert(data: {id: $id, displayName: $displayName, email: $email, photoUrl: $photoUrl, role: $role, avatar: $avatar, password: $password, createdAt_expr: "request.time"})
+mutation AdminUpsertUser($id: String!, $displayName: String!, $email: String!, $photoUrl: String, $role: String!, $avatar: String) @auth(level: USER) {
+  user_upsert(data: {id: $id, displayName: $displayName, email: $email, photoUrl: $photoUrl, role: $role, avatar: $avatar, createdAt_expr: "request.time"})
 }
 
 query GetUser @auth(level: USER) {
@@ -14,7 +14,6 @@ query GetUser @auth(level: USER) {
     photoUrl
     role
     avatar
-    password
     createdAt
   }
 }
@@ -26,25 +25,24 @@ query ListUsers @auth(level: USER) {
     email
     role
     avatar
-    password
   }
 }
 
-mutation UpdateUserProfile($id: String!, $displayName: String, $avatar: String, $role: String, $password: String) @auth(level: USER) {
-  user_update(key: {id: $id}, data: {displayName: $displayName, avatar: $avatar, role: $role, password: $password})
+mutation UpdateUserProfile($id: String!, $displayName: String, $avatar: String, $role: String) @auth(level: USER) {
+  user_update(key: {id: $id}, data: {displayName: $displayName, avatar: $avatar, role: $role})
 }
 
 mutation DeleteUser($id: String!) @auth(level: USER) {
   user_delete(key: {id: $id})
 }
 
-mutation CreateBankAccount($bankName: String!, $bankUrl: String, $logo: String, $accountNumber: String, $accountNumberMasked: String!, $connectionStatus: String!, $requiresOtp: Boolean, $accountType: String) @auth(level: USER) {
+mutation CreateBankAccount($bankName: String!, $bankUrl: String, $logo: String, $accountNumberMasked: String!, $connectionStatus: String!, $requiresOtp: Boolean, $accountType: String, $creatorName: String) @auth(level: USER) {
   bankAccount_insert(data: {
-    user: {id_expr: "auth.uid"},
+    userId_expr: "auth.uid",
+    creatorName: $creatorName,
     bankName: $bankName,
     bankUrl: $bankUrl,
     logo: $logo,
-    accountNumber: $accountNumber,
     accountNumberMasked: $accountNumberMasked,
     connectionStatus: $connectionStatus,
     requiresOtp: $requiresOtp,
@@ -53,12 +51,11 @@ mutation CreateBankAccount($bankName: String!, $bankUrl: String, $logo: String, 
   })
 }
 
-mutation UpdateBankAccount($id: UUID!, $bankName: String, $bankUrl: String, $logo: String, $accountNumber: String, $accountNumberMasked: String, $connectionStatus: String, $requiresOtp: Boolean, $accountType: String) @auth(level: USER) {
+mutation UpdateBankAccount($id: UUID!, $bankName: String, $bankUrl: String, $logo: String, $accountNumberMasked: String, $connectionStatus: String, $requiresOtp: Boolean, $accountType: String) @auth(level: USER) {
   bankAccount_update(key: {id: $id}, data: {
     bankName: $bankName,
     bankUrl: $bankUrl,
     logo: $logo,
-    accountNumber: $accountNumber,
     accountNumberMasked: $accountNumberMasked,
     connectionStatus: $connectionStatus,
     requiresOtp: $requiresOtp,
@@ -70,9 +67,11 @@ mutation DeleteBankAccount($id: UUID!) @auth(level: USER) {
   bankAccount_delete(key: {id: $id})
 }
 
-query ListBankAccounts @auth(level: USER) {
-  bankAccounts(where: {user: {id: {eq_expr: "auth.uid"}}}) {
+query ListBankAccounts @auth(level: USER, insecureReason: "All authenticated users should see all organization bank accounts for download operations") {
+  bankAccounts {
     id
+    userId
+    creatorName
     bankName
     bankUrl
     logo
@@ -86,9 +85,10 @@ query ListBankAccounts @auth(level: USER) {
   }
 }
 
-mutation CreateDownloadSchedule($bankAccountId: UUID!, $frequency: String!, $scheduledTime: String, $targetFolder: String, $storageType: String, $nextDownloadAt: Timestamp!, $isActive: Boolean!, $statementFormat: String, $startDateOffset: String) @auth(level: USER) {
+mutation CreateDownloadSchedule($bankAccountId: UUID!, $frequency: String!, $scheduledTime: String, $targetFolder: String, $storageType: String, $nextDownloadAt: Timestamp!, $isActive: Boolean!, $statementFormat: String, $startDateOffset: String, $creatorName: String) @auth(level: USER) {
   downloadSchedule_insert(data: {
-    user: {id_expr: "auth.uid"},
+    userId_expr: "auth.uid",
+    creatorName: $creatorName,
     bankAccount: {id: $bankAccountId},
     frequency: $frequency,
     scheduledTime: $scheduledTime,
@@ -118,9 +118,11 @@ mutation DeleteDownloadSchedule($id: UUID!) @auth(level: USER) {
   downloadSchedule_delete(key: {id: $id})
 }
 
-query ListDownloadSchedules @auth(level: USER) {
-  downloadSchedules(where: {user: {id: {eq_expr: "auth.uid"}}}) {
+query ListDownloadSchedules @auth(level: USER, insecureReason: "All authenticated users should see all organization schedules for monitoring and download operations") {
+  downloadSchedules {
     id
+    userId
+    creatorName
     bankAccount {
       id
       bankName
@@ -141,7 +143,7 @@ query ListDownloadSchedules @auth(level: USER) {
 
 mutation CreateStatement($bankAccountId: UUID!, $downloadScheduleId: UUID, $fileName: String!, $downloadDate: Timestamp!, $statementPeriodStart: Date!, $statementPeriodEnd: Date!, $fileRef: String!, $status: String, $errorMessage: String) @auth(level: USER) {
   statement_insert(data: {
-    user: {id_expr: "auth.uid"},
+    userId_expr: "auth.uid",
     bankAccount: {id: $bankAccountId},
     downloadSchedule: {id: $downloadScheduleId},
     fileName: $fileName,
@@ -154,8 +156,8 @@ mutation CreateStatement($bankAccountId: UUID!, $downloadScheduleId: UUID, $file
   })
 }
 
-query ListStatements @auth(level: USER) {
-  statements(where: {user: {id: {eq_expr: "auth.uid"}}}, orderBy: [{downloadDate: DESC}]) {
+query ListStatements @auth(level: USER, insecureReason: "All authenticated users should see all organization statements for monitoring download history") {
+  statements(orderBy: [{downloadDate: DESC}]) {
     id
     bankAccount {
       bankName
@@ -169,7 +171,7 @@ query ListStatements @auth(level: USER) {
 
 mutation CreateNotification($message: String!, $type: String!, $relatedStatementId: UUID) @auth(level: USER) {
   notification_insert(data: {
-    user: {id_expr: "auth.uid"},
+    userId_expr: "auth.uid",
     message: $message,
     type: $type,
     isRead: false,
@@ -178,8 +180,8 @@ mutation CreateNotification($message: String!, $type: String!, $relatedStatement
   })
 }
 
-query ListNotifications @auth(level: USER) {
-  notifications(where: {user: {id: {eq_expr: "auth.uid"}}}, orderBy: [{createdAt: DESC}]) {
+query ListNotifications @auth(level: USER, insecureReason: "All authenticated users should see all organization notifications for system-wide awareness") {
+  notifications(orderBy: [{createdAt: DESC}]) {
     id
     message
     type

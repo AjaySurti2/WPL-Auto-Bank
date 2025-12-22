@@ -1,18 +1,45 @@
 import React, { useState } from 'react';
-import { BankAccount, BankStatus } from '../types';
-import { Plus, Trash2, Lock, ShieldCheck, ShieldAlert, CreditCard, Globe, ExternalLink, AlertCircle, Edit2 } from 'lucide-react';
+import { BankAccount, BankStatus, User } from '../types';
+import { Plus, Trash2, Lock, ShieldCheck, ShieldAlert, CreditCard, Globe, ExternalLink, AlertCircle, Edit2, RotateCw, Building2, Cloud, Database, RefreshCw, Bug, Settings as SettingsIcon } from 'lucide-react';
+import * as dbService from '../services/dbService';
 
 interface BankMasterProps {
     accounts: BankAccount[];
+    currentUser: User;
+    onManualDownload: (bankIds: string[]) => void;
     addAccount: (acc: BankAccount) => Promise<void> | void;
     updateAccount: (acc: BankAccount) => Promise<void> | void;
     removeAccount: (id: string) => Promise<void> | void;
 }
 
-export const BankMaster: React.FC<BankMasterProps> = ({ accounts, addAccount, updateAccount, removeAccount }) => {
+export const BankMaster: React.FC<BankMasterProps> = ({
+    accounts, currentUser, onManualDownload, addAccount, updateAccount, removeAccount
+}) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingId, setEditingId] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [syncingId, setSyncingId] = useState<string | null>(null);
+    const [isRefreshing, setIsRefreshing] = useState(false);
+    const [fetchStatus, setFetchStatus] = useState<{ count: number, error: string | null, source: 'cloud' | 'cache' | null }>({ count: 0, error: null, source: null });
+
+    const forceRefresh = async () => {
+        setIsRefreshing(true);
+        try {
+            console.log("[Diagnostic] Manual cloud fetch triggered...");
+            const data = await dbService.getAccounts();
+            setFetchStatus({
+                count: data.length,
+                error: data.length > 0 ? null : 'Empty Cloud Data',
+                source: 'cloud'
+            });
+        } catch (e: any) {
+            setFetchStatus({ count: 0, error: e.message || 'Unknown fetch error', source: null });
+        } finally {
+            setIsRefreshing(false);
+        }
+    };
+
+    const canManage = currentUser.role === 'Admin' || currentUser.role === 'Scheduler';
 
     const [newBankName, setNewBankName] = useState('');
     const [newBankUrl, setNewBankUrl] = useState('');
@@ -68,8 +95,8 @@ export const BankMaster: React.FC<BankMasterProps> = ({ accounts, addAccount, up
                     accountNumberMasked: masked,
                     userId: newUserId,
                     // Preserve existing status/sync info
-                    lastSync: accounts.find(a => a.id === editingId)?.lastSync || 'Never',
-                    status: accounts.find(a => a.id === editingId)?.status || BankStatus.CONNECTED,
+                    lastSyncedAt: accounts.find(a => a.id === editingId)?.lastSyncedAt || 'Never',
+                    connectionStatus: accounts.find(a => a.id === editingId)?.connectionStatus || BankStatus.CONNECTED,
                     requiresOtp: newRequiresOtp,
                     logo: accounts.find(a => a.id === editingId)?.logo || `https://picsum.photos/40/40?random=${Date.now()}`
                 };
@@ -83,8 +110,8 @@ export const BankMaster: React.FC<BankMasterProps> = ({ accounts, addAccount, up
                     accountNumber: newAccountNumber,
                     accountNumberMasked: masked,
                     userId: newUserId,
-                    lastSync: 'Never',
-                    status: BankStatus.CONNECTED,
+                    lastSyncedAt: 'Never',
+                    connectionStatus: BankStatus.CONNECTED,
                     requiresOtp: newRequiresOtp,
                     logo: `https://picsum.photos/40/40?random=${Date.now()}`
                 };
@@ -118,96 +145,184 @@ export const BankMaster: React.FC<BankMasterProps> = ({ accounts, addAccount, up
                     <h2 className="text-2xl font-bold text-white">Bank Master</h2>
                     <p className="text-slate-400 text-sm">Manage banking credentials and security preferences.</p>
                 </div>
-                <button
-                    onClick={() => handleOpenModal()}
-                    className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg font-medium transition-all"
-                >
-                    <Plus className="w-4 h-4" /> Add Bank
-                </button>
+                {canManage && (
+                    <button
+                        onClick={() => handleOpenModal()}
+                        className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg font-medium transition-all"
+                    >
+                        <Plus className="w-4 h-4" /> Add Bank
+                    </button>
+                )}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {accounts.map(acc => (
-                    <div key={acc.id} className="bg-slate-800 border border-slate-700 rounded-xl p-5 hover:border-blue-500/50 transition-all group">
-                        <div className="flex justify-between items-start mb-4">
-                            <div className="flex items-center gap-3">
-                                <img src={acc.logo} alt={acc.bankName} className="w-10 h-10 rounded-full bg-slate-700 object-cover" />
-                                <div>
-                                    <h3 className="font-semibold text-white">{acc.bankName}</h3>
-                                    <div className="flex items-center gap-1.5 mt-0.5">
-                                        <span className={`w-1.5 h-1.5 rounded-full ${acc.requiresOtp ? 'bg-blue-400' : 'bg-slate-500'}`}></span>
-                                        <p className="text-xs text-slate-400">{acc.requiresOtp ? 'OTP Enabled' : 'No OTP'}</p>
+            {/* Diagnostic Toolbar */}
+            <div className="bg-slate-900/40 border border-slate-700/50 rounded-xl p-4 flex flex-wrap items-center gap-4 justify-between">
+                <div className="flex items-center gap-6">
+                    <div className="flex flex-col">
+                        <span className="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Current Active Identity</span>
+                        <div className="flex items-center gap-2 mt-0.5">
+                            <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
+                            <span className="text-sm font-semibold text-white">{currentUser.displayName}</span>
+                            <span className="text-[10px] px-1.5 py-0.5 bg-slate-700 text-slate-300 rounded uppercase">{currentUser.role}</span>
+                        </div>
+                    </div>
+
+                    <div className="h-8 w-px bg-slate-700"></div>
+
+                    <div className="flex flex-col">
+                        <span className="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Cloud Sync Status</span>
+                        <div className="flex items-center gap-2 mt-0.5">
+                            {fetchStatus.error ? (
+                                <AlertCircle className="w-4 h-4 text-red-400" />
+                            ) : (
+                                <Cloud className={`w-4 h-4 ${fetchStatus.source === 'cloud' ? 'text-green-400' : 'text-slate-500'}`} />
+                            )}
+                            <span className="text-sm font-semibold text-white">
+                                {isRefreshing ? 'Syncing...' : (fetchStatus.error ? 'Fetch Error' : 'Connected')}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col items-center">
+                        <span className="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Records Found</span>
+                        <span className="text-sm font-bold text-blue-400 mt-0.5">{accounts.length}</span>
+                    </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                    <button
+                        onClick={forceRefresh}
+                        disabled={isRefreshing}
+                        className="flex items-center gap-2 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-bold transition-all border border-slate-700 hover:border-blue-500/50"
+                    >
+                        <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
+                        Forced Cloud Re-Sync
+                    </button>
+                    <button
+                        onClick={() => alert(`Diagnostics:\nUser: ${currentUser.email}\nRole: ${currentUser.role}\nLocal Storage Key: accounts_cache\nLast Error: ${fetchStatus.error || 'None'}`)}
+                        className="p-1.5 text-slate-400 hover:text-white transition-colors"
+                        title="Debug Info"
+                    >
+                        <SettingsIcon className="w-4 h-4" />
+                    </button>
+                </div>
+            </div>
+
+            {fetchStatus.error && (
+                <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3 flex items-center gap-3 text-red-400 text-sm animate-in fade-in slide-in-from-top-2">
+                    <AlertCircle className="w-5 h-5" />
+                    <div>
+                        <p className="font-bold">Fetch Warning</p>
+                        <p className="opacity-80">{fetchStatus.error}</p>
+                    </div>
+                </div>
+            )}
+
+            {accounts.length === 0 ? (
+                <div className="bg-slate-800/50 border border-dashed border-slate-700 rounded-2xl p-12 text-center">
+                    <div className="w-16 h-16 bg-slate-700/50 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <Building2 className="w-8 h-8 text-slate-500" />
+                    </div>
+                    <h3 className="text-lg font-bold text-white mb-2">No Bank Accounts Found</h3>
+                    <p className="text-slate-400 max-w-sm mx-auto mb-6">
+                        Organizations accounts will appear here once configured by an Admin or Scheduler.
+                    </p>
+                    {canManage && (
+                        <button
+                            onClick={() => handleOpenModal()}
+                            className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-6 py-2.5 rounded-lg font-bold transition-all"
+                        >
+                            <Plus className="w-4 h-4" /> Connect Your First Bank
+                        </button>
+                    )}
+                </div>
+            ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {accounts.map(acc => (
+                        <div key={acc.id} className="bg-slate-800 border border-slate-700 rounded-xl p-5 hover:border-blue-500/50 transition-all group">
+                            <div className="flex justify-between items-start mb-4">
+                                <div className="flex items-center gap-3">
+                                    <img src={acc.logo} alt={acc.bankName} className="w-10 h-10 rounded-full bg-slate-700 object-cover" />
+                                    <div>
+                                        <h3 className="font-semibold text-white">{acc.bankName}</h3>
+                                        <div className="flex items-center gap-1.5 mt-0.5">
+                                            <span className={`w-1.5 h-1.5 rounded-full ${acc.requiresOtp ? 'bg-blue-400' : 'bg-slate-500'}`}></span>
+                                            <p className="text-xs text-slate-400">{acc.requiresOtp ? 'OTP Enabled' : 'No OTP'}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className={`w-2 h-2 rounded-full ${acc.connectionStatus === BankStatus.CONNECTED ? 'bg-green-500' :
+                                    acc.connectionStatus === BankStatus.OTP_REQUIRED ? 'bg-red-500 animate-pulse' : 'bg-yellow-500'
+                                    }`} title={acc.connectionStatus}></div>
+                            </div>
+
+                            <div className="space-y-3">
+                                <div className="bg-slate-900/50 p-3 rounded-lg border border-slate-800">
+                                    <p className="text-xs text-slate-500 uppercase tracking-wider mb-1 flex items-center gap-1">
+                                        <CreditCard className="w-3 h-3" /> Account Number
+                                    </p>
+                                    <p className="text-sm text-slate-300 font-mono tracking-wide">{acc.accountNumberMasked}</p>
+                                </div>
+
+                                <div className="bg-slate-900/50 p-3 rounded-lg border border-slate-800">
+                                    <p className="text-xs text-slate-500 uppercase tracking-wider mb-1 flex items-center gap-1">
+                                        <Globe className="w-3 h-3" /> Bank Portal
+                                    </p>
+                                    <a href={acc.bankUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-blue-400 hover:text-blue-300 hover:underline font-mono truncate block flex items-center gap-1">
+                                        {acc.bankUrl} <ExternalLink className="w-3 h-3" />
+                                    </a>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-3">
+                                    <div className="bg-slate-900/50 p-3 rounded-lg border border-slate-800">
+                                        <p className="text-xs text-slate-500 uppercase tracking-wider mb-1">Configured By</p>
+                                        <p className="text-sm text-slate-300 font-mono truncate">{acc.creatorName || acc.userId}</p>
+                                    </div>
+                                    <div className="bg-slate-900/50 p-3 rounded-lg border border-slate-800 flex flex-col justify-center">
+                                        <p className="text-xs text-slate-500 uppercase tracking-wider mb-1 flex items-center gap-1">
+                                            Password <Lock className="w-3 h-3" />
+                                        </p>
+                                        <p className="text-sm text-slate-500 font-mono">••••••</p>
                                     </div>
                                 </div>
                             </div>
-                            <div className={`w-2 h-2 rounded-full ${acc.status === BankStatus.CONNECTED ? 'bg-green-500' :
-                                acc.status === BankStatus.OTP_REQUIRED ? 'bg-red-500 animate-pulse' : 'bg-yellow-500'
-                                }`} title={acc.status}></div>
-                        </div>
 
-                        <div className="space-y-3">
-                            <div className="bg-slate-900/50 p-3 rounded-lg border border-slate-800">
-                                <p className="text-xs text-slate-500 uppercase tracking-wider mb-1 flex items-center gap-1">
-                                    <CreditCard className="w-3 h-3" /> Account Number
-                                </p>
-                                <p className="text-sm text-slate-300 font-mono tracking-wide">{acc.accountNumberMasked}</p>
-                            </div>
-
-                            <div className="bg-slate-900/50 p-3 rounded-lg border border-slate-800">
-                                <p className="text-xs text-slate-500 uppercase tracking-wider mb-1 flex items-center gap-1">
-                                    <Globe className="w-3 h-3" /> Bank Portal
-                                </p>
-                                <a href={acc.bankUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-blue-400 hover:text-blue-300 hover:underline font-mono truncate block flex items-center gap-1">
-                                    {acc.bankUrl} <ExternalLink className="w-3 h-3" />
-                                </a>
-                            </div>
-
-                            <div className="grid grid-cols-2 gap-3">
-                                <div className="bg-slate-900/50 p-3 rounded-lg border border-slate-800">
-                                    <p className="text-xs text-slate-500 uppercase tracking-wider mb-1">User ID</p>
-                                    <p className="text-sm text-slate-300 font-mono truncate">{acc.userId}</p>
-                                </div>
-                                <div className="bg-slate-900/50 p-3 rounded-lg border border-slate-800 flex flex-col justify-center">
-                                    <p className="text-xs text-slate-500 uppercase tracking-wider mb-1 flex items-center gap-1">
-                                        Password <Lock className="w-3 h-3" />
-                                    </p>
-                                    <p className="text-sm text-slate-500 font-mono">••••••</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="mt-5 flex gap-2">
-                            <div className="flex-1 flex items-center justify-center gap-2 py-2 px-3 bg-slate-700/50 rounded-lg border border-slate-700">
-                                {acc.requiresOtp ? (
+                            <div className="mt-5 flex gap-2">
+                                <button
+                                    onClick={() => {
+                                        setSyncingId(acc.id);
+                                        onManualDownload([acc.id]);
+                                        setTimeout(() => setSyncingId(null), 2000);
+                                    }}
+                                    disabled={!!syncingId}
+                                    className="flex-1 flex items-center justify-center gap-2 py-2 px-3 bg-slate-700/50 hover:bg-blue-600/10 hover:text-blue-400 hover:border-blue-500/50 rounded-lg border border-slate-700 transition-all text-slate-300 disabled:opacity-50"
+                                >
+                                    <RotateCw className={`w-4 h-4 ${syncingId === acc.id ? 'animate-spin' : ''}`} />
+                                    <span className="text-xs font-semibold">Manual Sync</span>
+                                </button>
+                                {canManage && (
                                     <>
-                                        <ShieldCheck className="w-4 h-4 text-green-400" />
-                                        <span className="text-xs text-slate-300">Secured</span>
-                                    </>
-                                ) : (
-                                    <>
-                                        <ShieldAlert className="w-4 h-4 text-yellow-500" />
-                                        <span className="text-xs text-slate-300">Standard</span>
+                                        <button
+                                            onClick={() => handleOpenModal(acc)}
+                                            className="p-2 text-slate-400 hover:text-blue-400 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors"
+                                            title="Edit Bank"
+                                        >
+                                            <Edit2 className="w-4 h-4" />
+                                        </button>
+                                        <button
+                                            onClick={() => removeAccount(acc.id)}
+                                            className="p-2 text-slate-400 hover:text-red-400 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors"
+                                            title="Remove Bank"
+                                        >
+                                            <Trash2 className="w-4 h-4" />
+                                        </button>
                                     </>
                                 )}
                             </div>
-                            <button
-                                onClick={() => handleOpenModal(acc)}
-                                className="p-2 text-slate-400 hover:text-blue-400 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors"
-                                title="Edit Bank"
-                            >
-                                <Edit2 className="w-4 h-4" />
-                            </button>
-                            <button
-                                onClick={() => removeAccount(acc.id)}
-                                className="p-2 text-slate-400 hover:text-red-400 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors"
-                                title="Remove Bank"
-                            >
-                                <Trash2 className="w-4 h-4" />
-                            </button>
                         </div>
-                    </div>
-                ))}
-            </div>
+                    ))}
+                </div>
+            )}
 
             {/* Add/Edit Bank Modal */}
             {isModalOpen && (

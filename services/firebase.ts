@@ -1,11 +1,10 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
-import { getDataConnect } from "firebase/data-connect";
+import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from "firebase/firestore";
+import { getDataConnect, connectDataConnectEmulator } from "firebase/data-connect";
 import { connectorConfig } from "@dataconnect/generated";
 
 // Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
     authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -16,14 +15,16 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from "firebase/firestore";
-
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
-// Use experimentalForceLongPolling to bypass corporate proxies/firewalls
 export const db = initializeFirestore(app, {
     experimentalForceLongPolling: true,
 });
 
 export const dataconnect = getDataConnect(connectorConfig);
+
+// Connect to emulator in development
+if (import.meta.env.DEV || window.location.hostname === 'localhost') {
+    console.log("Connecting to Data Connect Emulator (localhost:9399)...");
+    connectDataConnectEmulator(dataconnect, 'localhost', 9399);
+}

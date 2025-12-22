@@ -1,0 +1,2041 @@
+"""
+✨ `BankAccount_KeyOutput` returns the primary key fields of table type `BankAccount`.
+
+It has the same format as `BankAccount_Key`, but is only used as mutation return value.
+"""
+scalar BankAccount_KeyOutput
+"""
+✨ `DownloadSchedule_KeyOutput` returns the primary key fields of table type `DownloadSchedule`.
+
+It has the same format as `DownloadSchedule_Key`, but is only used as mutation return value.
+"""
+scalar DownloadSchedule_KeyOutput
+"""
+✨ `Notification_KeyOutput` returns the primary key fields of table type `Notification`.
+
+It has the same format as `Notification_Key`, but is only used as mutation return value.
+"""
+scalar Notification_KeyOutput
+"""
+✨ `Statement_KeyOutput` returns the primary key fields of table type `Statement`.
+
+It has the same format as `Statement_Key`, but is only used as mutation return value.
+"""
+scalar Statement_KeyOutput
+"""
+✨ `User_KeyOutput` returns the primary key fields of table type `User`.
+
+It has the same format as `User_Key`, but is only used as mutation return value.
+"""
+scalar User_KeyOutput
+"""
+✨ Generated data input type for table 'BankAccount'. It includes all necessary fields for creating or upserting rows into table.
+"""
+input BankAccount_Data {
+  """
+  ✨ Generated from Field `BankAccount`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `BankAccount`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr
+  """
+  ✨ Generated from Field `BankAccount`.`accountNumber` of type `String`
+  """
+  accountNumber: String
+  """
+  ✨ `_expr` server value variant of `accountNumber` (✨ Generated from Field `BankAccount`.`accountNumber` of type `String`)
+  """
+  accountNumber_expr: String_Expr
+  """
+  ✨ Generated from Field `BankAccount`.`accountNumberMasked` of type `String!`
+  """
+  accountNumberMasked: String
+  """
+  ✨ `_expr` server value variant of `accountNumberMasked` (✨ Generated from Field `BankAccount`.`accountNumberMasked` of type `String!`)
+  """
+  accountNumberMasked_expr: String_Expr
+  """
+  ✨ Generated from Field `BankAccount`.`accountType` of type `String`
+  """
+  accountType: String
+  """
+  ✨ `_expr` server value variant of `accountType` (✨ Generated from Field `BankAccount`.`accountType` of type `String`)
+  """
+  accountType_expr: String_Expr
+  """
+  ✨ Generated from Field `BankAccount`.`bankName` of type `String!`
+  """
+  bankName: String
+  """
+  ✨ `_expr` server value variant of `bankName` (✨ Generated from Field `BankAccount`.`bankName` of type `String!`)
+  """
+  bankName_expr: String_Expr
+  """
+  ✨ Generated from Field `BankAccount`.`bankUrl` of type `String`
+  """
+  bankUrl: String
+  """
+  ✨ `_expr` server value variant of `bankUrl` (✨ Generated from Field `BankAccount`.`bankUrl` of type `String`)
+  """
+  bankUrl_expr: String_Expr
+  """
+  ✨ Generated from Field `BankAccount`.`connectionStatus` of type `String!`
+  """
+  connectionStatus: String
+  """
+  ✨ `_expr` server value variant of `connectionStatus` (✨ Generated from Field `BankAccount`.`connectionStatus` of type `String!`)
+  """
+  connectionStatus_expr: String_Expr
+  """
+  ✨ Generated from Field `BankAccount`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: Timestamp
+  """
+  ✨ `_expr` server value variant of `createdAt` (✨ Generated from Field `BankAccount`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_expr: Timestamp_Expr
+  """
+  ✨ `_time` server value variant of `createdAt` (✨ Generated from Field `BankAccount`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_time: Timestamp_Relative
+  """
+  ✨ `_update` server value variant of `createdAt` (✨ Generated from Field `BankAccount`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_update: [Timestamp_Update!]
+  """
+  ✨ Generated from Field `BankAccount`.`creatorName` of type `String`
+  """
+  creatorName: String
+  """
+  ✨ `_expr` server value variant of `creatorName` (✨ Generated from Field `BankAccount`.`creatorName` of type `String`)
+  """
+  creatorName_expr: String_Expr
+  """
+  ✨ Generated from Field `BankAccount`.`lastSyncedAt` of type `Timestamp`
+  """
+  lastSyncedAt: Timestamp
+  """
+  ✨ `_expr` server value variant of `lastSyncedAt` (✨ Generated from Field `BankAccount`.`lastSyncedAt` of type `Timestamp`)
+  """
+  lastSyncedAt_expr: Timestamp_Expr
+  """
+  ✨ `_time` server value variant of `lastSyncedAt` (✨ Generated from Field `BankAccount`.`lastSyncedAt` of type `Timestamp`)
+  """
+  lastSyncedAt_time: Timestamp_Relative
+  """
+  ✨ `_update` server value variant of `lastSyncedAt` (✨ Generated from Field `BankAccount`.`lastSyncedAt` of type `Timestamp`)
+  """
+  lastSyncedAt_update: [Timestamp_Update!]
+  """
+  ✨ Generated from Field `BankAccount`.`logo` of type `String`
+  """
+  logo: String
+  """
+  ✨ `_expr` server value variant of `logo` (✨ Generated from Field `BankAccount`.`logo` of type `String`)
+  """
+  logo_expr: String_Expr
+  """
+  ✨ Generated from Field `BankAccount`.`requiresOtp` of type `Boolean`
+  """
+  requiresOtp: Boolean
+  """
+  ✨ `_expr` server value variant of `requiresOtp` (✨ Generated from Field `BankAccount`.`requiresOtp` of type `Boolean`)
+  """
+  requiresOtp_expr: Boolean_Expr
+  """
+  ✨ Generated from Field `BankAccount`.`userId` of type `String!`
+  """
+  userId: String
+  """
+  ✨ `_expr` server value variant of `userId` (✨ Generated from Field `BankAccount`.`userId` of type `String!`)
+  """
+  userId_expr: String_Expr
+}
+"""
+✨ Generated filter input type for table 'BankAccount'. This input allows filtering objects using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input BankAccount_Filter {
+  """
+  Apply multiple filter conditions using `AND` logic.
+  """
+  _and: [BankAccount_Filter!]
+  """
+  Negate the result of the provided filter condition.
+  """
+  _not: BankAccount_Filter
+  """
+  Apply multiple filter conditions using `OR` logic.
+  """
+  _or: [BankAccount_Filter!]
+  """
+  ✨ Generated from Field `BankAccount`.`id` of type `UUID!`
+  """
+  id: UUID_Filter
+  """
+  ✨ Generated from Field `BankAccount`.`accountNumber` of type `String`
+  """
+  accountNumber: String_Filter
+  """
+  ✨ Generated from Field `BankAccount`.`accountNumberMasked` of type `String!`
+  """
+  accountNumberMasked: String_Filter
+  """
+  ✨ Generated from Field `BankAccount`.`accountType` of type `String`
+  """
+  accountType: String_Filter
+  """
+  ✨ Generated from Field `BankAccount`.`bankName` of type `String!`
+  """
+  bankName: String_Filter
+  """
+  ✨ Generated from Field `BankAccount`.`bankUrl` of type `String`
+  """
+  bankUrl: String_Filter
+  """
+  ✨ Generated from Field `BankAccount`.`connectionStatus` of type `String!`
+  """
+  connectionStatus: String_Filter
+  """
+  ✨ Generated from Field `BankAccount`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: Timestamp_Filter
+  """
+  ✨ Generated from Field `BankAccount`.`creatorName` of type `String`
+  """
+  creatorName: String_Filter
+  """
+  ✨ Generated from Field `BankAccount`.`lastSyncedAt` of type `Timestamp`
+  """
+  lastSyncedAt: Timestamp_Filter
+  """
+  ✨ Generated from Field `BankAccount`.`logo` of type `String`
+  """
+  logo: String_Filter
+  """
+  ✨ Generated from Field `BankAccount`.`requiresOtp` of type `Boolean`
+  """
+  requiresOtp: Boolean_Filter
+  """
+  ✨ Generated from Field `BankAccount`.`userId` of type `String!`
+  """
+  userId: String_Filter
+  """
+  ✨ Generated from Field `BankAccount`.`downloadSchedules_on_bankAccount` of type `[DownloadSchedule!]!`
+  """
+  downloadSchedules_on_bankAccount: DownloadSchedule_ListFilter
+  """
+  ✨ Generated from Field `BankAccount`.`statements_on_bankAccount` of type `[Statement!]!`
+  """
+  statements_on_bankAccount: Statement_ListFilter
+}
+"""
+✨ Generated first-row input type for table 'BankAccount'. This input selects the first row matching the filter criteria, ordered according to the specified conditions.
+"""
+input BankAccount_FirstRow {
+  """
+  Order the result by the specified fields.
+  """
+  orderBy: [BankAccount_Order!]
+  """
+  Filters rows based on the specified conditions.
+  """
+  where: BankAccount_Filter
+}
+"""
+✨ Generated having input type for table 'BankAccount'. This input allows you to filter groups during aggregate queries using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input BankAccount_Having {
+  """
+  Apply multiple Having conditions using `AND` logic.
+  """
+  _and: [BankAccount_Having!]
+  """
+  Whether to apply DISTINCT to the aggregate function.
+  """
+  _distinct: Boolean
+  """
+  Negate the result of the provided Having condition.
+  """
+  _not: BankAccount_Having
+  """
+  Apply multiple Having conditions using `OR` logic.
+  """
+  _or: [BankAccount_Having!]
+  """
+  ✨ Generated from Field `BankAccount`.`_count` of type `Int!`
+  """
+  _count: Int_Filter
+  """
+  ✨ Generated from Field `BankAccount`.`accountNumberMasked_count` of type `Int!`
+  """
+  accountNumberMasked_count: Int_Filter
+  """
+  ✨ Generated from Field `BankAccount`.`accountNumber_count` of type `Int!`
+  """
+  accountNumber_count: Int_Filter
+  """
+  ✨ Generated from Field `BankAccount`.`accountType_count` of type `Int!`
+  """
+  accountType_count: Int_Filter
+  """
+  ✨ Generated from Field `BankAccount`.`bankName_count` of type `Int!`
+  """
+  bankName_count: Int_Filter
+  """
+  ✨ Generated from Field `BankAccount`.`bankUrl_count` of type `Int!`
+  """
+  bankUrl_count: Int_Filter
+  """
+  ✨ Generated from Field `BankAccount`.`connectionStatus_count` of type `Int!`
+  """
+  connectionStatus_count: Int_Filter
+  """
+  ✨ Generated from Field `BankAccount`.`createdAt_count` of type `Int!`
+  """
+  createdAt_count: Int_Filter
+  """
+  ✨ Generated from Field `BankAccount`.`creatorName_count` of type `Int!`
+  """
+  creatorName_count: Int_Filter
+  """
+  ✨ Generated from Field `BankAccount`.`id_count` of type `Int!`
+  """
+  id_count: Int_Filter
+  """
+  ✨ Generated from Field `BankAccount`.`lastSyncedAt_count` of type `Int!`
+  """
+  lastSyncedAt_count: Int_Filter
+  """
+  ✨ Generated from Field `BankAccount`.`logo_count` of type `Int!`
+  """
+  logo_count: Int_Filter
+  """
+  ✨ Generated from Field `BankAccount`.`requiresOtp_count` of type `Int!`
+  """
+  requiresOtp_count: Int_Filter
+  """
+  ✨ Generated from Field `BankAccount`.`userId_count` of type `Int!`
+  """
+  userId_count: Int_Filter
+  """
+  ✨ Generated from Field `BankAccount`.`createdAt_min` of type `Timestamp`
+  """
+  createdAt_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `BankAccount`.`lastSyncedAt_min` of type `Timestamp`
+  """
+  lastSyncedAt_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `BankAccount`.`createdAt_max` of type `Timestamp`
+  """
+  createdAt_max: Timestamp_Filter
+  """
+  ✨ Generated from Field `BankAccount`.`lastSyncedAt_max` of type `Timestamp`
+  """
+  lastSyncedAt_max: Timestamp_Filter
+}
+"""
+✨ Generated key input type for table 'BankAccount'. It represents the primary key fields used to uniquely identify a row in the table.
+"""
+input BankAccount_Key {
+  """
+  ✨ Generated from Field `BankAccount`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `BankAccount`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr
+}
+"""
+✨ Generated list filter input type for table 'BankAccount'. This input applies filtering logic based on the count or existence of related objects that matches certain criteria.
+"""
+input BankAccount_ListFilter {
+  """
+  The desired number of objects that match the condition (defaults to at least one).
+  """
+  count: Int_Filter = {gt:0}
+  """
+  Condition of the related objects to filter for.
+  """
+  exist: BankAccount_Filter
+}
+"""
+✨ Generated order input type for table 'BankAccount'. This input defines the sorting order of rows in query results based on one or more fields.
+"""
+input BankAccount_Order {
+  """
+  ✨ Generated from Field `BankAccount`.`id` of type `UUID!`
+  """
+  id: OrderDirection
+  """
+  ✨ Generated from Field `BankAccount`.`accountNumber` of type `String`
+  """
+  accountNumber: OrderDirection
+  """
+  ✨ Generated from Field `BankAccount`.`accountNumberMasked` of type `String!`
+  """
+  accountNumberMasked: OrderDirection
+  """
+  ✨ Generated from Field `BankAccount`.`accountType` of type `String`
+  """
+  accountType: OrderDirection
+  """
+  ✨ Generated from Field `BankAccount`.`bankName` of type `String!`
+  """
+  bankName: OrderDirection
+  """
+  ✨ Generated from Field `BankAccount`.`bankUrl` of type `String`
+  """
+  bankUrl: OrderDirection
+  """
+  ✨ Generated from Field `BankAccount`.`connectionStatus` of type `String!`
+  """
+  connectionStatus: OrderDirection
+  """
+  ✨ Generated from Field `BankAccount`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: OrderDirection
+  """
+  ✨ Generated from Field `BankAccount`.`creatorName` of type `String`
+  """
+  creatorName: OrderDirection
+  """
+  ✨ Generated from Field `BankAccount`.`lastSyncedAt` of type `Timestamp`
+  """
+  lastSyncedAt: OrderDirection
+  """
+  ✨ Generated from Field `BankAccount`.`logo` of type `String`
+  """
+  logo: OrderDirection
+  """
+  ✨ Generated from Field `BankAccount`.`requiresOtp` of type `Boolean`
+  """
+  requiresOtp: OrderDirection
+  """
+  ✨ Generated from Field `BankAccount`.`userId` of type `String!`
+  """
+  userId: OrderDirection
+  """
+  ✨ Generated from Field `BankAccount`.`_count` of type `Int!`
+  """
+  _count: OrderDirection
+  """
+  ✨ Generated from Field `BankAccount`.`accountNumberMasked_count` of type `Int!`
+  """
+  accountNumberMasked_count: OrderDirection
+  """
+  ✨ Generated from Field `BankAccount`.`accountNumber_count` of type `Int!`
+  """
+  accountNumber_count: OrderDirection
+  """
+  ✨ Generated from Field `BankAccount`.`accountType_count` of type `Int!`
+  """
+  accountType_count: OrderDirection
+  """
+  ✨ Generated from Field `BankAccount`.`bankName_count` of type `Int!`
+  """
+  bankName_count: OrderDirection
+  """
+  ✨ Generated from Field `BankAccount`.`bankUrl_count` of type `Int!`
+  """
+  bankUrl_count: OrderDirection
+  """
+  ✨ Generated from Field `BankAccount`.`connectionStatus_count` of type `Int!`
+  """
+  connectionStatus_count: OrderDirection
+  """
+  ✨ Generated from Field `BankAccount`.`createdAt_count` of type `Int!`
+  """
+  createdAt_count: OrderDirection
+  """
+  ✨ Generated from Field `BankAccount`.`creatorName_count` of type `Int!`
+  """
+  creatorName_count: OrderDirection
+  """
+  ✨ Generated from Field `BankAccount`.`id_count` of type `Int!`
+  """
+  id_count: OrderDirection
+  """
+  ✨ Generated from Field `BankAccount`.`lastSyncedAt_count` of type `Int!`
+  """
+  lastSyncedAt_count: OrderDirection
+  """
+  ✨ Generated from Field `BankAccount`.`logo_count` of type `Int!`
+  """
+  logo_count: OrderDirection
+  """
+  ✨ Generated from Field `BankAccount`.`requiresOtp_count` of type `Int!`
+  """
+  requiresOtp_count: OrderDirection
+  """
+  ✨ Generated from Field `BankAccount`.`userId_count` of type `Int!`
+  """
+  userId_count: OrderDirection
+  """
+  ✨ Generated from Field `BankAccount`.`createdAt_min` of type `Timestamp`
+  """
+  createdAt_min: OrderDirection
+  """
+  ✨ Generated from Field `BankAccount`.`lastSyncedAt_min` of type `Timestamp`
+  """
+  lastSyncedAt_min: OrderDirection
+  """
+  ✨ Generated from Field `BankAccount`.`createdAt_max` of type `Timestamp`
+  """
+  createdAt_max: OrderDirection
+  """
+  ✨ Generated from Field `BankAccount`.`lastSyncedAt_max` of type `Timestamp`
+  """
+  lastSyncedAt_max: OrderDirection
+}
+"""
+✨ Generated data input type for table 'DownloadSchedule'. It includes all necessary fields for creating or upserting rows into table.
+"""
+input DownloadSchedule_Data {
+  """
+  ✨ Generated from Field `DownloadSchedule`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `DownloadSchedule`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr
+  """
+  ✨ Generated from Field `DownloadSchedule`.`bankAccountId` of type `UUID!`
+  """
+  bankAccountId: UUID
+  """
+  ✨ `_expr` server value variant of `bankAccountId` (✨ Generated from Field `DownloadSchedule`.`bankAccountId` of type `UUID!`)
+  """
+  bankAccountId_expr: UUID_Expr
+  """
+  ✨ Generated from Field `DownloadSchedule`.`bankAccount` of type `BankAccount!`
+  """
+  bankAccount: BankAccount_Key
+  """
+  ✨ Generated from Field `DownloadSchedule`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: Timestamp
+  """
+  ✨ `_expr` server value variant of `createdAt` (✨ Generated from Field `DownloadSchedule`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_expr: Timestamp_Expr
+  """
+  ✨ `_time` server value variant of `createdAt` (✨ Generated from Field `DownloadSchedule`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_time: Timestamp_Relative
+  """
+  ✨ `_update` server value variant of `createdAt` (✨ Generated from Field `DownloadSchedule`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_update: [Timestamp_Update!]
+  """
+  ✨ Generated from Field `DownloadSchedule`.`creatorName` of type `String`
+  """
+  creatorName: String
+  """
+  ✨ `_expr` server value variant of `creatorName` (✨ Generated from Field `DownloadSchedule`.`creatorName` of type `String`)
+  """
+  creatorName_expr: String_Expr
+  """
+  ✨ Generated from Field `DownloadSchedule`.`frequency` of type `String!`
+  """
+  frequency: String
+  """
+  ✨ `_expr` server value variant of `frequency` (✨ Generated from Field `DownloadSchedule`.`frequency` of type `String!`)
+  """
+  frequency_expr: String_Expr
+  """
+  ✨ Generated from Field `DownloadSchedule`.`isActive` of type `Boolean!`
+  """
+  isActive: Boolean
+  """
+  ✨ `_expr` server value variant of `isActive` (✨ Generated from Field `DownloadSchedule`.`isActive` of type `Boolean!`)
+  """
+  isActive_expr: Boolean_Expr
+  """
+  ✨ Generated from Field `DownloadSchedule`.`lastDownloadAt` of type `Timestamp`
+  """
+  lastDownloadAt: Timestamp
+  """
+  ✨ `_expr` server value variant of `lastDownloadAt` (✨ Generated from Field `DownloadSchedule`.`lastDownloadAt` of type `Timestamp`)
+  """
+  lastDownloadAt_expr: Timestamp_Expr
+  """
+  ✨ `_time` server value variant of `lastDownloadAt` (✨ Generated from Field `DownloadSchedule`.`lastDownloadAt` of type `Timestamp`)
+  """
+  lastDownloadAt_time: Timestamp_Relative
+  """
+  ✨ `_update` server value variant of `lastDownloadAt` (✨ Generated from Field `DownloadSchedule`.`lastDownloadAt` of type `Timestamp`)
+  """
+  lastDownloadAt_update: [Timestamp_Update!]
+  """
+  ✨ Generated from Field `DownloadSchedule`.`nextDownloadAt` of type `Timestamp!`
+  """
+  nextDownloadAt: Timestamp
+  """
+  ✨ `_expr` server value variant of `nextDownloadAt` (✨ Generated from Field `DownloadSchedule`.`nextDownloadAt` of type `Timestamp!`)
+  """
+  nextDownloadAt_expr: Timestamp_Expr
+  """
+  ✨ `_time` server value variant of `nextDownloadAt` (✨ Generated from Field `DownloadSchedule`.`nextDownloadAt` of type `Timestamp!`)
+  """
+  nextDownloadAt_time: Timestamp_Relative
+  """
+  ✨ `_update` server value variant of `nextDownloadAt` (✨ Generated from Field `DownloadSchedule`.`nextDownloadAt` of type `Timestamp!`)
+  """
+  nextDownloadAt_update: [Timestamp_Update!]
+  """
+  ✨ Generated from Field `DownloadSchedule`.`scheduledTime` of type `String`
+  """
+  scheduledTime: String
+  """
+  ✨ `_expr` server value variant of `scheduledTime` (✨ Generated from Field `DownloadSchedule`.`scheduledTime` of type `String`)
+  """
+  scheduledTime_expr: String_Expr
+  """
+  ✨ Generated from Field `DownloadSchedule`.`startDateOffset` of type `String`
+  """
+  startDateOffset: String
+  """
+  ✨ `_expr` server value variant of `startDateOffset` (✨ Generated from Field `DownloadSchedule`.`startDateOffset` of type `String`)
+  """
+  startDateOffset_expr: String_Expr
+  """
+  ✨ Generated from Field `DownloadSchedule`.`statementFormat` of type `String`
+  """
+  statementFormat: String
+  """
+  ✨ `_expr` server value variant of `statementFormat` (✨ Generated from Field `DownloadSchedule`.`statementFormat` of type `String`)
+  """
+  statementFormat_expr: String_Expr
+  """
+  ✨ Generated from Field `DownloadSchedule`.`storageType` of type `String`
+  """
+  storageType: String
+  """
+  ✨ `_expr` server value variant of `storageType` (✨ Generated from Field `DownloadSchedule`.`storageType` of type `String`)
+  """
+  storageType_expr: String_Expr
+  """
+  ✨ Generated from Field `DownloadSchedule`.`targetFolder` of type `String`
+  """
+  targetFolder: String
+  """
+  ✨ `_expr` server value variant of `targetFolder` (✨ Generated from Field `DownloadSchedule`.`targetFolder` of type `String`)
+  """
+  targetFolder_expr: String_Expr
+  """
+  ✨ Generated from Field `DownloadSchedule`.`userId` of type `String!`
+  """
+  userId: String
+  """
+  ✨ `_expr` server value variant of `userId` (✨ Generated from Field `DownloadSchedule`.`userId` of type `String!`)
+  """
+  userId_expr: String_Expr
+}
+"""
+✨ Generated filter input type for table 'DownloadSchedule'. This input allows filtering objects using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input DownloadSchedule_Filter {
+  """
+  Apply multiple filter conditions using `AND` logic.
+  """
+  _and: [DownloadSchedule_Filter!]
+  """
+  Negate the result of the provided filter condition.
+  """
+  _not: DownloadSchedule_Filter
+  """
+  Apply multiple filter conditions using `OR` logic.
+  """
+  _or: [DownloadSchedule_Filter!]
+  """
+  ✨ Generated from Field `DownloadSchedule`.`id` of type `UUID!`
+  """
+  id: UUID_Filter
+  """
+  ✨ Generated from Field `DownloadSchedule`.`bankAccountId` of type `UUID!`
+  """
+  bankAccountId: UUID_Filter
+  """
+  ✨ Generated from Field `DownloadSchedule`.`bankAccount` of type `BankAccount!`
+  """
+  bankAccount: BankAccount_Filter
+  """
+  ✨ Generated from Field `DownloadSchedule`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: Timestamp_Filter
+  """
+  ✨ Generated from Field `DownloadSchedule`.`creatorName` of type `String`
+  """
+  creatorName: String_Filter
+  """
+  ✨ Generated from Field `DownloadSchedule`.`frequency` of type `String!`
+  """
+  frequency: String_Filter
+  """
+  ✨ Generated from Field `DownloadSchedule`.`isActive` of type `Boolean!`
+  """
+  isActive: Boolean_Filter
+  """
+  ✨ Generated from Field `DownloadSchedule`.`lastDownloadAt` of type `Timestamp`
+  """
+  lastDownloadAt: Timestamp_Filter
+  """
+  ✨ Generated from Field `DownloadSchedule`.`nextDownloadAt` of type `Timestamp!`
+  """
+  nextDownloadAt: Timestamp_Filter
+  """
+  ✨ Generated from Field `DownloadSchedule`.`scheduledTime` of type `String`
+  """
+  scheduledTime: String_Filter
+  """
+  ✨ Generated from Field `DownloadSchedule`.`startDateOffset` of type `String`
+  """
+  startDateOffset: String_Filter
+  """
+  ✨ Generated from Field `DownloadSchedule`.`statementFormat` of type `String`
+  """
+  statementFormat: String_Filter
+  """
+  ✨ Generated from Field `DownloadSchedule`.`storageType` of type `String`
+  """
+  storageType: String_Filter
+  """
+  ✨ Generated from Field `DownloadSchedule`.`targetFolder` of type `String`
+  """
+  targetFolder: String_Filter
+  """
+  ✨ Generated from Field `DownloadSchedule`.`userId` of type `String!`
+  """
+  userId: String_Filter
+  """
+  ✨ Generated from Field `DownloadSchedule`.`statements_on_downloadSchedule` of type `[Statement!]!`
+  """
+  statements_on_downloadSchedule: Statement_ListFilter
+}
+"""
+✨ Generated first-row input type for table 'DownloadSchedule'. This input selects the first row matching the filter criteria, ordered according to the specified conditions.
+"""
+input DownloadSchedule_FirstRow {
+  """
+  Order the result by the specified fields.
+  """
+  orderBy: [DownloadSchedule_Order!]
+  """
+  Filters rows based on the specified conditions.
+  """
+  where: DownloadSchedule_Filter
+}
+"""
+✨ Generated having input type for table 'DownloadSchedule'. This input allows you to filter groups during aggregate queries using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input DownloadSchedule_Having {
+  """
+  Apply multiple Having conditions using `AND` logic.
+  """
+  _and: [DownloadSchedule_Having!]
+  """
+  Whether to apply DISTINCT to the aggregate function.
+  """
+  _distinct: Boolean
+  """
+  Negate the result of the provided Having condition.
+  """
+  _not: DownloadSchedule_Having
+  """
+  Apply multiple Having conditions using `OR` logic.
+  """
+  _or: [DownloadSchedule_Having!]
+  """
+  ✨ Generated from Field `DownloadSchedule`.`_count` of type `Int!`
+  """
+  _count: Int_Filter
+  """
+  ✨ Generated from Field `DownloadSchedule`.`bankAccountId_count` of type `Int!`
+  """
+  bankAccountId_count: Int_Filter
+  """
+  ✨ Generated from Field `DownloadSchedule`.`createdAt_count` of type `Int!`
+  """
+  createdAt_count: Int_Filter
+  """
+  ✨ Generated from Field `DownloadSchedule`.`creatorName_count` of type `Int!`
+  """
+  creatorName_count: Int_Filter
+  """
+  ✨ Generated from Field `DownloadSchedule`.`frequency_count` of type `Int!`
+  """
+  frequency_count: Int_Filter
+  """
+  ✨ Generated from Field `DownloadSchedule`.`id_count` of type `Int!`
+  """
+  id_count: Int_Filter
+  """
+  ✨ Generated from Field `DownloadSchedule`.`isActive_count` of type `Int!`
+  """
+  isActive_count: Int_Filter
+  """
+  ✨ Generated from Field `DownloadSchedule`.`lastDownloadAt_count` of type `Int!`
+  """
+  lastDownloadAt_count: Int_Filter
+  """
+  ✨ Generated from Field `DownloadSchedule`.`nextDownloadAt_count` of type `Int!`
+  """
+  nextDownloadAt_count: Int_Filter
+  """
+  ✨ Generated from Field `DownloadSchedule`.`scheduledTime_count` of type `Int!`
+  """
+  scheduledTime_count: Int_Filter
+  """
+  ✨ Generated from Field `DownloadSchedule`.`startDateOffset_count` of type `Int!`
+  """
+  startDateOffset_count: Int_Filter
+  """
+  ✨ Generated from Field `DownloadSchedule`.`statementFormat_count` of type `Int!`
+  """
+  statementFormat_count: Int_Filter
+  """
+  ✨ Generated from Field `DownloadSchedule`.`storageType_count` of type `Int!`
+  """
+  storageType_count: Int_Filter
+  """
+  ✨ Generated from Field `DownloadSchedule`.`targetFolder_count` of type `Int!`
+  """
+  targetFolder_count: Int_Filter
+  """
+  ✨ Generated from Field `DownloadSchedule`.`userId_count` of type `Int!`
+  """
+  userId_count: Int_Filter
+  """
+  ✨ Generated from Field `DownloadSchedule`.`createdAt_min` of type `Timestamp`
+  """
+  createdAt_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `DownloadSchedule`.`lastDownloadAt_min` of type `Timestamp`
+  """
+  lastDownloadAt_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `DownloadSchedule`.`nextDownloadAt_min` of type `Timestamp`
+  """
+  nextDownloadAt_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `DownloadSchedule`.`createdAt_max` of type `Timestamp`
+  """
+  createdAt_max: Timestamp_Filter
+  """
+  ✨ Generated from Field `DownloadSchedule`.`lastDownloadAt_max` of type `Timestamp`
+  """
+  lastDownloadAt_max: Timestamp_Filter
+  """
+  ✨ Generated from Field `DownloadSchedule`.`nextDownloadAt_max` of type `Timestamp`
+  """
+  nextDownloadAt_max: Timestamp_Filter
+}
+"""
+✨ Generated key input type for table 'DownloadSchedule'. It represents the primary key fields used to uniquely identify a row in the table.
+"""
+input DownloadSchedule_Key {
+  """
+  ✨ Generated from Field `DownloadSchedule`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `DownloadSchedule`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr
+}
+"""
+✨ Generated list filter input type for table 'DownloadSchedule'. This input applies filtering logic based on the count or existence of related objects that matches certain criteria.
+"""
+input DownloadSchedule_ListFilter {
+  """
+  The desired number of objects that match the condition (defaults to at least one).
+  """
+  count: Int_Filter = {gt:0}
+  """
+  Condition of the related objects to filter for.
+  """
+  exist: DownloadSchedule_Filter
+}
+"""
+✨ Generated order input type for table 'DownloadSchedule'. This input defines the sorting order of rows in query results based on one or more fields.
+"""
+input DownloadSchedule_Order {
+  """
+  ✨ Generated from Field `DownloadSchedule`.`id` of type `UUID!`
+  """
+  id: OrderDirection
+  """
+  ✨ Generated from Field `DownloadSchedule`.`bankAccountId` of type `UUID!`
+  """
+  bankAccountId: OrderDirection
+  """
+  ✨ Generated from Field `DownloadSchedule`.`bankAccount` of type `BankAccount!`
+  """
+  bankAccount: BankAccount_Order
+  """
+  ✨ Generated from Field `DownloadSchedule`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: OrderDirection
+  """
+  ✨ Generated from Field `DownloadSchedule`.`creatorName` of type `String`
+  """
+  creatorName: OrderDirection
+  """
+  ✨ Generated from Field `DownloadSchedule`.`frequency` of type `String!`
+  """
+  frequency: OrderDirection
+  """
+  ✨ Generated from Field `DownloadSchedule`.`isActive` of type `Boolean!`
+  """
+  isActive: OrderDirection
+  """
+  ✨ Generated from Field `DownloadSchedule`.`lastDownloadAt` of type `Timestamp`
+  """
+  lastDownloadAt: OrderDirection
+  """
+  ✨ Generated from Field `DownloadSchedule`.`nextDownloadAt` of type `Timestamp!`
+  """
+  nextDownloadAt: OrderDirection
+  """
+  ✨ Generated from Field `DownloadSchedule`.`scheduledTime` of type `String`
+  """
+  scheduledTime: OrderDirection
+  """
+  ✨ Generated from Field `DownloadSchedule`.`startDateOffset` of type `String`
+  """
+  startDateOffset: OrderDirection
+  """
+  ✨ Generated from Field `DownloadSchedule`.`statementFormat` of type `String`
+  """
+  statementFormat: OrderDirection
+  """
+  ✨ Generated from Field `DownloadSchedule`.`storageType` of type `String`
+  """
+  storageType: OrderDirection
+  """
+  ✨ Generated from Field `DownloadSchedule`.`targetFolder` of type `String`
+  """
+  targetFolder: OrderDirection
+  """
+  ✨ Generated from Field `DownloadSchedule`.`userId` of type `String!`
+  """
+  userId: OrderDirection
+  """
+  ✨ Generated from Field `DownloadSchedule`.`_count` of type `Int!`
+  """
+  _count: OrderDirection
+  """
+  ✨ Generated from Field `DownloadSchedule`.`bankAccountId_count` of type `Int!`
+  """
+  bankAccountId_count: OrderDirection
+  """
+  ✨ Generated from Field `DownloadSchedule`.`createdAt_count` of type `Int!`
+  """
+  createdAt_count: OrderDirection
+  """
+  ✨ Generated from Field `DownloadSchedule`.`creatorName_count` of type `Int!`
+  """
+  creatorName_count: OrderDirection
+  """
+  ✨ Generated from Field `DownloadSchedule`.`frequency_count` of type `Int!`
+  """
+  frequency_count: OrderDirection
+  """
+  ✨ Generated from Field `DownloadSchedule`.`id_count` of type `Int!`
+  """
+  id_count: OrderDirection
+  """
+  ✨ Generated from Field `DownloadSchedule`.`isActive_count` of type `Int!`
+  """
+  isActive_count: OrderDirection
+  """
+  ✨ Generated from Field `DownloadSchedule`.`lastDownloadAt_count` of type `Int!`
+  """
+  lastDownloadAt_count: OrderDirection
+  """
+  ✨ Generated from Field `DownloadSchedule`.`nextDownloadAt_count` of type `Int!`
+  """
+  nextDownloadAt_count: OrderDirection
+  """
+  ✨ Generated from Field `DownloadSchedule`.`scheduledTime_count` of type `Int!`
+  """
+  scheduledTime_count: OrderDirection
+  """
+  ✨ Generated from Field `DownloadSchedule`.`startDateOffset_count` of type `Int!`
+  """
+  startDateOffset_count: OrderDirection
+  """
+  ✨ Generated from Field `DownloadSchedule`.`statementFormat_count` of type `Int!`
+  """
+  statementFormat_count: OrderDirection
+  """
+  ✨ Generated from Field `DownloadSchedule`.`storageType_count` of type `Int!`
+  """
+  storageType_count: OrderDirection
+  """
+  ✨ Generated from Field `DownloadSchedule`.`targetFolder_count` of type `Int!`
+  """
+  targetFolder_count: OrderDirection
+  """
+  ✨ Generated from Field `DownloadSchedule`.`userId_count` of type `Int!`
+  """
+  userId_count: OrderDirection
+  """
+  ✨ Generated from Field `DownloadSchedule`.`createdAt_min` of type `Timestamp`
+  """
+  createdAt_min: OrderDirection
+  """
+  ✨ Generated from Field `DownloadSchedule`.`lastDownloadAt_min` of type `Timestamp`
+  """
+  lastDownloadAt_min: OrderDirection
+  """
+  ✨ Generated from Field `DownloadSchedule`.`nextDownloadAt_min` of type `Timestamp`
+  """
+  nextDownloadAt_min: OrderDirection
+  """
+  ✨ Generated from Field `DownloadSchedule`.`createdAt_max` of type `Timestamp`
+  """
+  createdAt_max: OrderDirection
+  """
+  ✨ Generated from Field `DownloadSchedule`.`lastDownloadAt_max` of type `Timestamp`
+  """
+  lastDownloadAt_max: OrderDirection
+  """
+  ✨ Generated from Field `DownloadSchedule`.`nextDownloadAt_max` of type `Timestamp`
+  """
+  nextDownloadAt_max: OrderDirection
+}
+"""
+✨ Generated data input type for table 'Notification'. It includes all necessary fields for creating or upserting rows into table.
+"""
+input Notification_Data {
+  """
+  ✨ Generated from Field `Notification`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `Notification`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr
+  """
+  ✨ Generated from Field `Notification`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: Timestamp
+  """
+  ✨ `_expr` server value variant of `createdAt` (✨ Generated from Field `Notification`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_expr: Timestamp_Expr
+  """
+  ✨ `_time` server value variant of `createdAt` (✨ Generated from Field `Notification`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_time: Timestamp_Relative
+  """
+  ✨ `_update` server value variant of `createdAt` (✨ Generated from Field `Notification`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_update: [Timestamp_Update!]
+  """
+  ✨ Generated from Field `Notification`.`isRead` of type `Boolean!`
+  """
+  isRead: Boolean
+  """
+  ✨ `_expr` server value variant of `isRead` (✨ Generated from Field `Notification`.`isRead` of type `Boolean!`)
+  """
+  isRead_expr: Boolean_Expr
+  """
+  ✨ Generated from Field `Notification`.`message` of type `String!`
+  """
+  message: String
+  """
+  ✨ `_expr` server value variant of `message` (✨ Generated from Field `Notification`.`message` of type `String!`)
+  """
+  message_expr: String_Expr
+  """
+  ✨ Generated from Field `Notification`.`relatedStatementId` of type `UUID`
+  """
+  relatedStatementId: UUID
+  """
+  ✨ `_expr` server value variant of `relatedStatementId` (✨ Generated from Field `Notification`.`relatedStatementId` of type `UUID`)
+  """
+  relatedStatementId_expr: UUID_Expr
+  """
+  ✨ Generated from Field `Notification`.`type` of type `String!`
+  """
+  type: String
+  """
+  ✨ `_expr` server value variant of `type` (✨ Generated from Field `Notification`.`type` of type `String!`)
+  """
+  type_expr: String_Expr
+  """
+  ✨ Generated from Field `Notification`.`userId` of type `String!`
+  """
+  userId: String
+  """
+  ✨ `_expr` server value variant of `userId` (✨ Generated from Field `Notification`.`userId` of type `String!`)
+  """
+  userId_expr: String_Expr
+}
+"""
+✨ Generated filter input type for table 'Notification'. This input allows filtering objects using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input Notification_Filter {
+  """
+  Apply multiple filter conditions using `AND` logic.
+  """
+  _and: [Notification_Filter!]
+  """
+  Negate the result of the provided filter condition.
+  """
+  _not: Notification_Filter
+  """
+  Apply multiple filter conditions using `OR` logic.
+  """
+  _or: [Notification_Filter!]
+  """
+  ✨ Generated from Field `Notification`.`id` of type `UUID!`
+  """
+  id: UUID_Filter
+  """
+  ✨ Generated from Field `Notification`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: Timestamp_Filter
+  """
+  ✨ Generated from Field `Notification`.`isRead` of type `Boolean!`
+  """
+  isRead: Boolean_Filter
+  """
+  ✨ Generated from Field `Notification`.`message` of type `String!`
+  """
+  message: String_Filter
+  """
+  ✨ Generated from Field `Notification`.`relatedStatementId` of type `UUID`
+  """
+  relatedStatementId: UUID_Filter
+  """
+  ✨ Generated from Field `Notification`.`type` of type `String!`
+  """
+  type: String_Filter
+  """
+  ✨ Generated from Field `Notification`.`userId` of type `String!`
+  """
+  userId: String_Filter
+}
+"""
+✨ Generated first-row input type for table 'Notification'. This input selects the first row matching the filter criteria, ordered according to the specified conditions.
+"""
+input Notification_FirstRow {
+  """
+  Order the result by the specified fields.
+  """
+  orderBy: [Notification_Order!]
+  """
+  Filters rows based on the specified conditions.
+  """
+  where: Notification_Filter
+}
+"""
+✨ Generated having input type for table 'Notification'. This input allows you to filter groups during aggregate queries using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input Notification_Having {
+  """
+  Apply multiple Having conditions using `AND` logic.
+  """
+  _and: [Notification_Having!]
+  """
+  Whether to apply DISTINCT to the aggregate function.
+  """
+  _distinct: Boolean
+  """
+  Negate the result of the provided Having condition.
+  """
+  _not: Notification_Having
+  """
+  Apply multiple Having conditions using `OR` logic.
+  """
+  _or: [Notification_Having!]
+  """
+  ✨ Generated from Field `Notification`.`_count` of type `Int!`
+  """
+  _count: Int_Filter
+  """
+  ✨ Generated from Field `Notification`.`createdAt_count` of type `Int!`
+  """
+  createdAt_count: Int_Filter
+  """
+  ✨ Generated from Field `Notification`.`id_count` of type `Int!`
+  """
+  id_count: Int_Filter
+  """
+  ✨ Generated from Field `Notification`.`isRead_count` of type `Int!`
+  """
+  isRead_count: Int_Filter
+  """
+  ✨ Generated from Field `Notification`.`message_count` of type `Int!`
+  """
+  message_count: Int_Filter
+  """
+  ✨ Generated from Field `Notification`.`relatedStatementId_count` of type `Int!`
+  """
+  relatedStatementId_count: Int_Filter
+  """
+  ✨ Generated from Field `Notification`.`type_count` of type `Int!`
+  """
+  type_count: Int_Filter
+  """
+  ✨ Generated from Field `Notification`.`userId_count` of type `Int!`
+  """
+  userId_count: Int_Filter
+  """
+  ✨ Generated from Field `Notification`.`createdAt_min` of type `Timestamp`
+  """
+  createdAt_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `Notification`.`createdAt_max` of type `Timestamp`
+  """
+  createdAt_max: Timestamp_Filter
+}
+"""
+✨ Generated key input type for table 'Notification'. It represents the primary key fields used to uniquely identify a row in the table.
+"""
+input Notification_Key {
+  """
+  ✨ Generated from Field `Notification`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `Notification`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr
+}
+"""
+✨ Generated list filter input type for table 'Notification'. This input applies filtering logic based on the count or existence of related objects that matches certain criteria.
+"""
+input Notification_ListFilter {
+  """
+  The desired number of objects that match the condition (defaults to at least one).
+  """
+  count: Int_Filter = {gt:0}
+  """
+  Condition of the related objects to filter for.
+  """
+  exist: Notification_Filter
+}
+"""
+✨ Generated order input type for table 'Notification'. This input defines the sorting order of rows in query results based on one or more fields.
+"""
+input Notification_Order {
+  """
+  ✨ Generated from Field `Notification`.`id` of type `UUID!`
+  """
+  id: OrderDirection
+  """
+  ✨ Generated from Field `Notification`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: OrderDirection
+  """
+  ✨ Generated from Field `Notification`.`isRead` of type `Boolean!`
+  """
+  isRead: OrderDirection
+  """
+  ✨ Generated from Field `Notification`.`message` of type `String!`
+  """
+  message: OrderDirection
+  """
+  ✨ Generated from Field `Notification`.`relatedStatementId` of type `UUID`
+  """
+  relatedStatementId: OrderDirection
+  """
+  ✨ Generated from Field `Notification`.`type` of type `String!`
+  """
+  type: OrderDirection
+  """
+  ✨ Generated from Field `Notification`.`userId` of type `String!`
+  """
+  userId: OrderDirection
+  """
+  ✨ Generated from Field `Notification`.`_count` of type `Int!`
+  """
+  _count: OrderDirection
+  """
+  ✨ Generated from Field `Notification`.`createdAt_count` of type `Int!`
+  """
+  createdAt_count: OrderDirection
+  """
+  ✨ Generated from Field `Notification`.`id_count` of type `Int!`
+  """
+  id_count: OrderDirection
+  """
+  ✨ Generated from Field `Notification`.`isRead_count` of type `Int!`
+  """
+  isRead_count: OrderDirection
+  """
+  ✨ Generated from Field `Notification`.`message_count` of type `Int!`
+  """
+  message_count: OrderDirection
+  """
+  ✨ Generated from Field `Notification`.`relatedStatementId_count` of type `Int!`
+  """
+  relatedStatementId_count: OrderDirection
+  """
+  ✨ Generated from Field `Notification`.`type_count` of type `Int!`
+  """
+  type_count: OrderDirection
+  """
+  ✨ Generated from Field `Notification`.`userId_count` of type `Int!`
+  """
+  userId_count: OrderDirection
+  """
+  ✨ Generated from Field `Notification`.`createdAt_min` of type `Timestamp`
+  """
+  createdAt_min: OrderDirection
+  """
+  ✨ Generated from Field `Notification`.`createdAt_max` of type `Timestamp`
+  """
+  createdAt_max: OrderDirection
+}
+"""
+✨ Generated data input type for table 'Statement'. It includes all necessary fields for creating or upserting rows into table.
+"""
+input Statement_Data {
+  """
+  ✨ Generated from Field `Statement`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `Statement`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr
+  """
+  ✨ Generated from Field `Statement`.`bankAccountId` of type `UUID!`
+  """
+  bankAccountId: UUID
+  """
+  ✨ `_expr` server value variant of `bankAccountId` (✨ Generated from Field `Statement`.`bankAccountId` of type `UUID!`)
+  """
+  bankAccountId_expr: UUID_Expr
+  """
+  ✨ Generated from Field `Statement`.`downloadScheduleId` of type `UUID`
+  """
+  downloadScheduleId: UUID
+  """
+  ✨ `_expr` server value variant of `downloadScheduleId` (✨ Generated from Field `Statement`.`downloadScheduleId` of type `UUID`)
+  """
+  downloadScheduleId_expr: UUID_Expr
+  """
+  ✨ Generated from Field `Statement`.`bankAccount` of type `BankAccount!`
+  """
+  bankAccount: BankAccount_Key
+  """
+  ✨ Generated from Field `Statement`.`downloadSchedule` of type `DownloadSchedule`
+  """
+  downloadSchedule: DownloadSchedule_Key
+  """
+  ✨ Generated from Field `Statement`.`downloadDate` of type `Timestamp!`
+  """
+  downloadDate: Timestamp
+  """
+  ✨ `_expr` server value variant of `downloadDate` (✨ Generated from Field `Statement`.`downloadDate` of type `Timestamp!`)
+  """
+  downloadDate_expr: Timestamp_Expr
+  """
+  ✨ `_time` server value variant of `downloadDate` (✨ Generated from Field `Statement`.`downloadDate` of type `Timestamp!`)
+  """
+  downloadDate_time: Timestamp_Relative
+  """
+  ✨ `_update` server value variant of `downloadDate` (✨ Generated from Field `Statement`.`downloadDate` of type `Timestamp!`)
+  """
+  downloadDate_update: [Timestamp_Update!]
+  """
+  ✨ Generated from Field `Statement`.`errorMessage` of type `String`
+  """
+  errorMessage: String
+  """
+  ✨ `_expr` server value variant of `errorMessage` (✨ Generated from Field `Statement`.`errorMessage` of type `String`)
+  """
+  errorMessage_expr: String_Expr
+  """
+  ✨ Generated from Field `Statement`.`fileName` of type `String!`
+  """
+  fileName: String
+  """
+  ✨ `_expr` server value variant of `fileName` (✨ Generated from Field `Statement`.`fileName` of type `String!`)
+  """
+  fileName_expr: String_Expr
+  """
+  ✨ Generated from Field `Statement`.`fileRef` of type `String!`
+  """
+  fileRef: String
+  """
+  ✨ `_expr` server value variant of `fileRef` (✨ Generated from Field `Statement`.`fileRef` of type `String!`)
+  """
+  fileRef_expr: String_Expr
+  """
+  ✨ Generated from Field `Statement`.`statementPeriodEnd` of type `Date!`
+  """
+  statementPeriodEnd: Date
+  """
+  ✨ `_date` server value variant of `statementPeriodEnd` (✨ Generated from Field `Statement`.`statementPeriodEnd` of type `Date!`)
+  """
+  statementPeriodEnd_date: Date_Relative
+  """
+  ✨ `_expr` server value variant of `statementPeriodEnd` (✨ Generated from Field `Statement`.`statementPeriodEnd` of type `Date!`)
+  """
+  statementPeriodEnd_expr: Date_Expr
+  """
+  ✨ `_update` server value variant of `statementPeriodEnd` (✨ Generated from Field `Statement`.`statementPeriodEnd` of type `Date!`)
+  """
+  statementPeriodEnd_update: [Date_Update!]
+  """
+  ✨ Generated from Field `Statement`.`statementPeriodStart` of type `Date!`
+  """
+  statementPeriodStart: Date
+  """
+  ✨ `_date` server value variant of `statementPeriodStart` (✨ Generated from Field `Statement`.`statementPeriodStart` of type `Date!`)
+  """
+  statementPeriodStart_date: Date_Relative
+  """
+  ✨ `_expr` server value variant of `statementPeriodStart` (✨ Generated from Field `Statement`.`statementPeriodStart` of type `Date!`)
+  """
+  statementPeriodStart_expr: Date_Expr
+  """
+  ✨ `_update` server value variant of `statementPeriodStart` (✨ Generated from Field `Statement`.`statementPeriodStart` of type `Date!`)
+  """
+  statementPeriodStart_update: [Date_Update!]
+  """
+  ✨ Generated from Field `Statement`.`status` of type `String`
+  """
+  status: String
+  """
+  ✨ `_expr` server value variant of `status` (✨ Generated from Field `Statement`.`status` of type `String`)
+  """
+  status_expr: String_Expr
+  """
+  ✨ Generated from Field `Statement`.`userId` of type `String!`
+  """
+  userId: String
+  """
+  ✨ `_expr` server value variant of `userId` (✨ Generated from Field `Statement`.`userId` of type `String!`)
+  """
+  userId_expr: String_Expr
+}
+"""
+✨ Generated filter input type for table 'Statement'. This input allows filtering objects using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input Statement_Filter {
+  """
+  Apply multiple filter conditions using `AND` logic.
+  """
+  _and: [Statement_Filter!]
+  """
+  Negate the result of the provided filter condition.
+  """
+  _not: Statement_Filter
+  """
+  Apply multiple filter conditions using `OR` logic.
+  """
+  _or: [Statement_Filter!]
+  """
+  ✨ Generated from Field `Statement`.`id` of type `UUID!`
+  """
+  id: UUID_Filter
+  """
+  ✨ Generated from Field `Statement`.`bankAccountId` of type `UUID!`
+  """
+  bankAccountId: UUID_Filter
+  """
+  ✨ Generated from Field `Statement`.`downloadScheduleId` of type `UUID`
+  """
+  downloadScheduleId: UUID_Filter
+  """
+  ✨ Generated from Field `Statement`.`bankAccount` of type `BankAccount!`
+  """
+  bankAccount: BankAccount_Filter
+  """
+  ✨ Generated from Field `Statement`.`downloadSchedule` of type `DownloadSchedule`
+  """
+  downloadSchedule: DownloadSchedule_Filter
+  """
+  ✨ Generated from Field `Statement`.`downloadDate` of type `Timestamp!`
+  """
+  downloadDate: Timestamp_Filter
+  """
+  ✨ Generated from Field `Statement`.`errorMessage` of type `String`
+  """
+  errorMessage: String_Filter
+  """
+  ✨ Generated from Field `Statement`.`fileName` of type `String!`
+  """
+  fileName: String_Filter
+  """
+  ✨ Generated from Field `Statement`.`fileRef` of type `String!`
+  """
+  fileRef: String_Filter
+  """
+  ✨ Generated from Field `Statement`.`statementPeriodEnd` of type `Date!`
+  """
+  statementPeriodEnd: Date_Filter
+  """
+  ✨ Generated from Field `Statement`.`statementPeriodStart` of type `Date!`
+  """
+  statementPeriodStart: Date_Filter
+  """
+  ✨ Generated from Field `Statement`.`status` of type `String`
+  """
+  status: String_Filter
+  """
+  ✨ Generated from Field `Statement`.`userId` of type `String!`
+  """
+  userId: String_Filter
+}
+"""
+✨ Generated first-row input type for table 'Statement'. This input selects the first row matching the filter criteria, ordered according to the specified conditions.
+"""
+input Statement_FirstRow {
+  """
+  Order the result by the specified fields.
+  """
+  orderBy: [Statement_Order!]
+  """
+  Filters rows based on the specified conditions.
+  """
+  where: Statement_Filter
+}
+"""
+✨ Generated having input type for table 'Statement'. This input allows you to filter groups during aggregate queries using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input Statement_Having {
+  """
+  Apply multiple Having conditions using `AND` logic.
+  """
+  _and: [Statement_Having!]
+  """
+  Whether to apply DISTINCT to the aggregate function.
+  """
+  _distinct: Boolean
+  """
+  Negate the result of the provided Having condition.
+  """
+  _not: Statement_Having
+  """
+  Apply multiple Having conditions using `OR` logic.
+  """
+  _or: [Statement_Having!]
+  """
+  ✨ Generated from Field `Statement`.`_count` of type `Int!`
+  """
+  _count: Int_Filter
+  """
+  ✨ Generated from Field `Statement`.`bankAccountId_count` of type `Int!`
+  """
+  bankAccountId_count: Int_Filter
+  """
+  ✨ Generated from Field `Statement`.`downloadDate_count` of type `Int!`
+  """
+  downloadDate_count: Int_Filter
+  """
+  ✨ Generated from Field `Statement`.`downloadScheduleId_count` of type `Int!`
+  """
+  downloadScheduleId_count: Int_Filter
+  """
+  ✨ Generated from Field `Statement`.`errorMessage_count` of type `Int!`
+  """
+  errorMessage_count: Int_Filter
+  """
+  ✨ Generated from Field `Statement`.`fileName_count` of type `Int!`
+  """
+  fileName_count: Int_Filter
+  """
+  ✨ Generated from Field `Statement`.`fileRef_count` of type `Int!`
+  """
+  fileRef_count: Int_Filter
+  """
+  ✨ Generated from Field `Statement`.`id_count` of type `Int!`
+  """
+  id_count: Int_Filter
+  """
+  ✨ Generated from Field `Statement`.`statementPeriodEnd_count` of type `Int!`
+  """
+  statementPeriodEnd_count: Int_Filter
+  """
+  ✨ Generated from Field `Statement`.`statementPeriodStart_count` of type `Int!`
+  """
+  statementPeriodStart_count: Int_Filter
+  """
+  ✨ Generated from Field `Statement`.`status_count` of type `Int!`
+  """
+  status_count: Int_Filter
+  """
+  ✨ Generated from Field `Statement`.`userId_count` of type `Int!`
+  """
+  userId_count: Int_Filter
+  """
+  ✨ Generated from Field `Statement`.`downloadDate_min` of type `Timestamp`
+  """
+  downloadDate_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `Statement`.`statementPeriodEnd_min` of type `Date`
+  """
+  statementPeriodEnd_min: Date_Filter
+  """
+  ✨ Generated from Field `Statement`.`statementPeriodStart_min` of type `Date`
+  """
+  statementPeriodStart_min: Date_Filter
+  """
+  ✨ Generated from Field `Statement`.`downloadDate_max` of type `Timestamp`
+  """
+  downloadDate_max: Timestamp_Filter
+  """
+  ✨ Generated from Field `Statement`.`statementPeriodEnd_max` of type `Date`
+  """
+  statementPeriodEnd_max: Date_Filter
+  """
+  ✨ Generated from Field `Statement`.`statementPeriodStart_max` of type `Date`
+  """
+  statementPeriodStart_max: Date_Filter
+}
+"""
+✨ Generated key input type for table 'Statement'. It represents the primary key fields used to uniquely identify a row in the table.
+"""
+input Statement_Key {
+  """
+  ✨ Generated from Field `Statement`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `Statement`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr
+}
+"""
+✨ Generated list filter input type for table 'Statement'. This input applies filtering logic based on the count or existence of related objects that matches certain criteria.
+"""
+input Statement_ListFilter {
+  """
+  The desired number of objects that match the condition (defaults to at least one).
+  """
+  count: Int_Filter = {gt:0}
+  """
+  Condition of the related objects to filter for.
+  """
+  exist: Statement_Filter
+}
+"""
+✨ Generated order input type for table 'Statement'. This input defines the sorting order of rows in query results based on one or more fields.
+"""
+input Statement_Order {
+  """
+  ✨ Generated from Field `Statement`.`id` of type `UUID!`
+  """
+  id: OrderDirection
+  """
+  ✨ Generated from Field `Statement`.`bankAccountId` of type `UUID!`
+  """
+  bankAccountId: OrderDirection
+  """
+  ✨ Generated from Field `Statement`.`downloadScheduleId` of type `UUID`
+  """
+  downloadScheduleId: OrderDirection
+  """
+  ✨ Generated from Field `Statement`.`bankAccount` of type `BankAccount!`
+  """
+  bankAccount: BankAccount_Order
+  """
+  ✨ Generated from Field `Statement`.`downloadSchedule` of type `DownloadSchedule`
+  """
+  downloadSchedule: DownloadSchedule_Order
+  """
+  ✨ Generated from Field `Statement`.`downloadDate` of type `Timestamp!`
+  """
+  downloadDate: OrderDirection
+  """
+  ✨ Generated from Field `Statement`.`errorMessage` of type `String`
+  """
+  errorMessage: OrderDirection
+  """
+  ✨ Generated from Field `Statement`.`fileName` of type `String!`
+  """
+  fileName: OrderDirection
+  """
+  ✨ Generated from Field `Statement`.`fileRef` of type `String!`
+  """
+  fileRef: OrderDirection
+  """
+  ✨ Generated from Field `Statement`.`statementPeriodEnd` of type `Date!`
+  """
+  statementPeriodEnd: OrderDirection
+  """
+  ✨ Generated from Field `Statement`.`statementPeriodStart` of type `Date!`
+  """
+  statementPeriodStart: OrderDirection
+  """
+  ✨ Generated from Field `Statement`.`status` of type `String`
+  """
+  status: OrderDirection
+  """
+  ✨ Generated from Field `Statement`.`userId` of type `String!`
+  """
+  userId: OrderDirection
+  """
+  ✨ Generated from Field `Statement`.`_count` of type `Int!`
+  """
+  _count: OrderDirection
+  """
+  ✨ Generated from Field `Statement`.`bankAccountId_count` of type `Int!`
+  """
+  bankAccountId_count: OrderDirection
+  """
+  ✨ Generated from Field `Statement`.`downloadDate_count` of type `Int!`
+  """
+  downloadDate_count: OrderDirection
+  """
+  ✨ Generated from Field `Statement`.`downloadScheduleId_count` of type `Int!`
+  """
+  downloadScheduleId_count: OrderDirection
+  """
+  ✨ Generated from Field `Statement`.`errorMessage_count` of type `Int!`
+  """
+  errorMessage_count: OrderDirection
+  """
+  ✨ Generated from Field `Statement`.`fileName_count` of type `Int!`
+  """
+  fileName_count: OrderDirection
+  """
+  ✨ Generated from Field `Statement`.`fileRef_count` of type `Int!`
+  """
+  fileRef_count: OrderDirection
+  """
+  ✨ Generated from Field `Statement`.`id_count` of type `Int!`
+  """
+  id_count: OrderDirection
+  """
+  ✨ Generated from Field `Statement`.`statementPeriodEnd_count` of type `Int!`
+  """
+  statementPeriodEnd_count: OrderDirection
+  """
+  ✨ Generated from Field `Statement`.`statementPeriodStart_count` of type `Int!`
+  """
+  statementPeriodStart_count: OrderDirection
+  """
+  ✨ Generated from Field `Statement`.`status_count` of type `Int!`
+  """
+  status_count: OrderDirection
+  """
+  ✨ Generated from Field `Statement`.`userId_count` of type `Int!`
+  """
+  userId_count: OrderDirection
+  """
+  ✨ Generated from Field `Statement`.`downloadDate_min` of type `Timestamp`
+  """
+  downloadDate_min: OrderDirection
+  """
+  ✨ Generated from Field `Statement`.`statementPeriodEnd_min` of type `Date`
+  """
+  statementPeriodEnd_min: OrderDirection
+  """
+  ✨ Generated from Field `Statement`.`statementPeriodStart_min` of type `Date`
+  """
+  statementPeriodStart_min: OrderDirection
+  """
+  ✨ Generated from Field `Statement`.`downloadDate_max` of type `Timestamp`
+  """
+  downloadDate_max: OrderDirection
+  """
+  ✨ Generated from Field `Statement`.`statementPeriodEnd_max` of type `Date`
+  """
+  statementPeriodEnd_max: OrderDirection
+  """
+  ✨ Generated from Field `Statement`.`statementPeriodStart_max` of type `Date`
+  """
+  statementPeriodStart_max: OrderDirection
+}
+"""
+✨ Generated data input type for table 'User'. It includes all necessary fields for creating or upserting rows into table.
+"""
+input User_Data {
+  """
+  ✨ Generated from Field `User`.`id` of type `String!`
+  """
+  id: String
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `User`.`id` of type `String!`)
+  """
+  id_expr: String_Expr
+  """
+  ✨ Generated from Field `User`.`avatar` of type `String`
+  """
+  avatar: String
+  """
+  ✨ `_expr` server value variant of `avatar` (✨ Generated from Field `User`.`avatar` of type `String`)
+  """
+  avatar_expr: String_Expr
+  """
+  ✨ Generated from Field `User`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: Timestamp
+  """
+  ✨ `_expr` server value variant of `createdAt` (✨ Generated from Field `User`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_expr: Timestamp_Expr
+  """
+  ✨ `_time` server value variant of `createdAt` (✨ Generated from Field `User`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_time: Timestamp_Relative
+  """
+  ✨ `_update` server value variant of `createdAt` (✨ Generated from Field `User`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_update: [Timestamp_Update!]
+  """
+  ✨ Generated from Field `User`.`displayName` of type `String!`
+  """
+  displayName: String
+  """
+  ✨ `_expr` server value variant of `displayName` (✨ Generated from Field `User`.`displayName` of type `String!`)
+  """
+  displayName_expr: String_Expr
+  """
+  ✨ Generated from Field `User`.`email` of type `String!`
+  """
+  email: String
+  """
+  ✨ `_expr` server value variant of `email` (✨ Generated from Field `User`.`email` of type `String!`)
+  """
+  email_expr: String_Expr
+  """
+  ✨ Generated from Field `User`.`photoUrl` of type `String`
+  """
+  photoUrl: String
+  """
+  ✨ `_expr` server value variant of `photoUrl` (✨ Generated from Field `User`.`photoUrl` of type `String`)
+  """
+  photoUrl_expr: String_Expr
+  """
+  ✨ Generated from Field `User`.`role` of type `String!`
+  """
+  role: String
+  """
+  ✨ `_expr` server value variant of `role` (✨ Generated from Field `User`.`role` of type `String!`)
+  """
+  role_expr: String_Expr
+}
+"""
+✨ Generated filter input type for table 'User'. This input allows filtering objects using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input User_Filter {
+  """
+  Apply multiple filter conditions using `AND` logic.
+  """
+  _and: [User_Filter!]
+  """
+  Negate the result of the provided filter condition.
+  """
+  _not: User_Filter
+  """
+  Apply multiple filter conditions using `OR` logic.
+  """
+  _or: [User_Filter!]
+  """
+  ✨ Generated from Field `User`.`id` of type `String!`
+  """
+  id: String_Filter
+  """
+  ✨ Generated from Field `User`.`avatar` of type `String`
+  """
+  avatar: String_Filter
+  """
+  ✨ Generated from Field `User`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: Timestamp_Filter
+  """
+  ✨ Generated from Field `User`.`displayName` of type `String!`
+  """
+  displayName: String_Filter
+  """
+  ✨ Generated from Field `User`.`email` of type `String!`
+  """
+  email: String_Filter
+  """
+  ✨ Generated from Field `User`.`photoUrl` of type `String`
+  """
+  photoUrl: String_Filter
+  """
+  ✨ Generated from Field `User`.`role` of type `String!`
+  """
+  role: String_Filter
+}
+"""
+✨ Generated first-row input type for table 'User'. This input selects the first row matching the filter criteria, ordered according to the specified conditions.
+"""
+input User_FirstRow {
+  """
+  Order the result by the specified fields.
+  """
+  orderBy: [User_Order!]
+  """
+  Filters rows based on the specified conditions.
+  """
+  where: User_Filter
+}
+"""
+✨ Generated having input type for table 'User'. This input allows you to filter groups during aggregate queries using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input User_Having {
+  """
+  Apply multiple Having conditions using `AND` logic.
+  """
+  _and: [User_Having!]
+  """
+  Whether to apply DISTINCT to the aggregate function.
+  """
+  _distinct: Boolean
+  """
+  Negate the result of the provided Having condition.
+  """
+  _not: User_Having
+  """
+  Apply multiple Having conditions using `OR` logic.
+  """
+  _or: [User_Having!]
+  """
+  ✨ Generated from Field `User`.`_count` of type `Int!`
+  """
+  _count: Int_Filter
+  """
+  ✨ Generated from Field `User`.`avatar_count` of type `Int!`
+  """
+  avatar_count: Int_Filter
+  """
+  ✨ Generated from Field `User`.`createdAt_count` of type `Int!`
+  """
+  createdAt_count: Int_Filter
+  """
+  ✨ Generated from Field `User`.`displayName_count` of type `Int!`
+  """
+  displayName_count: Int_Filter
+  """
+  ✨ Generated from Field `User`.`email_count` of type `Int!`
+  """
+  email_count: Int_Filter
+  """
+  ✨ Generated from Field `User`.`id_count` of type `Int!`
+  """
+  id_count: Int_Filter
+  """
+  ✨ Generated from Field `User`.`photoUrl_count` of type `Int!`
+  """
+  photoUrl_count: Int_Filter
+  """
+  ✨ Generated from Field `User`.`role_count` of type `Int!`
+  """
+  role_count: Int_Filter
+  """
+  ✨ Generated from Field `User`.`createdAt_min` of type `Timestamp`
+  """
+  createdAt_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `User`.`createdAt_max` of type `Timestamp`
+  """
+  createdAt_max: Timestamp_Filter
+}
+"""
+✨ Generated key input type for table 'User'. It represents the primary key fields used to uniquely identify a row in the table.
+"""
+input User_Key {
+  """
+  ✨ Generated from Field `User`.`id` of type `String!`
+  """
+  id: String
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `User`.`id` of type `String!`)
+  """
+  id_expr: String_Expr
+}
+"""
+✨ Generated list filter input type for table 'User'. This input applies filtering logic based on the count or existence of related objects that matches certain criteria.
+"""
+input User_ListFilter {
+  """
+  The desired number of objects that match the condition (defaults to at least one).
+  """
+  count: Int_Filter = {gt:0}
+  """
+  Condition of the related objects to filter for.
+  """
+  exist: User_Filter
+}
+"""
+✨ Generated order input type for table 'User'. This input defines the sorting order of rows in query results based on one or more fields.
+"""
+input User_Order {
+  """
+  ✨ Generated from Field `User`.`id` of type `String!`
+  """
+  id: OrderDirection
+  """
+  ✨ Generated from Field `User`.`avatar` of type `String`
+  """
+  avatar: OrderDirection
+  """
+  ✨ Generated from Field `User`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: OrderDirection
+  """
+  ✨ Generated from Field `User`.`displayName` of type `String!`
+  """
+  displayName: OrderDirection
+  """
+  ✨ Generated from Field `User`.`email` of type `String!`
+  """
+  email: OrderDirection
+  """
+  ✨ Generated from Field `User`.`photoUrl` of type `String`
+  """
+  photoUrl: OrderDirection
+  """
+  ✨ Generated from Field `User`.`role` of type `String!`
+  """
+  role: OrderDirection
+  """
+  ✨ Generated from Field `User`.`_count` of type `Int!`
+  """
+  _count: OrderDirection
+  """
+  ✨ Generated from Field `User`.`avatar_count` of type `Int!`
+  """
+  avatar_count: OrderDirection
+  """
+  ✨ Generated from Field `User`.`createdAt_count` of type `Int!`
+  """
+  createdAt_count: OrderDirection
+  """
+  ✨ Generated from Field `User`.`displayName_count` of type `Int!`
+  """
+  displayName_count: OrderDirection
+  """
+  ✨ Generated from Field `User`.`email_count` of type `Int!`
+  """
+  email_count: OrderDirection
+  """
+  ✨ Generated from Field `User`.`id_count` of type `Int!`
+  """
+  id_count: OrderDirection
+  """
+  ✨ Generated from Field `User`.`photoUrl_count` of type `Int!`
+  """
+  photoUrl_count: OrderDirection
+  """
+  ✨ Generated from Field `User`.`role_count` of type `Int!`
+  """
+  role_count: OrderDirection
+  """
+  ✨ Generated from Field `User`.`createdAt_min` of type `Timestamp`
+  """
+  createdAt_min: OrderDirection
+  """
+  ✨ Generated from Field `User`.`createdAt_max` of type `Timestamp`
+  """
+  createdAt_max: OrderDirection
+}

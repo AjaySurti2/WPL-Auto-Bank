@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import { SyncSchedule, BankAccount } from '../types';
+import { DownloadSchedule, BankAccount } from '../types';
 import { CalendarClock, FolderOpen, ToggleRight, ToggleLeft, Folder, ChevronRight, Home, Check, X, ArrowLeft, Plus, Edit2, Trash2, Clock, User, HardDrive, Cloud } from 'lucide-react';
 
 interface SchedulerProps {
-    schedules: SyncSchedule[];
+    schedules: DownloadSchedule[];
     accounts: BankAccount[];
     toggleSchedule: (id: string) => void;
-    addSchedule: (schedule: SyncSchedule) => Promise<void>;
-    updateSchedule: (schedule: SyncSchedule) => Promise<void>;
+    addSchedule: (schedule: DownloadSchedule) => Promise<void>;
+    updateSchedule: (schedule: DownloadSchedule) => Promise<void>;
     removeSchedule: (id: string) => void;
+    currentUser: any; // User type usually, but 'any' to avoid type issues if not imported here
 }
 
 // Mock Google Drive Structure
@@ -24,8 +25,9 @@ const DRIVE_DATA: Record<string, string[]> = {
 };
 
 export const Scheduler: React.FC<SchedulerProps> = ({
-    schedules, accounts, toggleSchedule, addSchedule, updateSchedule, removeSchedule
+    schedules, accounts, toggleSchedule, addSchedule, updateSchedule, removeSchedule, currentUser
 }) => {
+    const canManage = currentUser.role === 'Admin' || currentUser.role === 'Scheduler';
     // Modal State
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isFolderPickerOpen, setIsFolderPickerOpen] = useState(false);
@@ -47,7 +49,7 @@ export const Scheduler: React.FC<SchedulerProps> = ({
 
     // --- CRUD Handlers ---
 
-    const handleOpenModal = (schedule?: SyncSchedule) => {
+    const handleOpenModal = (schedule?: DownloadSchedule) => {
         if (schedule) {
             setEditingId(schedule.id);
             setSelectedBankId(schedule.bankId);
@@ -82,14 +84,14 @@ export const Scheduler: React.FC<SchedulerProps> = ({
             nextDate.setDate(nextDate.getDate() + 1);
         }
 
-        const newScheduleData: SyncSchedule = {
+        const newScheduleData: DownloadSchedule = {
             id: editingId || Date.now().toString(),
             bankId: selectedBankId,
             frequency,
             scheduledTime,
             targetFolder: storageType === 'Local' && !targetFolder ? 'Downloads Folder (Default)' : targetFolder,
             storageType,
-            nextRun: nextDate.toISOString(),
+            nextDownloadAt: nextDate.toISOString(),
             isActive
         };
 
@@ -155,12 +157,14 @@ export const Scheduler: React.FC<SchedulerProps> = ({
                     <h2 className="text-2xl font-bold text-white">Download Scheduler</h2>
                     <p className="text-slate-400 text-sm">Configure automated downloads to Cloud or Local storage.</p>
                 </div>
-                <button
-                    onClick={() => handleOpenModal()}
-                    className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg font-medium transition-all"
-                >
-                    <Plus className="w-4 h-4" /> Create Schedule
-                </button>
+                {canManage && (
+                    <button
+                        onClick={() => handleOpenModal()}
+                        className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg font-medium transition-all"
+                    >
+                        <Plus className="w-4 h-4" /> Create Schedule
+                    </button>
+                )}
             </div>
 
             <div className="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
@@ -191,7 +195,7 @@ export const Scheduler: React.FC<SchedulerProps> = ({
                                                 <div className="flex items-center gap-2 text-xs text-slate-500">
                                                     <span>{bank.accountNumberMasked}</span>
                                                     <span className="w-1 h-1 rounded-full bg-slate-600"></span>
-                                                    <span className="flex items-center gap-1"><User className="w-3 h-3" /> {bank.userId}</span>
+                                                    <span className="flex items-center gap-1" title="Created By"><User className="w-3 h-3 text-blue-400" /> {schedule.userName}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -227,28 +231,35 @@ export const Scheduler: React.FC<SchedulerProps> = ({
                                     </td>
                                     <td className="px-6 py-4 text-center">
                                         <button
-                                            onClick={() => toggleSchedule(schedule.id)}
-                                            className={`transition-colors ${schedule.isActive ? 'text-green-400 hover:text-green-300' : 'text-slate-600 hover:text-slate-500'}`}
+                                            onClick={() => canManage && toggleSchedule(schedule.id)}
+                                            disabled={!canManage}
+                                            className={`transition-colors ${!canManage ? 'cursor-not-allowed opacity-50' : ''} ${schedule.isActive ? 'text-green-400 hover:text-green-300' : 'text-slate-600 hover:text-slate-500'}`}
                                         >
                                             {schedule.isActive ? <ToggleRight className="w-8 h-8 mx-auto" /> : <ToggleLeft className="w-8 h-8 mx-auto" />}
                                         </button>
                                     </td>
                                     <td className="px-6 py-4 text-right">
                                         <div className="flex justify-end gap-2">
-                                            <button
-                                                onClick={() => handleOpenModal(schedule)}
-                                                className="p-2 text-slate-400 hover:text-blue-400 bg-slate-900 hover:bg-slate-700 rounded-lg transition-colors"
-                                                title="Edit Schedule"
-                                            >
-                                                <Edit2 className="w-4 h-4" />
-                                            </button>
-                                            <button
-                                                onClick={() => removeSchedule(schedule.id)}
-                                                className="p-2 text-slate-400 hover:text-red-400 bg-slate-900 hover:bg-slate-700 rounded-lg transition-colors"
-                                                title="Delete Schedule"
-                                            >
-                                                <Trash2 className="w-4 h-4" />
-                                            </button>
+                                            {canManage ? (
+                                                <>
+                                                    <button
+                                                        onClick={() => handleOpenModal(schedule)}
+                                                        className="p-2 text-slate-400 hover:text-blue-400 bg-slate-900 hover:bg-slate-700 rounded-lg transition-colors"
+                                                        title="Edit Schedule"
+                                                    >
+                                                        <Edit2 className="w-4 h-4" />
+                                                    </button>
+                                                    <button
+                                                        onClick={() => removeSchedule(schedule.id)}
+                                                        className="p-2 text-slate-400 hover:text-red-400 bg-slate-900 hover:bg-slate-700 rounded-lg transition-colors"
+                                                        title="Delete Schedule"
+                                                    >
+                                                        <Trash2 className="w-4 h-4" />
+                                                    </button>
+                                                </>
+                                            ) : (
+                                                <span className="text-xs text-slate-500 px-2 py-1 bg-slate-900 rounded">View Only</span>
+                                            )}
                                         </div>
                                     </td>
                                 </tr>

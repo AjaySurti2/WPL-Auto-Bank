@@ -1,0 +1,36 @@
+extend type BankAccount {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "BankAccount", purpose: IMPLICIT_KEY_FIELD)
+}
+extend type DownloadSchedule {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "DownloadSchedule", purpose: IMPLICIT_KEY_FIELD)
+  """
+  ✨ Implicit foreign key field based on `DownloadSchedule`.`bankAccount`. It must match the value of `BankAccount`.`id`. See `@ref` for how to customize it.
+  """
+  bankAccountId: UUID! @fdc_generated(from: "DownloadSchedule.bankAccount", purpose: IMPLICIT_REF_FIELD)
+}
+extend type Notification {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "Notification", purpose: IMPLICIT_KEY_FIELD)
+}
+extend type Statement {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "Statement", purpose: IMPLICIT_KEY_FIELD)
+  """
+  ✨ Implicit foreign key field based on `Statement`.`bankAccount`. It must match the value of `BankAccount`.`id`. See `@ref` for how to customize it.
+  """
+  bankAccountId: UUID! @fdc_generated(from: "Statement.bankAccount", purpose: IMPLICIT_REF_FIELD)
+  """
+  ✨ Implicit foreign key field based on `Statement`.`downloadSchedule`. It must match the value of `DownloadSchedule`.`id`. See `@ref` for how to customize it.
+  """
+  downloadScheduleId: UUID @fdc_generated(from: "Statement.downloadSchedule", purpose: IMPLICIT_REF_FIELD)
+}

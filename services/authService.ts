@@ -19,8 +19,8 @@ export const login = async (email: string, password: string): Promise<User> => {
             id: fbUser.uid,
             name: fbUser.displayName || email?.split('@')[0] || 'User',
             email: fbUser.email || '',
-            role: 'Admin', // Default role for now, ideally fetched from DB
-            password: '', // Don't keep password
+            role: 'Downloader', // Default role for mapping, should be updated from DB
+            password: '',
             avatar: (fbUser.displayName || email || 'U')[0].toUpperCase()
         };
     } catch (error) {
@@ -59,7 +59,7 @@ export const subscribeToAuthChanges = (callback: (user: User | null) => void) =>
                 id: fbUser.uid,
                 name: fbUser.displayName || fbUser.email?.split('@')[0] || 'User',
                 email: fbUser.email || '',
-                role: 'Admin',
+                role: 'Downloader',
                 password: '',
                 avatar: (fbUser.displayName || fbUser.email || 'U')[0].toUpperCase()
             });

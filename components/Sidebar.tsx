@@ -13,7 +13,7 @@ interface SidebarProps {
 export const Sidebar: React.FC<SidebarProps> = ({ currentPage, setPage, pendingOtpCount, currentUser, onLogout }) => {
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'bank-master', label: 'Bank Master', icon: Building2, disabled: currentUser.role === 'Downloader' },
+    { id: 'bank-master', label: 'Bank Master', icon: Building2 },
     { id: 'scheduler', label: 'Scheduler', icon: CalendarClock, disabled: currentUser.role === 'Downloader' },
     { id: 'action-center', label: 'Action Center', icon: ShieldAlert, badge: pendingOtpCount > 0 ? pendingOtpCount : undefined },
     { id: 'insights', label: 'AI Insights', icon: FileText },
@@ -55,10 +55,20 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, setPage, pendingO
         })}
       </nav>
 
-      <div className="p-4 border-t border-slate-800">
+      <div className="p-4 border-t border-slate-800 space-y-2">
+        <div className="flex items-center gap-3 px-4 py-3 bg-slate-800/50 rounded-lg border border-slate-700/50 mb-2 group">
+          <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold text-xs shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-transform">
+            {currentUser.avatar}
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-bold text-white truncate">{currentUser.name}</p>
+            <p className="text-[10px] font-medium text-blue-400 uppercase tracking-wider">{currentUser.role}</p>
+          </div>
+        </div>
+
         <button
           onClick={() => setPage('settings')}
-          className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors mb-2
+          className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors
                 ${currentPage === 'settings' ? 'bg-blue-600/10 text-blue-500' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'}
             `}
         >

@@ -9,7 +9,7 @@ import { Insights } from './pages/Insights';
 import { Settings } from './pages/Settings';
 import { Login } from './pages/Login';
 import { MOCK_USERS } from './constants';
-import { BankAccount, BankStatus, User, ActivityLog, SyncSchedule } from './types';
+import { BankAccount, BankStatus, User, ActivityLog, DownloadSchedule } from './types';
 import { subscribeToAuthChanges, logout, signUp } from './services/authService';
 import * as dbService from './services/dbService';
 
@@ -21,19 +21,25 @@ const App: React.FC = () => {
   // App Data State
   const [currentPage, setCurrentPage] = useState('dashboard');
   const [accounts, setAccounts] = useState<BankAccount[]>([]);
-  const [schedules, setSchedules] = useState<SyncSchedule[]>([]);
+  const [schedules, setSchedules] = useState<DownloadSchedule[]>([]);
   const [logs, setLogs] = useState<ActivityLog[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [showProfileModal, setShowProfileModal] = useState(false);
 
   // Services
   useEffect(() => {
-    const unsubscribe = subscribeToAuthChanges((user) => {
-      setCurrentUser(user);
-      setLoading(false);
+    const unsubscribe = subscribeToAuthChanges(async (user) => {
       if (user) {
-        dbService.syncUser(user);
+        setLoading(true);
+        // Ensure user exists in DB
+        await dbService.syncUser(user);
+        // Fetch real role and profile from DB
+        const profile = await dbService.getCurrentUser();
+        setCurrentUser(profile || user);
+      } else {
+        setCurrentUser(null);
       }
+      setLoading(false);
     });
     return () => unsubscribe();
   }, []);
@@ -60,7 +66,7 @@ const App: React.FC = () => {
   }, [currentUser]);
 
   // Counts
-  const pendingOtpCount = accounts.filter(a => a.status === BankStatus.OTP_REQUIRED).length;
+  const pendingOtpCount = accounts.filter(a => a.connectionStatus === BankStatus.OTP_REQUIRED).length;
 
   // Actions
   const handleLogin = (user: User) => {
@@ -88,7 +94,7 @@ const App: React.FC = () => {
         bankName: acc.bankName,
         action: `Added new bank: ${acc.bankName}`,
         status: 'Success',
-        triggeredBy: currentUser?.name || 'Unknown'
+        triggeredBy: currentUser?.displayName || 'Unknown'
       });
     } catch (error) {
       console.error("Error adding account:", error);
@@ -107,7 +113,7 @@ const App: React.FC = () => {
         bankName: updatedAcc.bankName,
         action: `Updated bank details: ${updatedAcc.bankName}`,
         status: 'Success',
-        triggeredBy: currentUser?.name || 'Unknown'
+        triggeredBy: currentUser?.displayName || 'Unknown'
       });
     } catch (error) {
       console.error("Error updating account:", error);
@@ -131,7 +137,7 @@ const App: React.FC = () => {
         bankName: 'System',
         action: 'Removed bank account',
         status: 'Success',
-        triggeredBy: currentUser?.name || 'Unknown'
+        triggeredBy: currentUser?.displayName || 'Unknown'
       });
     } catch (error) {
       console.error("Error deleting account:", error);
@@ -150,17 +156,17 @@ const App: React.FC = () => {
     }
   };
 
-  const addSchedule = async (schedule: SyncSchedule) => {
+  const addSchedule = async (schedule: DownloadSchedule) => {
     try {
       // @ts-ignore
       const { id, ...scheduleData } = schedule;
       const newSchedule = await dbService.addSchedule(scheduleData);
-      setSchedules(prev => [...prev, newSchedule as SyncSchedule]);
+      setSchedules(prev => [...prev, newSchedule as DownloadSchedule]);
       await dbService.addLog({
         bankName: 'Scheduler',
         action: 'Created new sync schedule',
         status: 'Success',
-        triggeredBy: currentUser?.name || 'Unknown'
+        triggeredBy: currentUser?.displayName || 'Unknown'
       });
       // Return or indicate success? The await above is enough for the caller in Scheduler.tsx
     } catch (error) {
@@ -169,7 +175,7 @@ const App: React.FC = () => {
     }
   };
 
-  const updateSchedule = async (updatedSchedule: SyncSchedule) => {
+  const updateSchedule = async (updatedSchedule: DownloadSchedule) => {
     try {
       // @ts-ignore
       const { id, ...updates } = updatedSchedule;
@@ -179,7 +185,7 @@ const App: React.FC = () => {
         bankName: 'Scheduler',
         action: 'Updated sync schedule configuration',
         status: 'Success',
-        triggeredBy: currentUser?.name || 'Unknown'
+        triggeredBy: currentUser?.displayName || 'Unknown'
       });
     } catch (error) {
       console.error("Error updating schedule:", error);
@@ -195,7 +201,7 @@ const App: React.FC = () => {
         bankName: 'Scheduler',
         action: 'Deleted sync schedule',
         status: 'Success',
-        triggeredBy: currentUser?.name || 'Unknown'
+        triggeredBy: currentUser?.displayName || 'Unknown'
       });
     } catch (error) {
       console.error("Error deleting schedule:", error);
@@ -205,19 +211,19 @@ const App: React.FC = () => {
   const resolveOtp = async (bankId: string) => {
     // Update local state first
     setAccounts(prev => prev.map(a =>
-      a.id === bankId ? { ...a, status: BankStatus.CONNECTED, lastSync: 'Just now' } : a
+      a.id === bankId ? { ...a, connectionStatus: BankStatus.CONNECTED, lastSyncedAt: 'Just now' } : a
     ));
 
     // Persist to DB
     try {
-      await dbService.updateAccount(bankId, { status: BankStatus.CONNECTED, lastSync: new Date().toISOString() });
+      await dbService.updateAccount(bankId, { connectionStatus: BankStatus.CONNECTED, lastSyncedAt: new Date().toISOString() });
       setTimeout(async () => {
         alert("OTP Verified. Download initiated.");
         await dbService.addLog({
           bankName: 'Action Center',
           action: 'OTP Verified & Download Started',
           status: 'Success',
-          triggeredBy: currentUser?.name || 'Unknown'
+          triggeredBy: currentUser?.displayName || 'Unknown'
         });
       }, 500);
     } catch (error) {
@@ -235,7 +241,7 @@ const App: React.FC = () => {
       action: 'Manual Download Triggered',
       timestamp: 'Just now',
       status: 'Pending',
-      triggeredBy: currentUser?.name || 'Unknown'
+      triggeredBy: currentUser?.displayName || 'Unknown'
     }));
     setLogs(prev => [...newLogs, ...prev]);
 
@@ -253,7 +259,7 @@ const App: React.FC = () => {
 
       // B. Update Last Sync Time
       bankIds.forEach(async (id) => {
-        await dbService.updateAccount(id, { lastSync: new Date().toISOString() });
+        await dbService.updateAccount(id, { lastSyncedAt: new Date().toISOString() });
       });
 
       setLogs(prev => prev.map(l =>
@@ -261,7 +267,7 @@ const App: React.FC = () => {
       ));
 
       setAccounts(prev => prev.map(a =>
-        bankIds.includes(a.id) ? { ...a, lastSync: 'Just now' } : a
+        bankIds.includes(a.id) ? { ...a, lastSyncedAt: 'Just now' } : a
       ));
 
       // C. Generate Realistic CSV
@@ -314,7 +320,7 @@ const App: React.FC = () => {
           // Note: createUserWithEmailAndPassword logs the user in.
           // Since we are likely an Admin, we might need a workaround or just warn.
           // For now, we proceed - the syncUser logic in dbService will bridge the gap.
-          await signUp(user.email, user.password, user.name);
+          await signUp(user.email, user.password, user.displayName);
           console.log(`[Auth] Account created.`);
         } catch (authError: any) {
           if (authError.code !== 'auth/email-already-in-use') {
@@ -333,9 +339,9 @@ const App: React.FC = () => {
 
       await dbService.addLog({
         bankName: 'Settings',
-        action: `${existingUser ? 'Updated' : 'Added'} user: ${user.name}`,
+        action: `${existingUser ? 'Updated' : 'Added'} user: ${user.displayName}`,
         status: 'Success',
-        triggeredBy: currentUser?.name || 'Unknown'
+        triggeredBy: currentUser?.displayName || 'Unknown'
       });
     } catch (error: any) {
       console.error("Error adding/updating user:", error);
@@ -351,7 +357,7 @@ const App: React.FC = () => {
         bankName: 'Settings',
         action: 'Removed user',
         status: 'Success',
-        triggeredBy: currentUser?.name || 'Unknown'
+        triggeredBy: currentUser?.displayName || 'Unknown'
       });
     } catch (error) {
       console.error("Error removing user:", error);
@@ -365,7 +371,7 @@ const App: React.FC = () => {
       action: action,
       timestamp: 'Just now',
       status: 'Success',
-      triggeredBy: currentUser?.name
+      triggeredBy: currentUser?.displayName
     };
     setLogs(prev => [newLog, ...prev]);
   };
@@ -378,25 +384,24 @@ const App: React.FC = () => {
       case 'dashboard':
         return <Dashboard accounts={accounts} logs={logs} setPage={setCurrentPage} onManualDownload={handleManualDownload} />;
       case 'bank-master':
-        return currentUser.role === 'Downloader'
-          ? <Dashboard accounts={accounts} logs={logs} setPage={setCurrentPage} onManualDownload={handleManualDownload} /> // Redirect if unauthorized
-          : <BankMaster
-            accounts={accounts}
-            addAccount={addAccount}
-            updateAccount={updateAccount}
-            removeAccount={removeAccount}
-          />;
+        return <BankMaster
+          accounts={accounts}
+          currentUser={currentUser}
+          onManualDownload={handleManualDownload}
+          addAccount={addAccount}
+          updateAccount={updateAccount}
+          removeAccount={removeAccount}
+        />;
       case 'scheduler':
-        return currentUser.role === 'Downloader'
-          ? <Dashboard accounts={accounts} logs={logs} setPage={setCurrentPage} onManualDownload={handleManualDownload} />
-          : <Scheduler
-            schedules={schedules}
-            accounts={accounts}
-            toggleSchedule={toggleSchedule}
-            addSchedule={addSchedule}
-            updateSchedule={updateSchedule}
-            removeSchedule={removeSchedule}
-          />;
+        return <Scheduler
+          schedules={schedules}
+          accounts={accounts}
+          currentUser={currentUser}
+          toggleSchedule={toggleSchedule}
+          addSchedule={addSchedule}
+          updateSchedule={updateSchedule}
+          removeSchedule={removeSchedule}
+        />;
       case 'action-center':
         return <ActionCenter accounts={accounts} resolveOtp={resolveOtp} />;
       case 'insights':
@@ -430,7 +435,7 @@ const App: React.FC = () => {
         <header className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-2xl font-bold text-white capitalize">{currentPage.replace('-', ' ')}</h1>
-            <p className="text-slate-500 text-sm">Welcome back, {currentUser.name}</p>
+            <p className="text-slate-500 text-sm">Welcome back, {currentUser.displayName}</p>
           </div>
 
           <div className="absolute left-1/2 top-8 transform -translate-x-1/2 -translate-y-1/2 hidden lg:block">
@@ -470,7 +475,7 @@ const App: React.FC = () => {
               <div className="w-24 h-24 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold text-3xl shadow-xl shadow-blue-500/20 mb-6">
                 {currentUser.avatar}
               </div>
-              <h4 className="text-xl font-bold text-white mb-1">{currentUser.name}</h4>
+              <h4 className="text-xl font-bold text-white mb-1">{currentUser.displayName}</h4>
               <p className="text-blue-400 text-sm font-medium mb-4 flex items-center gap-1.5">
                 <Shield className="w-4 h-4" /> {currentUser.role}
               </p>
